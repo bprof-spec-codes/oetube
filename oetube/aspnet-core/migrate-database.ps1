@@ -1,0 +1,1 @@
+dotnet run --project OeTube --migrate-database

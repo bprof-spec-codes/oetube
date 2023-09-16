@@ -1,0 +1,3 @@
+<ng-container *ngIf="service.examples$ | async as examples">
+    <dx-data-grid [dataSource]="examples"></dx-data-grid>
+</ng-container>
