@@ -1,4 +1,3 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -22,6 +21,12 @@
       ],
       "@proxy/*": [
         "src/app/proxy/*"
+      ],
+      "@abp/ng.theme.basic": [
+        "projects/abp-ng.theme.basic/src/public-api.ts"
+      ],
+      "@abp/ng.theme.basic/testing": [
+        "projects/abp-ng.theme.basic/testing/src/public-api.ts"
       ]
     },
     "useDefineForClassFields": false
