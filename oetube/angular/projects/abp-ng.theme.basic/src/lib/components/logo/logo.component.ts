@@ -1,4 +1,5 @@
 import { ApplicationInfo, EnvironmentService } from '@abp/ng.core';
+
 import { Component } from '@angular/core';
 
 @Component({
@@ -9,9 +10,10 @@ import { Component } from '@angular/core';
         *ngIf="appInfo.logoUrl; else appName"
         [src]="appInfo.logoUrl"
         [alt]="appInfo.name"
-        width="100%"
-        height="auto"
+        width="40px"
+        height="40px"
       />
+      TUBE
     </a>
 
     <ng-template #appName>
