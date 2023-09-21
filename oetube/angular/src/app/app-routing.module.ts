@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { NgModule } from '@angular/core';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    loadChildren: () => import('./video/video.module').then(m => m.VideoModule),
   },
   {
     path: 'account',
@@ -25,7 +26,19 @@ const routes: Routes = [
     loadChildren: () =>
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
-  { path: 'dev-extreme', loadChildren: () => import('./dev-extreme/dev-extreme.module').then(m => m.DevExtremeModule) },
+  {
+    path: 'dev-extreme',
+    loadChildren: () => import('./dev-extreme/dev-extreme.module').then(m => m.DevExtremeModule),
+  },
+  {
+    path: 'upload',
+    loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
+  },
+  {
+    path: 'playlist',
+    loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule),
+  },
+  { path: 'video', loadChildren: () => import('./video/video.module').then(m => m.VideoModule) },
 ];
 
 @NgModule({
