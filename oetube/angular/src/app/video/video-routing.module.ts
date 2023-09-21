@@ -11,7 +11,7 @@ const routes: Routes = [
     component: VideoComponent,
   },
   {
-    path: 'watch',
+    path: 'watch/:id',
     component: VideoPlayerComponent,
   },
 ];
