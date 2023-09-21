@@ -1,21 +1,20 @@
+import { APP_ROUTE_PROVIDER } from './route.provider';
+import { AbpOAuthModule } from '@abp/ng.oauth';
 import { AccountConfigModule } from '@abp/ng.account/config';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 import { CoreModule } from '@abp/ng.core';
-import { registerLocale } from '@abp/ng.core/locale';
+import { FeatureManagementModule } from '@abp/ng.feature-management';
 import { IdentityConfigModule } from '@abp/ng.identity/config';
+import { NgModule } from '@angular/core';
 import { SettingManagementConfigModule } from '@abp/ng.setting-management/config';
 import { TenantManagementConfigModule } from '@abp/ng.tenant-management/config';
-import { ThemeLeptonXModule } from '@abp/ng.theme.lepton-x';
-import { SideMenuLayoutModule } from '@abp/ng.theme.lepton-x/layouts';
+import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { APP_ROUTE_PROVIDER } from './route.provider';
-import { FeatureManagementModule } from '@abp/ng.feature-management';
-import { AbpOAuthModule } from '@abp/ng.oauth';
+import { registerLocale } from '@abp/ng.core/locale';
 
 @NgModule({
   imports: [
@@ -28,12 +27,11 @@ import { AbpOAuthModule } from '@abp/ng.oauth';
     }),
     AbpOAuthModule.forRoot(),
     ThemeSharedModule.forRoot(),
+    ThemeBasicModule.forRoot(),
     AccountConfigModule.forRoot(),
     IdentityConfigModule.forRoot(),
     TenantManagementConfigModule.forRoot(),
     SettingManagementConfigModule.forRoot(),
-    ThemeLeptonXModule.forRoot(),
-    SideMenuLayoutModule.forRoot(),
     FeatureManagementModule.forRoot(),
   ],
   declarations: [AppComponent],
