@@ -19,18 +19,15 @@
                     {{ getCommand() }}
                 </em>
             </p>
-          
             <dx-button [disabled]="input==undefined" (onClick)="transcode()">Transcode</dx-button>
-
     </div>
     <div>
-        <h4>LOG & PROGRESS</h4>
-        <p> <b>{{ progress| number: '1.00' }}% </b> {{ message }}</p>
+        <h4>PROGRESS & LOG</h4>
+        <p> <b>{{ progress*100| number: '1.0' }}% </b> {{ message }}</p>
     </div>
     <div>
         <h4>OUTPUT</h4>
         <video #outputDisplay controls></video>
-     
     </div>
 
 
