@@ -7,7 +7,7 @@ export const environment = {
   application: {
     baseUrl,
     name: 'OeTube',
-    logoUrl: '',
+    logoUrl: 'images/oe_logo.png',
   },
   oAuthConfig: {
     issuer: 'https://localhost:44348',
@@ -15,7 +15,7 @@ export const environment = {
     clientId: 'OeTube_App',
     responseType: 'code',
     scope: 'offline_access OeTube',
-    requireHttps: true
+    requireHttps: true,
   },
   apis: {
     default: {

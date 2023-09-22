@@ -1,4 +1,5 @@
 import { RoutesService, eLayoutType } from '@abp/ng.core';
+
 import { APP_INITIALIZER } from '@angular/core';
 
 export const APP_ROUTE_PROVIDER = [
@@ -11,15 +12,27 @@ function configureRoutes(routesService: RoutesService) {
       {
         path: '/',
         name: '::Menu:Home',
-        iconClass: 'fas fa-home',
+        //iconClass: 'fas fa-home',
         order: 1,
         layout: eLayoutType.application,
       },
       {
-        path:'/dev-extreme',
-        name:'Dev Extreme',
-        order:2,
-        layout:eLayoutType.application,
+        path: '/upload',
+        name: 'Upload',
+        order: 2,
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/playlist/create',
+        name: 'Create Playlist',
+        order: 3,
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/dev-extreme',
+        name: 'Dev Extreme',
+        order: 4,
+        layout: eLayoutType.application,
       },
     ]);
   };

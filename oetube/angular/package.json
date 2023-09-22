@@ -8,7 +8,9 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "postinstall": "npm run compile:ivy",
+    "compile:ivy": "yarn ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points --tsconfig './tsconfig.prod.json' --source node_modules"
   },
   "private": true,
   "dependencies": {
@@ -19,7 +21,7 @@
     "@abp/ng.oauth": "~7.3.3",
     "@abp/ng.setting-management": "~7.3.3",
     "@abp/ng.tenant-management": "~7.3.3",
-    "@abp/ng.theme.lepton-x": "~2.3.2",
+    "@abp/ng.theme.basic": "^7.3.3",
     "@abp/ng.theme.shared": "~7.3.3",
     "@angular/animations": "~16.0.0",
     "@angular/common": "~16.0.0",
