@@ -15,6 +15,7 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { environment } from '../environments/environment';
 import { registerLocale } from '@abp/ng.core/locale';
+import { DxFileUploaderModule } from 'devextreme-angular';
 
 @NgModule({
   imports: [

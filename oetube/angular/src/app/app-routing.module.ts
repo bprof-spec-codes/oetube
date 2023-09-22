@@ -27,10 +27,6 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
   {
-    path: 'dev-extreme',
-    loadChildren: () => import('./dev-extreme/dev-extreme.module').then(m => m.DevExtremeModule),
-  },
-  {
     path: 'upload',
     loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
   },
@@ -39,6 +35,10 @@ const routes: Routes = [
     loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule),
   },
   { path: 'video', loadChildren: () => import('./video/video.module').then(m => m.VideoModule) },
+  {
+    path:'ffmpeg-test',
+    loadChildren: ()=>import('./ffmpeg-test/ffmpeg-test.module').then(m=>m.FfmpegTestModule)
+  }
 ];
 
 @NgModule({
