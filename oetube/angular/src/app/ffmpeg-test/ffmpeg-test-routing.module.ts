@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FfmpegTestComponent } from './ffmpeg-test.component';
+import { FfmpegTestComponent } from './components/ffmpeg-test/ffmpeg-test.component';
 
 const routes: Routes = [
   {
