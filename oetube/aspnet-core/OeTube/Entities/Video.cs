@@ -1,5 +1,4 @@
-﻿
-using Volo.Abp.AspNetCore.Mvc.UI.Theming;
+﻿using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.Domain.Entities;
 using static Volo.Abp.Http.MimeTypes;
 
