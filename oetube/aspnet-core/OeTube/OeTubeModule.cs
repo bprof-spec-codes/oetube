@@ -49,6 +49,7 @@ using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BackgroundJobs;
+using System.Reflection;
 
 namespace OeTube;
 
@@ -334,7 +335,7 @@ namespace OeTube;
             {
                 container.UseFileSystem(fileSystem =>
                 {
-                    fileSystem.BasePath = Environment.CurrentDirectory;
+                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 });
             });
         });
