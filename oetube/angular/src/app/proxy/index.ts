@@ -1,2 +1,2 @@
-import * as Services from './services';
-export { Services };
+import * as Application from './application';
+export { Application };
