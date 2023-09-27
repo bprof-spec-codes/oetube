@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,6 +46,9 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BackgroundJobs;
 
 namespace OeTube;
 
@@ -96,7 +99,11 @@ namespace OeTube;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule)
 )]
-public class OeTubeModule : AbpModule
+[DependsOn(
+    typeof(AbpBlobStoringFileSystemModule),
+    typeof(AbpBackgroundJobsModule)
+)]
+    public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
     private const bool IsMultiTenant = true;
@@ -143,6 +150,8 @@ public class OeTubeModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureDataProtection(context);
         ConfigureEfCore(context);
+        ConfigureBlobStoring();
+        ConfigureBackgroundJobs();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -232,7 +241,7 @@ public class OeTubeModule : AbpModule
             }
         });
     }
-
+  
     private void ConfigureAutoApiControllers()
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
@@ -317,7 +326,25 @@ public class OeTubeModule : AbpModule
         });
 
     }
-
+    private void ConfigureBlobStoring()
+    {
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = Environment.CurrentDirectory;
+                });
+            });
+        });
+    }
+    private void ConfigureBackgroundJobs()
+    {
+        Configure<AbpBackgroundJobWorkerOptions>(options =>
+        {
+        });
+    }
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
