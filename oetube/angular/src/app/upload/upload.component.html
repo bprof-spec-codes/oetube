@@ -1,1 +1,4 @@
-<p>upload works!</p>
+<form (ngSubmit)="onSubmit()" enctype="multipart/form-data" #form="ngForm" novalidate>
+    <input #fileUploader type="file">
+    <input type="submit">
+</form>
