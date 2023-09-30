@@ -50,6 +50,8 @@ using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BackgroundJobs;
 using System.Reflection;
+using Volo.Abp.AspNetCore.SignalR;
+using OeTube.Infrastructure.SignalR;
 
 namespace OeTube;
 
@@ -100,10 +102,9 @@ namespace OeTube;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule)
 )]
-[DependsOn(
-    typeof(AbpBlobStoringFileSystemModule),
-    typeof(AbpBackgroundJobsModule)
-)]
+    [DependsOn(typeof(AbpBlobStoringFileSystemModule))]
+    [DependsOn(typeof(AbpBackgroundJobsModule))]    
+    [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
     public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
@@ -189,6 +190,7 @@ namespace OeTube;
             options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
             options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
+        
     }
 
     private void ConfigureLocalization()
@@ -242,7 +244,6 @@ namespace OeTube;
             }
         });
     }
-  
     private void ConfigureAutoApiControllers()
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
