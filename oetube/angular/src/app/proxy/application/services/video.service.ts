@@ -9,8 +9,9 @@ export class VideoService {
   
 
   uploadVideo = (content: FormData, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
+    this.restService.request<any, string>({
       method: 'POST',
+      responseType: 'text',
       url: '/api/app/video/upload-video',
       body: content,
     },
