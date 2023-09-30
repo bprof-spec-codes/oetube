@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Infrastructure.FFmpeg;
 using OeTube.Infrastructure.FFmpeg.Info;
 using OeTube.Infrastructure.FFmpeg.Job;
+using OeTube.Infrastructure.ProcessTemplate;
 using System.IO;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using Volo.Abp.Application.Services;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
@@ -11,7 +16,6 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Http;
-using Xabe.FFmpeg;
 
 namespace OeTube.Infrastructure.VideoStorage
 {
@@ -19,86 +23,114 @@ namespace OeTube.Infrastructure.VideoStorage
     public class VideoContainer
     { }
 
-
-
     [Dependency(ServiceLifetime.Transient)]
     [ExposeServices(typeof(IVideoStorageService))]
     public class VideoStorageService : IVideoStorageService
     {
-        private record ContainerPath(Guid Id, string Path, string AbsolutePath);
+        private record Size(int Width, int Height);
+        private static readonly Size SD = new Size(720, 480);
+        private static readonly Size HD = new Size(1280, 720);
+        private static readonly Size FHD = new Size(1920, 1080);
+        private static readonly Size[] NamedResolutions = new Size[]
+        {
+            SD,HD,FHD
+        };
+
 
         private readonly IBlobContainer<VideoContainer> _container;
-        private readonly IBlobFilePathCalculator _pathCalculator;
-        private readonly IBlobContainerConfigurationProvider _containerConfigurationProvider;
         private readonly IFFmpegService _ffmpeg;
-        private readonly IBackgroundJobManager _jobManager;
         public VideoStorageService(IFFmpegService ffmpeg,
                             IBlobContainer<VideoContainer> container,
                             IBlobFilePathCalculator calculator,
-                            IBlobContainerConfigurationProvider provider,
-                            IBackgroundJobManager backgroundJobManager
+                            IBlobContainerConfigurationProvider provider
             )
         {
-            _ffmpeg = ffmpeg;
             _container = container;
-            _pathCalculator = calculator;
-            _containerConfigurationProvider = provider;
-            _jobManager = backgroundJobManager;
+            _ffmpeg = ffmpeg;
+            _ffmpeg.WorkingDirectory = GetContainerDirectory(calculator,provider);
+            _ffmpeg.WriteToDebug = true;
+            
         }
-
-        private ContainerPath CalculatePath(Guid id, params string[] route)
+        private string GetContainerDirectory(IBlobFilePathCalculator calculator,IBlobContainerConfigurationProvider provider)
         {
             string container = BlobContainerNameAttribute.GetContainerName<VideoContainer>();
-            string path = Path.Combine(id.ToString(), Path.Combine(route));
-            string absolutePath = _pathCalculator.Calculate(new BlobProviderGetArgs(container, _containerConfigurationProvider.Get(container), path));
-            return new ContainerPath(id, path, absolutePath);
+            string absolutePath = Path.GetDirectoryName(calculator.Calculate(new BlobProviderGetArgs(container, provider.Get(container), "_")));
+            return absolutePath;
+        }
+        private string GetPath(Guid id, params string[] route)
+        {
+            return Path.Combine(id.ToString(), Path.Combine(route));
+        }
+        private async Task<ProbeInfo> AnalyzeAsync(string path, CancellationToken cancellationToken)
+        {
+            return await _ffmpeg.AnalyzeAsync(path,cancellationToken);
         }
 
-        private async Task<ProbeInfo> AnalyzeAsync(ContainerPath source, CancellationToken cancellationToken = default)
-        {
-            return await _ffmpeg.AnalyzeAsync(source.AbsolutePath, cancellationToken);
-        }
-
-        private void ValidateVideoFormat(ProbeInfo probeInfo)
+        private void ValidateVideoFormat(Guid id,ProbeInfo probeInfo)
         {
         }
-
-        //SD 480p 720x480
-        //HD 720p 1280x720
-        //FHD 1080p 1920x1080
-        private FFmpegJobArgs CreateJobArguments(Guid id,ContainerPath source, ProbeInfo probeInfo,CancellationToken cancellationToken)
+      
+        private NamedArguments[] CreateBulkArguments(Guid id,string sourcePath,IList<Size> resolutions)
         {
-           
-            return new FFmpegJobArgs(id, new FFmpegCommand[]
+            var directory=Path.GetDirectoryName(sourcePath);
+            NamedArguments[] args = new NamedArguments[resolutions.Count*2];
+            for (int i = 0; i < resolutions.Count; i++)
             {
-                CreateRescaleCommand(id,source,720,480),
-                CreateRescaleCommand(id,source,1280,720),
-                CreateRescaleCommand(id,source,1920,1080),
+                int width = resolutions[i].Width;
+                int height = resolutions[i].Height;
+                var path = Path.Combine(directory, $"{height}.mp4");
+                var hlsPath = Path.Combine(directory,height.ToString(),$"list.m3u8");
+                var segmentPath = Path.Combine(directory,height.ToString(), "%d.ts");
+                args[i*2]=new NamedArguments($"-i {sourcePath} -s {width}x{height} -c:a copy {path}",$"{height}.mp4");
+                args[i*2+1]=new NamedArguments($"-i {path} -f hls -hls_time 6 -hls_playlist_type event -hls_segment_filename {segmentPath} {hlsPath}",$"${height}.m3u8");
+            }
+            return args;
+        }
 
-            });
-        }
-        private FFmpegCommand CreateRescaleCommand(Guid id,ContainerPath source,int width, int height)
+        private IList<Size> CreateResolutions(ProbeInfo probeInfo)
         {
-            var output = CalculatePath(id, height + ".mp4");
-            return new FFmpegCommand($"-i {source.AbsolutePath} -s {width}x{height} -c:a copy {output.AbsolutePath}");
+            var video = probeInfo.VideoStreams.First();
+            var resolutions = new List<Size>();
+            int i = 0;
+
+            while (i <NamedResolutions.Length && video.Height >= NamedResolutions[i].Height)
+            {
+                resolutions.Add(NamedResolutions[i]);
+                i++;
+            }
+            return resolutions;
         }
+        private async Task CreateResolutionsSegmentsFolderIfNotExistsAsync(Guid id, IList<Size> resolutions)
+        {
+            foreach (var item in resolutions)
+            {
+                string path = Path.Combine(id.ToString(), item.Height.ToString(), "create.folder");
+                if(!await _container.ExistsAsync(path))
+                {
+                    await _container.SaveAsync(path, new byte[] { }, true);
+                }
+            }
+        }
+
         public async Task SaveVideoAsync(Guid id, IRemoteStreamContent content, bool overrideExisting = true, CancellationToken cancellationToken = default)
         {
             using var contentStream = content.GetStream();
-            var source = CalculatePath(id, "source" + Path.GetExtension(content.FileName));
-            await _container.SaveAsync(source.Path, contentStream, overrideExisting, cancellationToken);
-            var probeInfo = await AnalyzeAsync(source, cancellationToken);
-            ValidateVideoFormat(probeInfo);
-            var arguments = CreateJobArguments(id,source,probeInfo,cancellationToken);
-            await Console.Out.WriteLineAsync(arguments.ToString());
-            await _jobManager.EnqueueAsync(arguments);
+            var sourcePath = GetPath(id, "source" + Path.GetExtension(content.FileName));
+            await _container.SaveAsync(sourcePath, contentStream, overrideExisting, cancellationToken);
+            var probeInfo = await AnalyzeAsync(sourcePath, cancellationToken);
+            ValidateVideoFormat(id,probeInfo);
+            var resolutions=CreateResolutions(probeInfo);
+            await CreateResolutionsSegmentsFolderIfNotExistsAsync(id, resolutions);
+            var args = CreateBulkArguments(id,sourcePath, resolutions);
+            await _ffmpeg.BulkBackgroundConvertAsync(id, args);
         }
-
-        public async Task<FileResult> GetVideoAsync(Guid id, int resolution, CancellationToken cancellationToken = default)
+        public async Task<FileStreamResult> GetM3U8Async(Guid id, int height,CancellationToken cancellationToken = default)
         {
-            string outputPath = Path.Combine(id.ToString(), "output.mp4");
-            var content = await _container.GetAllBytesAsync(outputPath, cancellationToken);
-            return new FileContentResult(content, MimeTypes.GetByExtension("mp4"));
+            return new FileStreamResult(await _container.GetAsync(Path.Combine(id.ToString(),height.ToString(), $"list.m3u8")), "application/x-mpegURL");
+        }
+        public async Task<FileStreamResult> GetM3U8SegmentAsync(Guid id, int height,int segment, CancellationToken cancellationToken=default)
+        {
+            return new FileStreamResult(await _container.GetAsync(Path.Combine(id.ToString(), height.ToString(), $"{segment}.ts")), "application/x-mpegURL");
         }
         public Task<ProbeInfo> GetVideoInfoAsync(Guid id, CancellationToken cancellationToken = default)
         {
@@ -130,6 +162,11 @@ namespace OeTube.Infrastructure.VideoStorage
         }
 
         public IEnumerable<string> GetSupportedFormats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FileResult> GetVideoAsync(Guid id, int resolution, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
