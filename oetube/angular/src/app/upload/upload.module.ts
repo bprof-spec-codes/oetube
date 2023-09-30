@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { UploadRoutingModule } from './upload-routing.module';
 import { UploadComponent } from './upload.component';
-import { FFService } from './services/FF.service';
-import { FormsModule,ReactiveFormsModule} from '@angular/forms'
+import { FormsModule,ReactiveFormsModule} from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { FormsModule,ReactiveFormsModule} from '@angular/forms'
     CommonModule,
     UploadRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class UploadModule { }
