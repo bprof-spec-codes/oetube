@@ -1,13 +1,15 @@
-﻿namespace OeTube.Infrastructure.FFmpeg.Job
+﻿using OeTube.Infrastructure.ProcessTemplate;
+
+namespace OeTube.Infrastructure.FFmpeg.Job
 {
     public class FFmpegJobArgs
     {
-        public Guid JobId { get; }
-        public FFmpegCommand[] FFmpegCommands { get; }
-        public FFmpegJobArgs(Guid jobId, FFmpegCommand[] fFmpegCommands)
+        public Guid JobId { get; private set; }
+        public ProcessSettings[] Settings { get; private set; }
+        public FFmpegJobArgs(Guid jobId, ProcessSettings[] settings)
         {
             JobId = jobId;
-            FFmpegCommands = fFmpegCommands.ToArray();
+            Settings = settings;
         }
     }
 }
