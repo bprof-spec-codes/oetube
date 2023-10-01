@@ -7,12 +7,12 @@ namespace OeTube.Infrastructure.FFmpeg
 
     public interface IFFmpegService
     {
-        public string WorkingDirectory
+        string WorkingDirectory
         {
             get; set;
         }
 
-        public bool WriteToDebug
+        bool WriteToDebug
         {
             get; set;
         }

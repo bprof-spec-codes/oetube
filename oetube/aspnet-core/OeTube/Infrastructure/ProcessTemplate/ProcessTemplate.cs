@@ -7,17 +7,15 @@ namespace OeTube.Infrastructure.ProcessTemplate
     {
         public abstract string ExePath { get; }
         public string FileName => Path.GetFileNameWithoutExtension(ExePath);
-        public virtual string PreArguments => "";
-        public virtual string PostArguments => "";
+        public virtual string? PreArguments => null;
+        public virtual string? PostArguments => null;
 
         protected abstract TOutput HandleProcessOutput(Process process, ProcessSettings settings, string standardOutput, string standardError);
         protected virtual void HandleStandardOutputData(ProcessSettings settings, DataReceivedEventArgs dataArgs)
         {
-            Debug.WriteLineIf(settings.WriteToDebug, "[SOUT] " + dataArgs.Data, settings.NamedArguments.Name);
         }
         protected virtual void HandleStandardErrorData(ProcessSettings settings, DataReceivedEventArgs dataArgs)
         {
-            Debug.WriteLineIf(settings.WriteToDebug, "[SERR] " + dataArgs.Data, settings.NamedArguments.Name);
         }
         protected virtual ProcessStartInfo CreateStartInfo(ProcessSettings settings)
         {
@@ -53,11 +51,13 @@ namespace OeTube.Infrastructure.ProcessTemplate
             {
                 HandleStandardOutputData(settings, dataArgs);
                 outSb.AppendLine(dataArgs.Data);
+                Debug.WriteLineIf(settings.WriteToDebug, "[SOUT] " + dataArgs.Data, settings.NamedArguments.Name);
             }
             void Error(object sender, DataReceivedEventArgs dataArgs)
             {
                 HandleStandardErrorData(settings, dataArgs);
                 errorSb.AppendLine(dataArgs.Data);
+                Debug.WriteLineIf(settings.WriteToDebug, "[SERR] " + dataArgs.Data, settings.NamedArguments.Name);
             }
             process.OutputDataReceived += Output;
             process.ErrorDataReceived += Error;
