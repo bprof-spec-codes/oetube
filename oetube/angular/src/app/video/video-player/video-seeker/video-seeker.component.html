@@ -1,10 +1,11 @@
 <dx-slider
   class="slider"
-  [min]="min"
+  [min]="0"
   [max]="max"
   [value]="value"
+  valueChangeMode="onHandleRelease"
   (input)="inputHandler($event)"
-  (change)="changeHandler($event)"
-  [step]="step"
+  (onValueChanged)="changeHandler($event)"
+  [step]="0.00001"
 >
 </dx-slider>

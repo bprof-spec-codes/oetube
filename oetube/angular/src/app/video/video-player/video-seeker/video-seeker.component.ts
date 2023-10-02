@@ -14,9 +14,6 @@ export class VideoSeekerComponent {
   @Output() inputChange = new EventEmitter<ValueChangedEvent>();
   @Output() valueChange = new EventEmitter<ValueChangedEvent>();
 
-  step = 1 / 100000;
-  min = 0;
-
   inputHandler(event: ValueChangedEvent) {
     this.inputChange.emit(event);
   }

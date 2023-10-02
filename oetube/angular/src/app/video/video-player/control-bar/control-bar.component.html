@@ -5,7 +5,7 @@
     [value]="currentProgress"
     [label]="ariaLabel()"
     (input)="onInput($event)"
-    (change)="onChange($event)"
+    (valueChange)="onChange($event)"
   ></app-video-seeker>
   <div class="controls">
     <app-play-control

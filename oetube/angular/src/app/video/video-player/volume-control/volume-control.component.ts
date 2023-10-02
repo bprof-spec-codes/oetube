@@ -30,8 +30,6 @@ export class VolumeControlComponent implements OnInit {
   }
 
   onInput(event: ValueChangedEvent) {
-    console.log(event);
-
     this.volumeService.setVolumeValue(event?.value ?? 0);
   }
 
