@@ -14,7 +14,6 @@ import { VolumeService } from 'src/app/services/video/volume.service';
 })
 export class VideoWrapperComponent implements OnInit {
   loading = true;
-  ignore = false;
   playing = false;
   playNext = true;
   private videoEnded = false;
@@ -24,9 +23,8 @@ export class VideoWrapperComponent implements OnInit {
     canplay: () => this.videoService.setLoading(false),
     seeking: () => this.videoService.setLoading(true),
     timeupdate: () => {
-      if (!this.ignore) {
-        this.videoTimeService.setVideoProgress(this.video.nativeElement.currentTime);
-      }
+      this.videoTimeService.setVideoProgress(this.video.nativeElement.currentTime);
+
       if (
         this.video.nativeElement.currentTime === this.video.nativeElement.duration &&
         this.video.nativeElement.duration > 0
@@ -132,7 +130,6 @@ export class VideoWrapperComponent implements OnInit {
     this.volumeService.volumeValue$.subscribe(volume => (this.video.nativeElement.volume = volume));
     this.videoService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
     this.videoService.loading$.subscribe(loading => (this.loading = loading));
-    this.videoTimeService.ignore$.subscribe(ignore => (this.ignore = ignore));
     this.videoPlaylistService.shouldPlayNext$.subscribe(playNext => (this.playNext = playNext));
   }
 

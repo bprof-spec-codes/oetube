@@ -11,12 +11,7 @@ export class VideoSeekerComponent {
   @Input() max = 0;
   @Input() value = 0;
   @Input() label = '';
-  @Output() inputChange = new EventEmitter<ValueChangedEvent>();
   @Output() valueChange = new EventEmitter<ValueChangedEvent>();
-
-  inputHandler(event: ValueChangedEvent) {
-    this.inputChange.emit(event);
-  }
 
   changeHandler(event: ValueChangedEvent) {
     this.valueChange.emit(event);

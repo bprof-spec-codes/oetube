@@ -9,7 +9,6 @@ export class VideoTimeService {
   private videoProgress = new BehaviorSubject<number>(0);
   private videoDuration = new BehaviorSubject<number>(0);
   private currentTime = new BehaviorSubject<number>(0);
-  private ignore = new BehaviorSubject<boolean>(false);
 
   setVideoDuration(value: number): void {
     this.videoDuration.next(value);
@@ -33,13 +32,5 @@ export class VideoTimeService {
 
   get currentTime$(): Observable<number> {
     return this.currentTime.asObservable();
-  }
-
-  setIgnore(value: boolean): void {
-    this.ignore.next(value);
-  }
-
-  get ignore$(): Observable<boolean> {
-    return this.ignore.asObservable();
   }
 }

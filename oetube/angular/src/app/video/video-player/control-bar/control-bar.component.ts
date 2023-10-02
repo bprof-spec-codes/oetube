@@ -44,14 +44,12 @@ export class ControlBarComponent implements OnInit {
     this.videoService.play();
   }
 
-  onInput(event: ValueChangedEvent): void {
-    this.videoTimeService.setIgnore(true);
-    this.videoTimeService.setVideoProgress(event?.value ?? 0);
-  }
-
   onChange(event: ValueChangedEvent) {
-    this.videoTimeService.setIgnore(false);
-    this.videoTimeService.setCurrentTime(event?.value ?? 0);
+    if (event.event) {
+      // The interaction was done by the user
+      this.videoTimeService.setVideoProgress(event?.value ?? 0);
+      this.videoTimeService.setCurrentTime(event?.value ?? 0);
+    }
   }
 
   onFullscreen() {
