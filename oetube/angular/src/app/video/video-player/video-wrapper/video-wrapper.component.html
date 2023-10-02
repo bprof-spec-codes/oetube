@@ -1,0 +1,11 @@
+<div class="video-wrapper">
+  <video #video class="video" (click)="onVideoClick()" (dblclick)="onDoubleClick()"></video>
+  <app-control
+    class="control"
+    *ngIf="!playing"
+    [icon]="videoIconPlaying.value"
+    [title]="videoIconPlaying.name"
+    (click)="onVideoClick()"
+  ></app-control>
+  <dx-load-indicator *ngIf="loading" height="60" width="60" class="spinner"></dx-load-indicator>
+</div>
