@@ -1,0 +1,16 @@
+<div class="volume-control">
+  <app-play-control
+    class="icon"
+    [icon]="icon"
+    [title]="title"
+    (click)="onVolumeClick()"
+  ></app-play-control>
+  <app-video-seeker
+    class="bar"
+    [max]="maxVolumeValue"
+    [value]="volume"
+    [label]="ariaLabel"
+    (valueChange)="onInput($event)"
+    tabindex="0"
+  ></app-video-seeker>
+</div>
