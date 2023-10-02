@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import Hls from 'hls.js';
-import { VideoPlaylistService } from 'src/app/services/video/video-playlist.service';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
@@ -43,8 +42,7 @@ export class VideoWrapperComponent implements OnInit {
   constructor(
     private videoService: VideoService,
     private volumeService: VolumeService,
-    private videoTimeService: VideoTimeService,
-    private videoPlaylistService: VideoPlaylistService
+    private videoTimeService: VideoTimeService
   ) {}
 
   ngOnInit() {
@@ -57,6 +55,11 @@ export class VideoWrapperComponent implements OnInit {
         );
       }
     });
+
+    // TODO videos should not be loaded from here
+    this.load(
+      'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+    );
   }
 
   /** Play/Pause video on click */
@@ -123,14 +126,12 @@ export class VideoWrapperComponent implements OnInit {
    */
   private subscriptions() {
     this.videoService.playingState$.subscribe(playing => this.playPauseVideo(playing));
-    this.videoPlaylistService.currentVideo$.subscribe(video => this.load(video));
     this.videoTimeService.currentTime$.subscribe(
       currentTime => (this.video.nativeElement.currentTime = currentTime)
     );
     this.volumeService.volumeValue$.subscribe(volume => (this.video.nativeElement.volume = volume));
     this.videoService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
     this.videoService.loading$.subscribe(loading => (this.loading = loading));
-    this.videoPlaylistService.shouldPlayNext$.subscribe(playNext => (this.playNext = playNext));
   }
 
   /**

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ValueChangedEvent } from 'devextreme/ui/progress_bar';
-import { VideoPlaylistService } from 'src/app/services/video/video-playlist.service';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 
@@ -18,11 +17,7 @@ export class ControlBarComponent implements OnInit {
   label = 'Audio volume';
   private videoEnded = false;
 
-  constructor(
-    private videoService: VideoService,
-    private videoTimeService: VideoTimeService,
-    private videoPlaylistService: VideoPlaylistService
-  ) {}
+  constructor(private videoService: VideoService, private videoTimeService: VideoTimeService) {}
 
   ngOnInit() {
     this.videoService.playingState$.subscribe(playing => (this.playing = playing));
@@ -40,7 +35,6 @@ export class ControlBarComponent implements OnInit {
   }
 
   onNextClick() {
-    this.videoPlaylistService.playNextVideo();
     this.videoService.play();
   }
 

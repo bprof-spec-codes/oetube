@@ -10,7 +10,6 @@ import { VideoRoutingModule } from './video-routing.module';
 import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.component';
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
-import { VideoListComponent } from './video-player/video-list/video-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { VideoListComponent } from './video-player/video-list/video-list.compone
     VideoWrapperComponent,
     TimeComponent,
     ControlBarComponent,
-    VideoListComponent,
   ],
   imports: [CommonModule, VideoRoutingModule, DxSliderModule],
 })
