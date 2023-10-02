@@ -1,0 +1,27 @@
+<div class="video-controls">
+  <app-video-seeker
+    class="bar"
+    [max]="duration"
+    [value]="currentProgress"
+    [label]="ariaLabel()"
+    (input)="onInput($event)"
+    (change)="onChange($event)"
+  ></app-video-seeker>
+  <div class="controls">
+    <app-play-control
+      [icon]="iconPlaying.value"
+      [title]="iconPlaying.name"
+      (click)="onPlayClick()"
+    ></app-play-control>
+    <app-play-control icon="skip_next" title="Next" (click)="onNextClick()"></app-play-control>
+    <app-volume-control></app-volume-control>
+    <app-time [currentProgress]="currentProgress" [duration]="duration"></app-time>
+    <div class="full-screen">
+      <app-play-control
+        icon="fullscreen"
+        title="Fullscreen"
+        (click)="onFullscreen()"
+      ></app-play-control>
+    </div>
+  </div>
+</div>
