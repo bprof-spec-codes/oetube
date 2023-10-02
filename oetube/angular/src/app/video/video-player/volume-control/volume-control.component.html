@@ -5,12 +5,13 @@
     [title]="title"
     (click)="onVolumeClick()"
   ></app-play-control>
-  <app-video-seeker
+  <dx-slider
     class="bar"
+    [min]="min"
     [max]="maxVolumeValue"
     [value]="volume"
-    [label]="ariaLabel"
-    (valueChange)="onInput($event)"
-    tabindex="0"
-  ></app-video-seeker>
+    (onValueChanged)="onInput($event)"
+    [step]="step"
+  >
+  </dx-slider>
 </div>

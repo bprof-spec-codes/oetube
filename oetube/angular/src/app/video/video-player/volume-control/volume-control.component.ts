@@ -14,6 +14,8 @@ export class VolumeControlComponent implements OnInit {
   label = 'Video progress';
   maxVolumeValue = 1;
   volume = 1;
+  min = 0;
+  step = 1 / 10000;
   private savedVolume = 1;
 
   constructor(private volumeService: VolumeService) {}
@@ -28,6 +30,8 @@ export class VolumeControlComponent implements OnInit {
   }
 
   onInput(event: ValueChangedEvent) {
+    console.log(event);
+
     this.volumeService.setVolumeValue(event?.value ?? 0);
   }
 
