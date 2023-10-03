@@ -1,5 +1,8 @@
-﻿using Volo.Abp.AspNetCore.Mvc.UI.Theming;
+﻿using System.Collections.Immutable;
+using System.Text.RegularExpressions;
+using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories;
 using static Volo.Abp.Http.MimeTypes;
 
 namespace OeTube.Entities
@@ -11,16 +14,27 @@ namespace OeTube.Entities
 
     public class Video : AggregateRoot<Guid>
     {
-        public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public TimeSpan Duration { get; private set; }
         public AccessType Access { get; private set; }
         public DateTime CreationTime { get; private set; }
         public Guid CreatorId { get; set; }
-        public IList<Group> AccessGroups { get; private set; } //IReadOnlyList
         public bool IsDeleted { get; set; }
         public DateTime DeletionTime { get; set; }
+        private List<AccessGroup> _accessGroups;
+        public IReadOnlyCollection<AccessGroup> AccessGroups
+        { 
+            get
+            {
+                return _accessGroups;
+            }
+        }
+
+        private Video()
+        {
+            _accessGroups = new List<AccessGroup>();
+        }
 
         public Video(Guid id, string name, string description, TimeSpan duration,  DateTime creationTime, Guid creatorId)
         {
@@ -30,6 +44,7 @@ namespace OeTube.Entities
             Duration = duration;
             CreationTime = creationTime;
             CreatorId = creatorId;
+            _accessGroups = new List<AccessGroup>();
         }
 
         public void SetName(string name)
@@ -47,19 +62,17 @@ namespace OeTube.Entities
             Access = access;
         }
 
-        public void AddAccessGroup(Group group)
+        public void AddAccessGroup(AccessGroup group)
         {
-            AccessGroups.Add(group);
+            _accessGroups.Add(group);
         }
 
-        public void RemoveAccessGroup(Guid groupId)
+        public void RemoveAccessGroup(AccessGroup group)
         {
-            var item = AccessGroups.Where(x => x.Id == groupId).FirstOrDefault();
-            if (item == null)
+            if (!_accessGroups.Remove(group))
             {
-                throw new ArgumentException("There is no Group with this Id: " + groupId);
+                throw new ArgumentException("There is no Group with this Id: " + group.Id);
             }
-            AccessGroups.Remove(item);
         }
 
 

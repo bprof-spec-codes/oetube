@@ -5,18 +5,24 @@ namespace OeTube.Entities
 {
     public class Group : AggregateRoot<Guid>
     {
-        public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public DateTime CreationTime { get; private set; }
         public Guid CreatorId { get; set; }
-        public IList<User> Members { get; private set; } //IReadOnlyList
+        private List<Member> _members;
+        public IReadOnlyCollection<Member> Members 
+        {
+            get
+            {
+                return _members;
+            }
+        }
         public bool IsDeleted { get; set; }
         public DateTime DeletionTime { get; set; }
 
         public Group()
         {
-            
+            _members = new List<Member>();
         }
 
         public Group(Guid id, string name, string description, DateTime creationTime, Guid creatorId)
@@ -26,6 +32,7 @@ namespace OeTube.Entities
             Description = description;
             CreationTime = creationTime;
             CreatorId = creatorId;
+            _members = new List<Member>();
         }
 
         public void SetName(string name)
@@ -33,19 +40,17 @@ namespace OeTube.Entities
             Name = name;
         }
 
-        public void AddMember(User user)
+        public void AddMember(Member member)
         {
-            Members.Add(user);
+            _members.Add(member);
         }
 
-        public void RemoveMember(Guid userId)
+        public void RemoveMember(Member member)
         {
-            var user = Members.Where(x => x.Id == userId).FirstOrDefault();
-            if (user == null)
+            if (!_members.Remove(member))
             {
-                throw new ArgumentException("There is no User with this Id: " + userId);
+                throw new ArgumentException("There is no Group with this Id: " + member.Id);
             }
-            Members.Remove(user);
         }
     }
 }

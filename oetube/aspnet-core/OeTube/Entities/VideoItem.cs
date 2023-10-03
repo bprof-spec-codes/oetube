@@ -2,31 +2,10 @@
 
 namespace OeTube.Entities
 {
-    public class VideoItem : Entity
+    public class VideoItem : Entity<int>
     {
-        public Guid VideoId { get; private set; }
-        public string AdditionalDescription { get; private set; }
-        public int Order { get; set; }
+        private VideoItem() { }
 
-        public VideoItem()
-        {
-
-        }
-
-        public VideoItem(Guid videoId, int order)
-        {
-            VideoId = videoId;
-            Order = order;
-        }
-
-        public void SetAdditionalDescription(string description)
-        {
-            AdditionalDescription = description;
-        }
-
-        public override object[] GetKeys()
-        {
-            throw new NotImplementedException();
-        }
+        public VideoItem(int id) : base(id) { }
     }
 }

@@ -10,7 +10,15 @@ namespace OeTube.Entities
 
         public string Description { get; private set; }
 
-        public IList<Video> Items { get; private set; } // PlaylistItem vagy Video? 
+        private List<VideoItem> _items { get; set; }
+
+        public IReadOnlyCollection<VideoItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+        }
 
         public DateTime CreationTime { get; private set; }
 
@@ -18,6 +26,7 @@ namespace OeTube.Entities
 
         public Playlist()
         {
+            _items = new List<VideoItem>();
         }
 
         public Playlist(Guid id, string name, string description, DateTime creationTime, Guid creatorId)
@@ -27,6 +36,7 @@ namespace OeTube.Entities
             Description = description;
             CreationTime = creationTime;
             CreatorId = creatorId;
+            _items = new List<VideoItem>();
         }
 
 
@@ -40,19 +50,17 @@ namespace OeTube.Entities
             Description = description;
         }
 
-        public void AddItem(Video video)
+        public void AddItem(VideoItem item)
         {
-            Items.Add(video);
+            _items.Add(item);
         }
 
-        public void RemoveItem(Guid videoId)
+        public void RemoveItem(VideoItem item)
         {
-            var item = Items.Where(x => x.Id == videoId).FirstOrDefault();
-            if (item == null)
+            if (!_items.Remove(item))
             {
-                throw new ArgumentException("There is no Video with this Id: " + videoId);
+                throw new ArgumentException("There is no Group with this Id: " + item.Id);
             }
-            Items.Remove(item);
         }
     }
 }
