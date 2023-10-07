@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Autofac.Features.OwnedInstances;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Entities.Videos;
+using System.Linq.Expressions;
+using Volo.Abp.EntityFrameworkCore.Modeling;
+using Volo.Abp.Identity;
 
 namespace OeTube.Data.Configurations
 {
@@ -8,13 +13,38 @@ namespace OeTube.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Video> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.OwnsMany(p => p.AccessGroups, action =>
-            {
-                builder.HasOne(typeof(Group)).WithMany().HasForeignKey(nameof(AccessGroup.Id));
-            })
-                .HasOne(typeof(IdentityUser<Guid>)).WithMany().HasForeignKey(nameof(Video.CreatorId));
-            builder.Property(p => p.AccessGroups).HasField("_accessGroups");
+            builder.ConfigureByConvention();
+            builder.HasKey(v => v.Id);
+
+            builder.Property(v => v.Name)
+                   .HasMaxLength(VideoConstants.NameMaxLength)
+                   .IsRequired();
+
+            builder.Property(v => v.Description)
+                   .HasMaxLength(VideoConstants.DescriptionMaxLength);
+            
+            builder.Ignore(v => v.AccessGroups);
+            builder.HasMany(v => v.AccessGroups)
+                   .WithOne()
+                   .HasForeignKey(nameof(AccessGroup.VideoId))
+                   .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.ConfigureCreator<IdentityUser,Video>();
+            builder.ConfigureCreationTime();
+            
+            builder.HasIndex(v => v.CreationTime).IsUnique(false);
+        }
+    }
+    public class AccessGroupConfiguration : IEntityTypeConfiguration<AccessGroup>
+    {
+        public void Configure(EntityTypeBuilder<AccessGroup> builder)
+        {
+            builder.HasKey(nameof(AccessGroup.VideoId), nameof(AccessGroup.GroupId));
+            builder.HasOne(typeof(Group))
+                   .WithMany()
+                   .HasForeignKey(nameof(AccessGroup.GroupId))
+                   .OnDelete(DeleteBehavior.Cascade);
+            builder.ConfigureCreationTime();
         }
     }
 }
