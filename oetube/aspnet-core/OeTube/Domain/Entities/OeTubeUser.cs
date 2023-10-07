@@ -34,8 +34,8 @@ namespace OeTube.Entities
         {
             Check.Length(name,
                          nameof(name),
-                         OeTubeUserConstants.NameMinLength,
-                         OeTubeUserConstants.NameMaxLength);
+                         OeTubeUserConstants.NameMaxLength,
+                         OeTubeUserConstants.NameMinLength);
             Name = name;
             return this;
         }
