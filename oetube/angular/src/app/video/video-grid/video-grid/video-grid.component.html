@@ -1,0 +1,16 @@
+<div *ngIf="(videos$ | async)?.length === 0">No records found.</div>
+<div class="container">
+  <div class="row gx-5 gy-4 row-cols-1 row-cols-md-3 row-cols-lg-4">
+    <div *ngFor="let video of videos$ | async" class="col position-relative">
+      <img class="rounded my-1 w-100" [src]="'https://picsum.photos/300/200?r=' + video.Id" />
+      <div class="text-truncate" [title]="video.Name">
+        <a
+          [routerLink]="['video', 'watch', video.Id]"
+          class="h5 my-1 stretched-link text-decoration-none text-reset"
+          >{{ video.Name }}</a
+        >
+      </div>
+      <p class="h6">Author</p>
+    </div>
+  </div>
+</div>
