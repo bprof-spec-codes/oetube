@@ -5,7 +5,7 @@ using OeTube.Domain.Entities.Groups;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Identity;
 
-namespace OeTube.Data.Configurations
+namespace OeTube.Data.Configurations.Groups
 {
 
     public class GroupConfiguration : IEntityTypeConfiguration<Group>
@@ -34,27 +34,6 @@ namespace OeTube.Data.Configurations
                    .WithOne()
                    .HasForeignKey(nameof(EmailDomain.GroupId))
                    .OnDelete(DeleteBehavior.Cascade);
-        }
-    }
-    public class MemberConfiguration : IEntityTypeConfiguration<Member>
-    {
-        public void Configure(EntityTypeBuilder<Member> builder)
-        {
-            builder.HasKey(nameof(Member.GroupId), nameof(Member.UserId));
-            builder.HasOne(typeof(IdentityUser))
-                   .WithMany()
-                   .HasForeignKey(nameof(Member.UserId))
-                   .OnDelete(DeleteBehavior.Cascade);
-            builder.ConfigureCreationTimeIndex();
-        }
-    }
-    public class EmailDomainConfiguration : IEntityTypeConfiguration<EmailDomain>
-    {
-        public void Configure(EntityTypeBuilder<EmailDomain> builder)
-        {
-            builder.HasKey(nameof(EmailDomain.GroupId), nameof(EmailDomain.Domain));
-            builder.Property(o => o.Domain)
-                   .HasMaxLength(EmailDomainConstants.DomainMaxLength);
         }
     }
 }
