@@ -295,8 +295,8 @@ Lekérdező szolgáltatást nyújt, hogy az OeTubeUser számára melyik Video é
 +  HasAccess(user,video): Megállapítja, hogy user számára elérhető-e a Video entitás láthatóság és csoport tagságok alapján.
 + GetAvaliableVideosAsync(user): Lekérdezi az összes elérhető Video entitást a user számára.
 
-# Alkalmazási szolgáltatásk
-## GoupAppService
+# Alkalmazási szolgáltatások
+## GroupAppService
 Crud szolgáltatásokat nyújt a Group entitáshoz.
 
 ### CreateAsync(input)
@@ -337,7 +337,7 @@ Törli a megadott azonosítójú csoportot, ha létezik.
 ### GetGroupMembersAsync(id)
 Pagináltan lekérdezi a csoport tagjait.
 + Method: GET
-+ Route: /api/oetube/group/{id}/group-members
++ Route: /api/oetube/group/{id}/group-members?Sorting={input.Sorting?}&SkipCount={input.SkipCount?}&MaxResultCount={input.MaxResultCount?}
 + Return: PagedResultDto\<UserItemDto>
 
 ### UpdateMembersAsync(input)
