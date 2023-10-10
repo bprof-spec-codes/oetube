@@ -21,6 +21,7 @@ namespace OeTube.Application
         }
         public async Task<UpdateOeTubeUserDto> UpdateAsync(Guid id, UpdateOeTubeUserDto input)
         {
+            CurrentUser.CheckCreator(id);
             var user = await _users.GetAsync(id);
             user.SetName(input.Name)
                 .SetAboutMe(input.AboutMe);
