@@ -7,6 +7,7 @@ namespace OeTube.Domain.Repositories
 {
     public interface IGroupRepository : IRepository<Group, Guid>
     {
+        Task<IQueryable<EmailDomain>> GetEmailDomainsQueryableAsync();
         Task<Group> UpdateMembersAsync(Group group, IEnumerable<IdentityUser> users, bool autoSave = false, CancellationToken cancellationToken = default);
     }
 }

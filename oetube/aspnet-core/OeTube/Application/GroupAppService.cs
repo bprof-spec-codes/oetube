@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Extensions;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Repositories;
-using OeTube.Domain.Repositories.Extensions;
 using OeTube.Domain.Repositories.Queries;
 using OeTube.Domain.Services;
 using OeTube.Entities;
@@ -41,8 +41,9 @@ namespace OeTube.Application
         public async Task<PagedResultDto<OeTubeUserItemDto>> GetGroupMembersAsync(Guid id, PagedAndSortedResultRequestDto input)
         {
             var group = await GetEntityByIdAsync(id);
-            return (await _userGroupQuery.GetGroupMembersAsync(group))
-                         .ToPagedResultDto<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
+            var result = await _userGroupQuery.GetGroupMembersAsync(group);
+
+            return await result.ToPagedResultDtoAsync<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
         }
         
         public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)

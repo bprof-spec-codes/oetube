@@ -35,10 +35,10 @@ namespace OeTube.Data.Repositories
             var members =await GetMembersAsync();
             var result=await members.Where(m => m.GroupId == group.Id).ToListAsync(token);
             members.RemoveRange(result);
-            await members.AddRangeAsync(users.Select(u => new Member(group.Id, u.Id)),cancellationToken);
+            await members.AddRangeAsync(users.Select(u => new Member(group.Id, u.Id)), token);
             if(autoSave)
             {
-                await SaveChangesAsync(cancellationToken);
+                await SaveChangesAsync(token);
             }
             return group;
         }
@@ -56,10 +56,6 @@ namespace OeTube.Data.Repositories
             return (await GetQueryableAsync()).Include();
         }
 
-        public async Task<EntitySet<Group, Guid>> GetManyAsync(IEnumerable<Guid> keys, bool includeDetails = false, CancellationToken cancellationToken = default)
-        {
-            var result = await this.GetManyQueryableAsync(keys, includeDetails);
-            return new EntitySet<Group, Guid>(result);
-        }
+       
     }
 }

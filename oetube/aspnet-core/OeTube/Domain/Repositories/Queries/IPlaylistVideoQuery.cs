@@ -7,5 +7,6 @@ namespace OeTube.Domain.Repositories.Queries
     public interface IPlaylistVideoQuery
     {
         Task<IQueryable<Video>> GetPlaylistVideosAsync(Playlist playlist);
+        Task<IQueryable<VideoItem>> GetVideoItemsAsync();
     }
 }

@@ -1,32 +1,16 @@
 ﻿using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Extensions;
 using OeTube.Domain.Repositories;
 using OeTube.Entities;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Users;
 using Volo.Abp.VirtualFileSystem;
 
 namespace OeTube.Application
 {
-    public static class CurrentUserExtension
-    {
-        public static void CheckCreator(this ICurrentUser currentUser, Guid? id)
-        {
-            if(currentUser.Id!=id)
-            {
-                throw new UserFriendlyException("You have no right to modify the content of others.");
-            }
-        }
-        public static void CheckCreator<TCreatedEntity>(this ICurrentUser currentUser, TCreatedEntity entity)
-            where TCreatedEntity : class, IEntity, IMayHaveCreator
-        {
-            CheckCreator(currentUser, entity.CreatorId);
-        }
-    }
 
     public abstract class CreatorCrudAppService<TEntity, TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
         : CrudAppService<TEntity, TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
