@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace OeTube.Migrations
 {
     [DbContext(typeof(OeTubeDbContext))]
-    [Migration("20231006235715_Initial")]
+    [Migration("20231009181809_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -203,9 +203,6 @@ namespace OeTube.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
-                    b.Property<DateTime>("DeletionTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -217,16 +214,13 @@ namespace OeTube.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

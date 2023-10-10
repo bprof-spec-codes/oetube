@@ -719,8 +719,7 @@ namespace OeTube.Migrations
                     Access = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
