@@ -4,13 +4,13 @@ using Volo.Abp;
 
 namespace OeTube.Domain.Entities.Playlists
 {
-    public class VideoItem : Entity, IHasLocalKey<int>
+    public class VideoItem : Entity, IHasAtomicKey<int>
     {
         public Guid PlaylistId { get; private set; }
         public Guid VideoId { get; private set; }
         public int Order { get; private set; }
 
-        int IHasLocalKey<int>.LocalKey => Order;
+        int IHasAtomicKey<int>.AtomicKey => Order;
 
         private VideoItem() { }
 

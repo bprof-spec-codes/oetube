@@ -4,13 +4,13 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class Member : Entity, IHasCreationTime, IHasLocalKey<Guid>
+    public class Member : Entity, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public Guid GroupId { get; private set; }
         public Guid UserId { get; private set; }
         public DateTime CreationTime { get; private set; }
 
-        Guid IHasLocalKey<Guid>.LocalKey => UserId;
+        Guid IHasAtomicKey<Guid>.AtomicKey => UserId;
 
         private Member() { }
 

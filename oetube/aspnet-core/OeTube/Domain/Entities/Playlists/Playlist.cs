@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Playlists
 {
-    public class Playlist : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator
+    public class Playlist : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
 
@@ -20,6 +20,8 @@ namespace OeTube.Domain.Entities.Playlists
         public DateTime CreationTime { get; private set; }
 
         public Guid? CreatorId { get; private set; }
+
+        Guid IHasAtomicKey<Guid>.AtomicKey => Id;
 
         public Playlist()
         {
@@ -51,24 +53,6 @@ namespace OeTube.Domain.Entities.Playlists
             Check.Length(description, nameof(description),
                          PlaylistConstants.DescriptionMaxLength);
             Description = description;
-            return this;
-        }
-
-        public Playlist AddItem(int order, Guid videoId)
-        {
-            if (!items.Add(new VideoItem(Id,order,videoId)))
-            {
-                throw new ArgumentException();
-            }
-            return this;
-        }
-
-        public Playlist RemoveItem(int order)
-        {
-            if (!items.Remove(new VideoItem(Id, order, Guid.Empty)))
-            {
-                throw new ArgumentException();
-            }
             return this;
         }
     }

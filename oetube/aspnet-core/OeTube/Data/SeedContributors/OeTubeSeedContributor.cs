@@ -14,6 +14,8 @@ using Abp = Volo.Abp.Identity;
 using System.Linq.Expressions;
 using System.Linq;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Data.Repositories;
+using OeTube.Domain.Services;
 
 namespace OeTube.Data.SeedContributors
 {
@@ -26,9 +28,9 @@ namespace OeTube.Data.SeedContributors
         private readonly IIdentityUserRepository _userRepository;
         private readonly ILookupNormalizer _lookUpNormalizer;
         private readonly IOptions<IdentityOptions> _options;
-        private readonly IGroupRepository _groupRepository;
-        private readonly IVideoRepository _videoRepository;
-        private readonly IPlaylistRepository _playlistRepository;
+        private readonly GroupRepository _groupRepository;
+        private readonly VideoRepository _videoRepository;
+        private readonly PlaylistRepository _playlistRepository;
         public OeTubeSeedContributor(IGuidGenerator guidGenerator,
                                        IdentityUserManager userManager,
                                        IdentityRoleManager roleManager,
@@ -36,9 +38,9 @@ namespace OeTube.Data.SeedContributors
                                        IIdentityUserRepository userRepository,
                                        ILookupNormalizer lookUpNormalizer,
                                        IOptions<IdentityOptions> options,
-                                       IGroupRepository groupRepository,
-                                       IVideoRepository videoRepository,
-                                       IPlaylistRepository playlistRepository)
+                                       GroupRepository groupRepository,
+                                       VideoRepository videoRepository,
+                                       PlaylistRepository playlistRepository)
         {
             _guidGenerator = guidGenerator;
             _userManager = userManager;
@@ -54,25 +56,12 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public void SeedEmailDomains(Group group,params string[] emailDomains)
         {
-            foreach (var item in emailDomains)
-            {
-                if (!group.EmailDomains.Contains(item))
-                {
-                    group.AddEmailDomain(item);
-                }
-            }
+            group.UpdateEmailDomains(emailDomains);
         }
         [UnitOfWork]
-        public void SeedMembers(Group group,params Abp.IdentityUser[] members)
+        public async Task SeedMembersAsync(Group group,params Abp.IdentityUser[] members)
         {
-            foreach(var item in members)
-            {
-                Member member = new Member(group.Id, item.Id);
-                if (!group.Members.Contains(member))
-                {
-                    group.AddMember(item.Id);
-                }
-            }
+            await _groupRepository.UpdateMembersAsync(group, members);
         }
 
         [UnitOfWork]
@@ -153,7 +142,7 @@ namespace OeTube.Data.SeedContributors
             var random = await SeedGroupAsync("Random", user2);
             var empty = await SeedGroupAsync("Empty", user1);
 
-            SeedMembers(random, user4, user5, user3);
+            await SeedMembersAsync(random, user4, user5, user3);
             SeedEmailDomains(oe, "uni-obuda.hu","stud.uni-obuda.hu");
             SeedEmailDomains(oestud, "stud.uni-obuda.hu");
             SeedEmailDomains(random, "stud.uni-obuda.hu");

@@ -4,17 +4,19 @@ using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Identity;
-using static Volo.Abp.UI.Navigation.DefaultMenuNames.Application;
 
 namespace OeTube.Entities
 {
-    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime
+    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime,IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? AboutMe { get; private set; }
         public string EmailDomain { get; private set; }
         public DateTime CreationTime { get; private set; }
-        
+
+        Guid IHasAtomicKey<Guid>.AtomicKey => Id;
+
+
         private OeTubeUser()
         {
         }
