@@ -6,89 +6,57 @@ using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Repositories;
+using OeTube.Domain.Repositories.Extensions;
+using OeTube.Domain.Repositories.Queries;
 using OeTube.Domain.Services;
 using OeTube.Entities;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Users;
 
 namespace OeTube.Application
 {
-    public class GroupAppService : CrudAppService
+
+    [Authorize]
+    public class GroupAppService : CreatorCrudAppService
                                                 <Group, GroupDto,
                                                 GroupItemDto, Guid,
                                                 PagedAndSortedResultRequestDto,
                                                 CreateUpdateGroupDto, CreateUpdateGroupDto>
     {
         private readonly IGroupRepository _groups;
-        private readonly IUserGroupQueryService _userGroupQuery;
-        private readonly IReadOnlyOeTubeUserRepository _users;
-        public GroupAppService(IUserGroupQueryService userGroupQuery, IGroupRepository groups, IReadOnlyOeTubeUserRepository users) : base(groups)
+        private readonly IUserGroupQuery _userGroupQuery;
+        private readonly GroupMemberManager _groupMemberManager;
+
+        public GroupAppService(IGroupRepository groups, IUserGroupQuery userGroupQuery, GroupMemberManager groupMemberManager)
+        :base(groups)
         {
             _groups = groups;
             _userGroupQuery = userGroupQuery;
-            _users = users;
-        }
-        private async Task<PagedResultDto<OeTubeUserItemDto>> GetUsersByGroupAsync
-            (Guid id, Func<Group, Task<IQueryable<OeTubeUser>>> queryFunction, PagedAndSortedResultRequestDto input)
-        {
-            var group = await _groups.GetAsync(id);
-            var users = await queryFunction(group);
-            var result = users.PageBy(input)
-                            .Select(ObjectMapper.Map<OeTubeUser, OeTubeUserItemDto>)
-                            .ToList();
-            return new PagedResultDto<OeTubeUserItemDto>(result.Count, result);
+            _groupMemberManager = groupMemberManager;
         }
 
         public async Task<PagedResultDto<OeTubeUserItemDto>> GetGroupMembersAsync(Guid id, PagedAndSortedResultRequestDto input)
         {
-            return await GetUsersByGroupAsync(id, _userGroupQuery.GetGroupMembersWithDomainAsync, input);
+            var group = await GetEntityByIdAsync(id);
+            return (await _userGroupQuery.GetGroupMembersAsync(group))
+                         .ToPagedResultDto<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
         }
-        public async Task AddMembersAsync(Guid id, ModifyMembersDto input)
+        
+        public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)
         {
-
-            var group = await _groups.GetAsync(id);
-            CurrentUser.CheckIsOwner(group);
-            await _users.CheckKeysExistAsync(input.Members);
-            foreach (var item in input.Members)
-            {
-                group.AddMember(item);
-            }
-            await _groups.UpdateAsync(group, true);
+            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
+            await _groupMemberManager.UpdateMembersAsync(group, input.Members,true);
         }
-        public async Task RemoveMembersAsync(Guid id, ModifyMembersDto input)
+        public async Task UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
         {
-            var group = await _groups.GetAsync(id);
-            CurrentUser.CheckIsOwner(group);
-            foreach (var item in input.Members)
-            {
-                group.RemoveMember(item);
-            }
-            await _groups.UpdateAsync(group, true);
-        }
-        public async Task AddEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
-        {
-            var group = await _groups.GetAsync(id);
-            CurrentUser.CheckIsOwner(group);
+            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
+            group.UpdateEmailDomains(input.EmailDomains);
+            await _groups.UpdateAsync(group);
 
-            foreach (var item in input.EmailDomains)
-            {
-                group.AddEmailDomain(item);
-            }
-            await _groups.UpdateAsync(group, true);
         }
-        public async Task RemoveEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
-        {
-            var group = await _groups.GetAsync(id);
-            CurrentUser.CheckIsOwner(group);
-
-            foreach (var item in input.EmailDomains)
-            {
-                group.RemoveEmailDomain(item);
-            }
-            await _groups.UpdateAsync(group, true);
-        }
-
+       
     }
 }
