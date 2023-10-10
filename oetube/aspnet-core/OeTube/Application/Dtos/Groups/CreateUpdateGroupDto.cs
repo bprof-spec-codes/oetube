@@ -1,9 +1,38 @@
-﻿using JetBrains.Annotations;
+﻿using AutoMapper.Internal.Mappers;
+using JetBrains.Annotations;
 using OeTube.Domain.Entities.Groups;
 using System.ComponentModel.DataAnnotations;
+using Volo.Abp.DependencyInjection;
+using Volo.Abp.Guids;
+using Volo.Abp.ObjectMapping;
+using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Groups
 {
+    public class CreateUpdateGroupMapper : IObjectMapper<CreateUpdateGroupDto, Group>,ITransientDependency
+    {
+        private readonly IGuidGenerator _guidGenerator;
+        private readonly ICurrentUser _currentUser;
+        public CreateUpdateGroupMapper(IGuidGenerator guidGenerator,ICurrentUser currentUser)
+        {
+            _guidGenerator = guidGenerator;
+            _currentUser = currentUser;
+        }
+
+        public Group Map(CreateUpdateGroupDto source)
+        {
+            var group = new Group(_guidGenerator.Create(), source.Name, _currentUser.Id.Value)
+                            .SetDescription(source.Description);
+
+            return group;
+        }
+
+        public Group Map(CreateUpdateGroupDto source, Group destination)
+        {
+            return destination.SetName(source.Name)
+                               .SetDescription(source.Description);
+        }
+    }
     public class CreateUpdateGroupDto
     {
         [Required]
