@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OeTube.Data.Configurations;
+using OeTube.Data.Configurations.Groups;
+using OeTube.Data.Configurations.Playlists;
+using OeTube.Data.Configurations.Videos;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
