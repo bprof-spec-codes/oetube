@@ -5,19 +5,22 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OeTube.Domain.Repositories;
 using Volo.Abp.Identity;
 using OeTube.Domain.Repositories.Extensions;
+using OeTube.Data.Repositories.Includers;
 
 namespace OeTube.Data.Repositories
 {
     public class GroupRepository :
         EfCoreRepository<OeTubeDbContext, Group, Guid>, IGroupRepository, ITransientDependency
     {
-        public GroupRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
+        private readonly IIncluder<Group> _includer;
+
+        public GroupRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider, IIncluder<Group> includer) : base(dbContextProvider)
         {
+            this._includer = includer;
         }
 
         private async Task<DbSet<Member>> GetMembersAsync()
@@ -53,7 +56,7 @@ namespace OeTube.Data.Repositories
         }
         public override async Task<IQueryable<Group>> WithDetailsAsync()
         {
-            return (await GetQueryableAsync()).Include();
+            return await _includer.IncludeAsync(GetQueryableAsync, true);
         }
 
         public async Task<EntitySet<Group, Guid>> GetManyAsync(IEnumerable<Guid> keys, bool includeDetails = false, CancellationToken cancellationToken = default)

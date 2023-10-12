@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using NUglify;
 using OeTube.Entities;
 using System.Linq.Expressions;
@@ -10,10 +11,11 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Abp.Validation.StringValues;
 
 namespace OeTube.Domain.Repositories.Extensions
 {
-    public static class QueryableExtension
+    public static class ToPagedAndSortedExtension
     {
 
         public static IQueryable<T> ToPagedAndSorted<T>(this IQueryable<T> queryable,
@@ -22,16 +24,19 @@ namespace OeTube.Domain.Repositories.Extensions
             return queryable.OrderByIf<T, IQueryable<T>>(!request.Sorting.IsNullOrWhiteSpace(), request.Sorting)
                             .PageBy(request.SkipCount, request.MaxResultCount);
         }
-        public static PagedResultDto<TDestination> ToPagedResultDto<TSource, TDestination>
+        public async static Task<PagedResultDto<TDestination>> ToPagedResultDtoAsync<TSource, TDestination>
             (this IQueryable<TSource> queryable, 
-            IObjectMapper mapper, IPagedAndSortedResultRequest request,bool includeDetails = false)
+            IObjectMapper mapper, IPagedAndSortedResultRequest request, CancellationToken cancellationToken=default)
             where TSource : class, IEntity
         {
-            var result = queryable.Include(includeDetails)
-                                  .ToPagedAndSorted(request)
-                                  .Select(mapper.Map<TSource, TDestination>)
-                                  .ToList();
-            return new PagedResultDto<TDestination>(result.Count, result);
+            var result = queryable.ToPagedAndSorted(request);
+            var list = new List<TDestination>();
+            await foreach (var item in result.AsAsyncEnumerable().WithCancellation(cancellationToken))
+            {
+                list.Add(mapper.Map<TSource, TDestination>(item));
+            }
+
+            return new PagedResultDto<TDestination>(list.Count, list);
         }
     }
 }

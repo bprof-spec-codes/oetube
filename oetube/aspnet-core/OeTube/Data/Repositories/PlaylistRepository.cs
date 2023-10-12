@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OeTube.Data.Repositories.Includers;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Repositories;
@@ -14,8 +15,11 @@ namespace OeTube.Data.Repositories
     public class PlaylistRepository :
         EfCoreRepository<OeTubeDbContext, Playlist, Guid>, IPlaylistRepository, ITransientDependency
     {
-        public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
+        private readonly IIncluder<Playlist> _includer;
+
+        public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider, IIncluder<Playlist> includer) : base(dbContextProvider)
         {
+            this._includer = includer;
         }
         private async Task<DbSet<VideoItem>> GetVideoItemsAsync()
         {
@@ -46,7 +50,7 @@ namespace OeTube.Data.Repositories
         }
         public override async Task<IQueryable<Playlist>> WithDetailsAsync()
         {
-            return (await GetQueryableAsync()).Include();
+            return await _includer.IncludeAsync(GetQueryableAsync,true);
         }
 
         public async Task<List<Playlist>> GetListManyAsync(IEnumerable<Guid> keys, bool includeDetails = false, CancellationToken cancellationToken = default)

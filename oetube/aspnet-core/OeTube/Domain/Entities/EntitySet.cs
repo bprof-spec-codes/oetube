@@ -33,7 +33,7 @@ namespace OeTube.Entities
         {
             _dict = new Dictionary<TKey, TEntity>();
         }
-        public EntitySet(IEnumerable<TEntity> entities):base()
+        public EntitySet(IEnumerable<TEntity> entities):this()
         {
             foreach (var item in entities)
             {

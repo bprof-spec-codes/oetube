@@ -41,8 +41,8 @@ namespace OeTube.Application
         public async Task<PagedResultDto<OeTubeUserItemDto>> GetGroupMembersAsync(Guid id, PagedAndSortedResultRequestDto input)
         {
             var group = await GetEntityByIdAsync(id);
-            return (await _userGroupQuery.GetGroupMembersAsync(group))
-                         .ToPagedResultDto<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
+            return await (await _userGroupQuery.GetGroupMembersAsync(group))
+                         .ToPagedResultDtoAsync<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
         }
         
         public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)
