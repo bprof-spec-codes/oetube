@@ -44,19 +44,13 @@ namespace OeTube.Data.Repositories
 
             if (autoSave)
             {
-                await SaveChangesAsync(cancellationToken);
+                await SaveChangesAsync(token);
             }
             return playlist;
         }
         public override async Task<IQueryable<Playlist>> WithDetailsAsync()
         {
             return await _includer.IncludeAsync(GetQueryableAsync,true);
-        }
-
-        public async Task<List<Playlist>> GetListManyAsync(IEnumerable<Guid> keys, bool includeDetails = false, CancellationToken cancellationToken = default)
-        {
-            var result = await this.GetManyQueryableAsync(keys, includeDetails);
-            return await result.ToListAsync(GetCancellationToken(cancellationToken));
         }
     }
 }

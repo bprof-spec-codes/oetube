@@ -37,14 +37,9 @@ namespace OeTube.Data.Repositories
             await accessGroups.AddRangeAsync(groups.Select(g => new AccessGroup(video.Id, g.Id)));
             if (autoSave)
             {
-                await SaveChangesAsync(cancellationToken);
+                await SaveChangesAsync(token);
             }
             return video;
-        }
-        public async Task<List<Video>> GetListManyAsync(IEnumerable<Guid> keys, bool includeDetails = false, CancellationToken cancellationToken = default)
-        {
-            var result = await this.GetManyQueryableAsync(keys, includeDetails);
-            return await result.ToListAsync(GetCancellationToken(cancellationToken));
         }
         public override async Task<IQueryable<Video>> WithDetailsAsync()
         {

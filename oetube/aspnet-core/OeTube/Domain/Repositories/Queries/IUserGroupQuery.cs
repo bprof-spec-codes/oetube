@@ -10,5 +10,8 @@ namespace OeTube.Domain.Repositories.Queries
         Task<IQueryable<Group>> GetJoinedGroupsAsync(OeTubeUser user);
         Task<IQueryable<OeTubeUser>> GetGroupDomainMembersAsync(Group group);
         Task<IQueryable<OeTubeUser>> GetGroupMembersWithoutDomainMembersAsync(Group group);
+        Task<IQueryable<Member>> GetMembersAsync();
+        Task<IQueryable<Member>> GetDomainMembersAsync();
+        Task<IQueryable<Member>> GetMembersWithDomainAsync();
     }
 }
