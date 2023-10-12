@@ -23,7 +23,7 @@ namespace OeTube.Application.Dtos.Groups
     }
     public class GroupItemDto : EntityDto<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }
     }

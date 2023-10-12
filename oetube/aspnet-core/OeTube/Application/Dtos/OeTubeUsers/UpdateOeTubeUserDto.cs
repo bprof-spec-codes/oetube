@@ -9,7 +9,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
     {
         [Required]
         [StringLength(OeTubeUserConstants.NameMaxLength, MinimumLength = OeTubeUserConstants.NameMinLength)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? AboutMe { get; set; }
     }
 }

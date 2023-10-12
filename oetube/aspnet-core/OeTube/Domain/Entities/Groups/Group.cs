@@ -25,18 +25,17 @@ namespace OeTube.Domain.Entities.Groups
 
         private Group()
         {
+            Name = string.Empty;
             members = new EntitySet<Member,Guid>();
             emailDomains = new EntitySet<EmailDomain,string>();
         }
 
-        public Group(Guid id,[NotNull]string name, Guid creatorId)
+        public Group(Guid id,string name, Guid creatorId):this()
         {
             Id = id;
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
             SetName(name);
-            members = new EntitySet<Member,Guid>();
-            emailDomains = new EntitySet<EmailDomain,string>();
         }
 
         public Group SetDescription(string? description)
@@ -45,7 +44,7 @@ namespace OeTube.Domain.Entities.Groups
             Description = description;
             return this;
         }
-        public Group SetName([NotNull]string name)
+        public Group SetName(string name)
         {
             Check.Length(name, nameof(name),
                          GroupConstants.NameMaxLength, 

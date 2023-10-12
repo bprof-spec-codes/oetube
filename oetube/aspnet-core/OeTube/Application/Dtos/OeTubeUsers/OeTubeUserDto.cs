@@ -24,9 +24,9 @@ namespace OeTube.Application.Dtos.OeTubeUsers
 
     public class OeTubeUserDto : EntityDto<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? AboutMe { get; set; }
-        public string EmailDomain { get; set; }
+        public string EmailDomain { get; set; } = string.Empty;
         public DateTime RegistrationDate { get; set; }
 
 

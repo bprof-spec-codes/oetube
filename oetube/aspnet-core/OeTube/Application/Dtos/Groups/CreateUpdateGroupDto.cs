@@ -21,6 +21,10 @@ namespace OeTube.Application.Dtos.Groups
 
         public Group Map(CreateUpdateGroupDto source)
         {
+            if(_currentUser.Id is null)
+            {
+                throw new NullReferenceException(nameof(_currentUser.Id));
+            }
             var group = new Group(_guidGenerator.Create(), source.Name, _currentUser.Id.Value)
                             .SetDescription(source.Description);
 
@@ -37,7 +41,7 @@ namespace OeTube.Application.Dtos.Groups
     {
         [Required]
         [StringLength(GroupConstants.NameMaxLength, MinimumLength = GroupConstants.NameMinLength)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [StringLength(GroupConstants.NameMaxLength)]
         public string? Description { get; set; }
     }

@@ -27,12 +27,12 @@ namespace OeTube.Application.Dtos.Groups
     }
     public class GroupDto : EntityDto<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }
-        public List<string> EmailDomains { get; set; }
-        public List<Guid> Members { get; set; }
+        public List<string> EmailDomains { get; set; } = new List<string>();
+        public List<Guid> Members { get; set; } = new List<Guid>();
 
     }
 }

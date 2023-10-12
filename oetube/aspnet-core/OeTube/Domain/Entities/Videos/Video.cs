@@ -30,20 +30,20 @@ namespace OeTube.Domain.Entities.Videos
 
         private Video()
         {
+            Name = string.Empty;
             accessGroups = new EntitySet<AccessGroup,Guid>();
         }
 
-        public Video(Guid id, string name, Guid creatorId)
+        public Video(Guid id, string name, Guid creatorId):this()
         {
             Id = id;
             SetName(name);
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
-            accessGroups = new EntitySet<AccessGroup,Guid>();
             State = VideoState.Uploading;
         }
 
-        public Video SetName([NotNull]string name)
+        public Video SetName(string name)
         {
             Check.Length(name,
                         nameof(name),

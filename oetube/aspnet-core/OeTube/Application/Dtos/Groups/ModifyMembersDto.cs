@@ -2,6 +2,6 @@
 {
     public class ModifyMembersDto
     {
-        public List<Guid> Members { get; set; }
+        public List<Guid> Members { get; set; } = new List<Guid>();
     }
 }

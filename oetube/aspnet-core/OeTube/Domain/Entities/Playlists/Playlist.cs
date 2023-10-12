@@ -26,19 +26,19 @@ namespace OeTube.Domain.Entities.Playlists
         public Playlist()
         {
             items = new EntitySet<VideoItem,int>();
+            Name = string.Empty;
         }
 
-        public Playlist(Guid id,[NotNull]string name, Guid creatorId)
+        public Playlist(Guid id,string name, Guid creatorId):this()
         {
             Id = id;
             SetName(name);
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
-            items = new EntitySet<VideoItem,int>();
         }
 
 
-        public Playlist SetName([NotNull]string name)
+        public Playlist SetName(string name)
         {
             Check.Length(name,
                          nameof(name),

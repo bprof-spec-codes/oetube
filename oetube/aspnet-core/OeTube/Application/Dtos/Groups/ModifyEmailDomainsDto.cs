@@ -2,6 +2,6 @@
 {
     public class ModifyEmailDomainsDto
     {
-        public List<string> EmailDomains { get; set; }
+        public List<string> EmailDomains { get; set; } = new List<string>();
     }
 }

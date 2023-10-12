@@ -19,8 +19,10 @@ namespace OeTube.Entities
 
         private OeTubeUser()
         {
+            Name = string.Empty;
+            EmailDomain = string.Empty;
         }
-        public OeTubeUser(IdentityUser user) 
+        public OeTubeUser(IdentityUser user):this()
         {
             Id = user.Id;
             CreationTime = DateTime.Now;
