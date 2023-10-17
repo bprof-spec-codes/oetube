@@ -54,12 +54,12 @@ namespace OeTube.Data.SeedContributors
             _playlistRepository = playlistRepository;
         }
         [UnitOfWork]
-        public void SeedEmailDomains(Group group,params string[] emailDomains)
+        public void SeedEmailDomains(Group group, params string[] emailDomains)
         {
             group.UpdateEmailDomains(emailDomains);
         }
         [UnitOfWork]
-        public async Task SeedMembersAsync(Group group,params Abp.IdentityUser[] members)
+        public async Task SeedMembersAsync(Group group, params Abp.IdentityUser[] members)
         {
             await _groupRepository.UpdateMembersAsync(group, members);
         }
@@ -67,8 +67,8 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task<Group> SeedGroupAsync(string name, Abp.IdentityUser user)
         {
-            var group =await _groupRepository.FindAsync((g) => g.Name == name & g.CreatorId == user.Id);
-            if(group==null)
+            var group = await _groupRepository.FindAsync((g) => g.Name == name & g.CreatorId == user.Id);
+            if (group == null)
             {
                 group = new Group(_guidGenerator.Create(), name, user.Id);
                 await _groupRepository.InsertAsync(group);
@@ -76,7 +76,7 @@ namespace OeTube.Data.SeedContributors
             return group;
         }
         [UnitOfWork]
-        public async Task<Abp.IdentityUser> SeedUserAsync(string userName, string email, string password,string? roleName=null)
+        public async Task<Abp.IdentityUser> SeedUserAsync(string userName, string email, string password, string? roleName = null)
         {
             await _options.SetAsync();
 
@@ -86,22 +86,22 @@ namespace OeTube.Data.SeedContributors
                 return user;
             }
 
-            user = new Abp.IdentityUser(_guidGenerator.Create(), userName, email) 
-            { 
-                Name=userName
+            user = new Abp.IdentityUser(_guidGenerator.Create(), userName, email)
+            {
+                Name = userName
             };
-            var userResult=await _userManager.CreateAsync(user, password, validatePassword: true);
+            var userResult = await _userManager.CreateAsync(user, password, validatePassword: true);
             userResult.CheckErrors();
             if (roleName != null)
             {
                 var role = await _roleRepository.FindByNormalizedNameAsync
                     (_lookUpNormalizer.NormalizeName(roleName));
-                if(role==null)
+                if (role == null)
                 {
                     role = new Abp.IdentityRole(_guidGenerator.Create(), roleName)
-                    { 
+                    {
                         IsPublic = true,
-                        IsStatic=true
+                        IsStatic = true
                     };
                     var roleResult = await _roleManager.CreateAsync(role);
                     roleResult.CheckErrors();
@@ -122,28 +122,28 @@ namespace OeTube.Data.SeedContributors
             string admin = "Admin";
 
             string userName = "TestAdmin1";
-            var admin1=await SeedUserAsync(userName, userName + obudaMail, userName + "!", admin);
+            var admin1 = await SeedUserAsync(userName, userName + obudaMail, userName + "!", admin);
             userName = "TestAdmin2";
-            var admin2=await SeedUserAsync(userName, userName + studObudaMail, userName + "!", admin);
+            var admin2 = await SeedUserAsync(userName, userName + studObudaMail, userName + "!", admin);
 
             userName = "TestUser1";
-            var user1=await SeedUserAsync(userName, userName + studObudaMail, userName + "!");
+            var user1 = await SeedUserAsync(userName, userName + studObudaMail, userName + "!");
             userName = "TestUser2";
-            var user2=await SeedUserAsync(userName, userName + obudaMail, userName + "!");
+            var user2 = await SeedUserAsync(userName, userName + obudaMail, userName + "!");
             userName = "TestUser3";
-            var user3=await SeedUserAsync(userName, userName + studObudaMail, userName + "!");
+            var user3 = await SeedUserAsync(userName, userName + studObudaMail, userName + "!");
             userName = "TestUser4";
-            var user4=await SeedUserAsync(userName, userName + gmail, userName + "!");
+            var user4 = await SeedUserAsync(userName, userName + gmail, userName + "!");
             userName = "TestUser5";
-            var user5= await SeedUserAsync(userName, userName + gmail, userName + "!");
+            var user5 = await SeedUserAsync(userName, userName + gmail, userName + "!");
 
             var oe = await SeedGroupAsync("Oe", admin1);
-            var oestud =await SeedGroupAsync("OeStud", admin2);
+            var oestud = await SeedGroupAsync("OeStud", admin2);
             var random = await SeedGroupAsync("Random", user2);
             var empty = await SeedGroupAsync("Empty", user1);
 
             await SeedMembersAsync(random, user4, user5, user3);
-            SeedEmailDomains(oe, "uni-obuda.hu","stud.uni-obuda.hu");
+            SeedEmailDomains(oe, "uni-obuda.hu", "stud.uni-obuda.hu");
             SeedEmailDomains(oestud, "stud.uni-obuda.hu");
             SeedEmailDomains(random, "stud.uni-obuda.hu");
 

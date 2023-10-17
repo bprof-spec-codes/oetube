@@ -8,21 +8,21 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 namespace OeTube.Entities
 {
     public interface IHasAtomicKey<TKey>
-        where TKey:notnull
+        where TKey : notnull
     {
         public TKey AtomicKey { get; }
     }
- 
-    public interface IReadOnlyEntitySet<TEntity,TKey>:IReadOnlyCollection<TEntity>
-        where TEntity:IEntity,IHasAtomicKey<TKey>
-        where TKey:notnull
+
+    public interface IReadOnlyEntitySet<TEntity, TKey> : IReadOnlyCollection<TEntity>
+        where TEntity : IEntity, IHasAtomicKey<TKey>
+        where TKey : notnull
     {
         bool Contains(TKey key);
         bool Remove(TKey key);
     }
 
-    public class EntitySet<TEntity, TKey> :ICollection<TEntity>, IReadOnlyEntitySet<TEntity, TKey>
-        where TEntity : IEntity,IHasAtomicKey<TKey>
+    public class EntitySet<TEntity, TKey> : ICollection<TEntity>, IReadOnlyEntitySet<TEntity, TKey>
+        where TEntity : IEntity, IHasAtomicKey<TKey>
         where TKey : notnull
     {
         private Dictionary<TKey, TEntity> _dict;
@@ -33,7 +33,7 @@ namespace OeTube.Entities
         {
             _dict = new Dictionary<TKey, TEntity>();
         }
-        public EntitySet(IEnumerable<TEntity> entities):this()
+        public EntitySet(IEnumerable<TEntity> entities) : this()
         {
             foreach (var item in entities)
             {
@@ -63,7 +63,6 @@ namespace OeTube.Entities
 
         public void CopyTo(TEntity[] array, int arrayIndex)
         {
-            
             foreach (var item in _dict)
             {
                 array[arrayIndex++] = item.Value;
@@ -87,7 +86,7 @@ namespace OeTube.Entities
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-           return GetEnumerator();
+            return GetEnumerator();
         }
 
         void ICollection<TEntity>.Add(TEntity item)

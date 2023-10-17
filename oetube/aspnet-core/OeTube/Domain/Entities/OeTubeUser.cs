@@ -7,7 +7,7 @@ using Volo.Abp.Identity;
 
 namespace OeTube.Entities
 {
-    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime,IHasAtomicKey<Guid>
+    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? AboutMe { get; private set; }
@@ -22,16 +22,16 @@ namespace OeTube.Entities
             Name = string.Empty;
             EmailDomain = string.Empty;
         }
-        public OeTubeUser(IdentityUser user):this()
+        public OeTubeUser(IdentityUser user) : this()
         {
             Id = user.Id;
             CreationTime = DateTime.Now;
             SetName(user.UserName);
-            string emailDoman = user.Email.Split("@")[1];
-            Check.Length(emailDoman, nameof(emailDoman),
+            string emailDomain = user.Email.Split("@")[1];
+            Check.Length(emailDomain, nameof(emailDomain),
                          EmailDomainConstants.DomainMaxLength,
                          EmailDomainConstants.DomainMinLength);
-            EmailDomain = user.Email.Split("@")[1];
+            EmailDomain = emailDomain;
         }
 
         public OeTubeUser SetName([NotNull] string name)

@@ -14,7 +14,7 @@ namespace OeTube.Domain.Entities.Videos
 {
 
 
-    public class Video : AggregateRoot<Guid>, IMayHaveCreator, IHasCreationTime,IHasAtomicKey<Guid>
+    public class Video : AggregateRoot<Guid>, IMayHaveCreator, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }
@@ -23,7 +23,7 @@ namespace OeTube.Domain.Entities.Videos
         public DateTime CreationTime { get; private set; }
         public Guid? CreatorId { get; private set; }
         public VideoState State { get; private set; }
-        private readonly EntitySet<AccessGroup,Guid> accessGroups;
+        private readonly EntitySet<AccessGroup, Guid> accessGroups;
         public virtual IReadOnlyEntitySet<AccessGroup, Guid> AccessGroups => accessGroups;
 
         Guid IHasAtomicKey<Guid>.AtomicKey => Id;
@@ -31,10 +31,10 @@ namespace OeTube.Domain.Entities.Videos
         private Video()
         {
             Name = string.Empty;
-            accessGroups = new EntitySet<AccessGroup,Guid>();
+            accessGroups = new EntitySet<AccessGroup, Guid>();
         }
 
-        public Video(Guid id, string name, Guid creatorId):this()
+        public Video(Guid id, string name, Guid creatorId) : this()
         {
             Id = id;
             SetName(name);
@@ -57,7 +57,7 @@ namespace OeTube.Domain.Entities.Videos
         {
             Check.Length(description,
                          nameof(description),
-                         VideoConstants.DescriptionMaxLength); 
+                         VideoConstants.DescriptionMaxLength);
             Description = description;
             return this;
         }
@@ -70,7 +70,7 @@ namespace OeTube.Domain.Entities.Videos
 
         public Video SetStateToConverting()
         {
-            if(State==VideoState.Ready)
+            if (State == VideoState.Ready)
             {
                 throw new UserFriendlyException("The video is ready, you cannot set the state to converting!");
             }
@@ -81,7 +81,7 @@ namespace OeTube.Domain.Entities.Videos
 
         public Video SetStateToReady()
         {
-            if(State==VideoState.Ready)
+            if (State == VideoState.Ready)
             {
                 throw new UserFriendlyException("The video is ready!");
             }
@@ -95,7 +95,7 @@ namespace OeTube.Domain.Entities.Videos
         }
         public Video SetDuration(TimeSpan duration)
         {
-            if(Duration!=null)
+            if (Duration != null)
             {
                 throw new UserFriendlyException("Duration has already been set!");
             }

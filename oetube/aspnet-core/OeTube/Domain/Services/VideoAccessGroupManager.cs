@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Services;
 
 namespace OeTube.Domain.Services
 {
-    public class VideoAccessGroupManager:DomainService
+    public class VideoAccessGroupManager : DomainService
     {
         private readonly IVideoRepository _videoRepository;
         private readonly IGroupRepository _groupRepository;
@@ -21,7 +21,7 @@ namespace OeTube.Domain.Services
         }
         public async Task<Video> UpdateAccessGroupsAsync(Video video, IEnumerable<Guid> accessGroups, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var groups =await _groupRepository.GetManyAsSetAsync(accessGroups, false, cancellationToken);
+            var groups = await _groupRepository.GetManyAsSetAsync(accessGroups, false, cancellationToken);
             if (groups.Count != accessGroups.Count())
             {
                 throw new EntityNotFoundException(typeof(Video));

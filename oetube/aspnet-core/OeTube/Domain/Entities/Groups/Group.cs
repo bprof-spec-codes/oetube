@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-  
+
     public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
@@ -26,11 +26,11 @@ namespace OeTube.Domain.Entities.Groups
         private Group()
         {
             Name = string.Empty;
-            members = new EntitySet<Member,Guid>();
-            emailDomains = new EntitySet<EmailDomain,string>();
+            members = new EntitySet<Member, Guid>();
+            emailDomains = new EntitySet<EmailDomain, string>();
         }
 
-        public Group(Guid id,string name, Guid creatorId):this()
+        public Group(Guid id, string name, Guid creatorId) : this()
         {
             Id = id;
             CreationTime = DateTime.Now;
@@ -47,7 +47,7 @@ namespace OeTube.Domain.Entities.Groups
         public Group SetName(string name)
         {
             Check.Length(name, nameof(name),
-                         GroupConstants.NameMaxLength, 
+                         GroupConstants.NameMaxLength,
                          GroupConstants.NameMinLength);
             Name = name;
             return this;
@@ -62,7 +62,7 @@ namespace OeTube.Domain.Entities.Groups
             }
             return this;
         }
-    
+
 
     }
     public static class GroupConstants

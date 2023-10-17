@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Services;
 
 namespace OeTube.Domain.Services
 {
-    public class PlaylistItemManager:DomainService
+    public class PlaylistItemManager : DomainService
     {
         private readonly IVideoRepository _videoRepository;
         private readonly IPlaylistRepository _playlistRepository;
@@ -23,12 +23,12 @@ namespace OeTube.Domain.Services
         public async Task<Playlist> UpdateMembersAsync(Playlist playlist, IEnumerable<Guid> items, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             items = items.Distinct();
-            var videos=await _videoRepository.GetManyAsSetAsync(items, false, cancellationToken);
+            var videos = await _videoRepository.GetManyAsSetAsync(items, false, cancellationToken);
             if (videos.Count != items.Count())
             {
                 throw new EntityNotFoundException(typeof(Video));
             }
-            if(videos.Any(v=>v.Id!=playlist.CreatorId))
+            if (videos.Any(v => v.Id != playlist.CreatorId))
             {
                 throw new InvalidOperationException("Video and playlist creators do not match.");
             }

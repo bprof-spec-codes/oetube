@@ -23,11 +23,11 @@ namespace OeTube.Domain.Services
         {
             members = members.Distinct();
 
-            var users = await _userRepository.GetListByIdsAsync(members,false,cancellationToken);
+            var users = await _userRepository.GetListByIdsAsync(members, false, cancellationToken);
 
-            if(group.CreatorId!=null)
+            if (group.CreatorId != null)
             {
-                users.Remove(users.FirstOrDefault(u=>u.Id==group.CreatorId));
+                users.Remove(users.FirstOrDefault(u => u.Id == group.CreatorId));
             }
 
             if (users.Count != members.Count())

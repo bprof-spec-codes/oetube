@@ -32,14 +32,14 @@ namespace OeTube.Data.Repositories
             return (await GetDbContextAsync()).Set<EmailDomain>();
 
         }
-        public async Task<Group> UpdateMembersAsync(Group group,IEnumerable<IdentityUser> users,bool autoSave=false, CancellationToken cancellationToken=default)
+        public async Task<Group> UpdateMembersAsync(Group group, IEnumerable<IdentityUser> users, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var token=GetCancellationToken(cancellationToken);
-            var members =await GetMembersAsync();
-            var result=await members.Where(m => m.GroupId == group.Id).ToListAsync(token);
+            var token = GetCancellationToken(cancellationToken);
+            var members = await GetMembersAsync();
+            var result = await members.Where(m => m.GroupId == group.Id).ToListAsync(token);
             members.RemoveRange(result);
             await members.AddRangeAsync(users.Select(u => new Member(group.Id, u.Id)), token);
-            if(autoSave)
+            if (autoSave)
             {
                 await SaveChangesAsync(token);
             }
@@ -59,6 +59,6 @@ namespace OeTube.Data.Repositories
             return await _includer.IncludeAsync(GetQueryableAsync, true);
         }
 
-       
+
     }
 }
