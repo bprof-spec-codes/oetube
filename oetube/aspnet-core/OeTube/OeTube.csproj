@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -8,8 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="7.3.3" />
   </ItemGroup>
 
   <ItemGroup>

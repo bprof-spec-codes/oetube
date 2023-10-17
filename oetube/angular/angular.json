@@ -117,10 +117,18 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "OeTube:build:production"
+              "browserTarget": "OeTube:build:production",
+              "headers": {
+                "Cross-Origin-Opener-Policy":"same-origin",
+                "Cross-Origin-Embedder-Policy":"require-corp"
+              }
             },
             "development": {
-              "browserTarget": "OeTube:build:development"
+              "browserTarget": "OeTube:build:development",
+              "headers": {
+                "Cross-Origin-Opener-Policy":"same-origin",
+                "Cross-Origin-Embedder-Policy":"require-corp"
+              }
             }
           },
           "defaultConfiguration": "development"

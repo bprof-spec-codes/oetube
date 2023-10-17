@@ -29,8 +29,8 @@ function configureRoutes(routesService: RoutesService) {
         layout: eLayoutType.application,
       },
       {
-        path: '/dev-extreme',
-        name: 'Dev Extreme',
+        path: '/ffmpeg-test',
+        name: '::FFMPEG test',
         order: 4,
         layout: eLayoutType.application,
       },
