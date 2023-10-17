@@ -2,18 +2,19 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Volo.Abp.Domain.Entities;
-
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace OeTube.Entities
 {
-    public interface IHasLocalKey<TKey>
+    public interface IHasAtomicKey<TKey>
         where TKey:notnull
     {
-        public TKey LocalKey { get; }
+        public TKey AtomicKey { get; }
     }
-    
+ 
     public interface IReadOnlyEntitySet<TEntity,TKey>:IReadOnlyCollection<TEntity>
-        where TEntity:IHasLocalKey<TKey>
+        where TEntity:IEntity,IHasAtomicKey<TKey>
         where TKey:notnull
     {
         bool Contains(TKey key);
@@ -21,7 +22,7 @@ namespace OeTube.Entities
     }
 
     public class EntitySet<TEntity, TKey> :ICollection<TEntity>, IReadOnlyEntitySet<TEntity, TKey>
-        where TEntity : IHasLocalKey<TKey>
+        where TEntity : IEntity,IHasAtomicKey<TKey>
         where TKey : notnull
     {
         private Dictionary<TKey, TEntity> _dict;
@@ -32,11 +33,17 @@ namespace OeTube.Entities
         {
             _dict = new Dictionary<TKey, TEntity>();
         }
-
+        public EntitySet(IEnumerable<TEntity> entities):this()
+        {
+            foreach (var item in entities)
+            {
+                Add(item);
+            }
+        }
 
         public bool Add(TEntity entity)
         {
-            return _dict.TryAdd(entity.LocalKey, entity);
+            return _dict.TryAdd(entity.AtomicKey, entity);
         }
 
         public void Clear()
@@ -51,7 +58,7 @@ namespace OeTube.Entities
 
         public bool Contains(TEntity item)
         {
-            return _dict.ContainsKey(item.LocalKey);
+            return _dict.ContainsKey(item.AtomicKey);
         }
 
         public void CopyTo(TEntity[] array, int arrayIndex)
@@ -75,7 +82,7 @@ namespace OeTube.Entities
 
         public bool Remove(TEntity item)
         {
-            return _dict.Remove(item.LocalKey);
+            return _dict.Remove(item.AtomicKey);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -85,7 +92,7 @@ namespace OeTube.Entities
 
         void ICollection<TEntity>.Add(TEntity item)
         {
-            _dict.TryAdd(item.LocalKey, item);
+            _dict.TryAdd(item.AtomicKey, item);
         }
     }
 

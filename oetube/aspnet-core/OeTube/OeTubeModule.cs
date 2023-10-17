@@ -143,6 +143,7 @@ public class OeTubeModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureDataProtection(context);
         ConfigureEfCore(context);
+        ConfigureExceptions();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -180,11 +181,18 @@ public class OeTubeModule : AbpModule
             options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
     }
+    private void ConfigureExceptions()
+    {
+        Configure<AbpExceptionLocalizationOptions>(options =>
+        {
+        });
+    }
 
     private void ConfigureLocalization()
     {
         Configure<AbpLocalizationOptions>(options =>
         {
+          
             options.Resources
                 .Add<OeTubeResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))

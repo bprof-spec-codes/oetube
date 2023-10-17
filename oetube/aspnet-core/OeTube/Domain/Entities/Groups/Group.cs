@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Entities;
 namespace OeTube.Domain.Entities.Groups
 {
   
-    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator
+    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }
@@ -21,20 +21,21 @@ namespace OeTube.Domain.Entities.Groups
         public virtual IReadOnlyEntitySet<Member, Guid> Members => members;
         public virtual IReadOnlyEntitySet<EmailDomain, string> EmailDomains => emailDomains;
 
+        Guid IHasAtomicKey<Guid>.AtomicKey => Id;
+
         private Group()
         {
+            Name = string.Empty;
             members = new EntitySet<Member,Guid>();
             emailDomains = new EntitySet<EmailDomain,string>();
         }
 
-        public Group(Guid id,[NotNull]string name, Guid creatorId)
+        public Group(Guid id,string name, Guid creatorId):this()
         {
             Id = id;
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
             SetName(name);
-            members = new EntitySet<Member,Guid>();
-            emailDomains = new EntitySet<EmailDomain,string>();
         }
 
         public Group SetDescription(string? description)
@@ -43,7 +44,7 @@ namespace OeTube.Domain.Entities.Groups
             Description = description;
             return this;
         }
-        public Group SetName([NotNull]string name)
+        public Group SetName(string name)
         {
             Check.Length(name, nameof(name),
                          GroupConstants.NameMaxLength, 
@@ -51,43 +52,18 @@ namespace OeTube.Domain.Entities.Groups
             Name = name;
             return this;
         }
-        public Group AddEmailDomain([NotNull]string emailDomain)
-        {
-            if (!emailDomains.Add(new EmailDomain(Id,emailDomain)))
-            {
-                throw new ArgumentException();
-            }
-            return this;
-        }
-        public Group RemoveEmailDomain(string emailDomain)
-        {
-            if (!emailDomains.Remove(new EmailDomain(Id, emailDomain)))
-            {
-                throw new ArgumentException();
-            }
-            return this;
-        }
-        public Group AddMember(Guid userId)
-        {
-            if (CreatorId == userId)
-            {
-                throw new ArgumentException();
-            }
-            if (!members.Add(new Member(Id, userId))) 
-            {
-                throw new ArgumentException();   
-            }
-            return this;
-        }
 
-        public Group RemoveMember(Guid userId)
+        public Group UpdateEmailDomains(IEnumerable<string> emailDomains)
         {
-            if (!members.Remove(new Member(Id, userId)))
+            this.emailDomains.Clear();
+            foreach (var item in emailDomains)
             {
-                throw new ArgumentException();
+                this.emailDomains.Add(new EmailDomain(Id, item));
             }
             return this;
         }
+    
+
     }
     public static class GroupConstants
     {

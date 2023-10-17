@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OeTube.Entities;
+using Volo.Abp.Auditing;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Identity;
 
@@ -16,7 +17,6 @@ namespace OeTube.Data.Configurations
             builder.Property(u => u.Name)
                    .HasMaxLength(OeTubeUserConstants.NameMaxLength)
                    .IsRequired();
-
             builder.Property(u => u.AboutMe)
                    .HasMaxLength(OeTubeUserConstants.AboutMeMaxLength);
 

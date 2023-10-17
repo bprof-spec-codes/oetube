@@ -6,12 +6,12 @@ using Volo.Abp;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class EmailDomain : Entity,IHasLocalKey<string>
+    public class EmailDomain : Entity,IHasAtomicKey<string>
     {
         public Guid GroupId { get; private set; }
         public string Domain { get; private set; }
 
-        string IHasLocalKey<string>.LocalKey => Domain;
+        string IHasAtomicKey<string>.AtomicKey => Domain;
 
         public EmailDomain(Guid groupId, [NotNull]string domain)
         {
