@@ -143,6 +143,7 @@ public class OeTubeModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureDataProtection(context);
         ConfigureEfCore(context);
+        ConfigureExceptions();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -180,11 +181,18 @@ public class OeTubeModule : AbpModule
             options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
     }
+    private void ConfigureExceptions()
+    {
+        Configure<AbpExceptionLocalizationOptions>(options =>
+        {
+        });
+    }
 
     private void ConfigureLocalization()
     {
         Configure<AbpLocalizationOptions>(options =>
         {
+          
             options.Resources
                 .Add<OeTubeResource>("en")
                 .AddBaseTypes(typeof(AbpValidationResource))
@@ -237,7 +245,10 @@ public class OeTubeModule : AbpModule
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly);
+            options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly, opts =>
+            {
+                opts.RootPath = "oetube";
+            });
         });
     }
 
@@ -301,11 +312,13 @@ public class OeTubeModule : AbpModule
     {
         context.Services.AddAbpDbContext<OeTubeDbContext>(options =>
         {
+            options.AddDefaultRepositories(includeAllEntities: true);
             /* You can remove "includeAllEntities: true" to create
              * default repositories only for aggregate roots
              * Documentation: https://docs.abp.io/en/abp/latest/Entity-Framework-Core#add-default-repositories
              */
-            options.AddDefaultRepositories(includeAllEntities: true);
+            options.ReplaceDbContext<ITenantManagementDbContext>();
+            options.ReplaceDbContext<IIdentityDbContext>();
         });
 
         Configure<AbpDbContextOptions>(options =>
