@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -44,6 +45,8 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
     },
   };
 
+  @Input() videoUrl: string;
+
   @ViewChild('video') video: ElementRef<HTMLVideoElement> = {} as ElementRef<HTMLVideoElement>;
 
   constructor(
@@ -63,12 +66,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    // TODO videos should not be loaded from here
-    if (Math.random() < 0.5)
-      this.load(
-        'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-      );
-    else this.load('https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8');
+    this.load(this.videoUrl);
   }
 
   ngOnDestroy() {
