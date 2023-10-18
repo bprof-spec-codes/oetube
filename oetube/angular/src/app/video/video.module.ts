@@ -1,6 +1,7 @@
+import { DxButtonModule, DxSliderModule, DxTextBoxModule } from 'devextreme-angular';
+
 import { CommonModule } from '@angular/common';
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
-import { DxSliderModule } from 'devextreme-angular';
 import { NgModule } from '@angular/core';
 import { PlayControlComponent } from './video-player/play-control/play-control.component';
 import { TimeComponent } from './video-player/time/time.component';
@@ -11,6 +12,7 @@ import { VideoRoutingModule } from './video-routing.module';
 import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.component';
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
+import { SearchBarComponent } from './video-grid/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { VolumeControlComponent } from './video-player/volume-control/volume-con
     TimeComponent,
     ControlBarComponent,
     VideoGridComponent,
+    SearchBarComponent,
   ],
-  imports: [CommonModule, VideoRoutingModule, DxSliderModule],
+  imports: [CommonModule, VideoRoutingModule, DxSliderModule, DxButtonModule, DxTextBoxModule],
 })
 export class VideoModule {}
