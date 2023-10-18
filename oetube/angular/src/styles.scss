@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'devextreme/scss/bundles/dx.material.blue.light.scss';
 
 @keyframes donut-spin {
   0% {
@@ -8,7 +9,7 @@
     transform: rotate(360deg);
   }
 }
-:root  {
+:root {
   --lpx-logo: url('/assets/images/logo/logo-light.png');
   --lpx-logo-icon: url('/assets/images/logo/logo-light-thumbnail.png');
 }
@@ -27,5 +28,4 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
 }
