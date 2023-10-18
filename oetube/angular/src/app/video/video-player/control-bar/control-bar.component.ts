@@ -34,10 +34,6 @@ export class ControlBarComponent implements OnInit {
     }
   }
 
-  onNextClick() {
-    this.videoService.play();
-  }
-
   onChange(event: ValueChangedEvent) {
     if (event.event) {
       // The interaction was done by the user
