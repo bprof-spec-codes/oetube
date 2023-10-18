@@ -163,7 +163,6 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   private loadVideoWithHLS(currentVideo: string) {
     this.hls.loadSource(currentVideo);
     this.hls.attachMedia(this.video.nativeElement);
-    // this.hls.on(HLS.Events.MANIFEST_PARSED, () => this.video.nativeElement.play());
   }
 
   /**
