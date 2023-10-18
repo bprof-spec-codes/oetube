@@ -1,11 +1,15 @@
 <div class="input-group">
-  <dx-text-box placeholder="Search" (onEnterKey)="onSearch()" class="w-100 rounded-pill">
+  <dx-text-box
+    placeholder="Search"
+    (onEnterKey)="onSearch()"
+    [(value)]="searchPhrase"
+    class="w-100 rounded-pill"
+  >
     <dxi-button
       name="search"
       [options]="searchButtonOptions"
       text="Search"
       icon="search"
-      (onClick)="onSearch()"
     ></dxi-button>
   </dx-text-box>
 </div>

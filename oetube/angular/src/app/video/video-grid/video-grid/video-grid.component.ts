@@ -22,6 +22,14 @@ export class VideoGridComponent implements OnInit {
   public videos$: Observable<Video[]>;
 
   ngOnInit(): void {
+    this.refreshVideos();
+  }
+
+  onSearch(searchPhrase: string) {
+    this.refreshVideos(searchPhrase);
+  }
+
+  refreshVideos(searchPhrase?: string) {
     //Observable from Create Method
     this.videos$ = of([
       {
