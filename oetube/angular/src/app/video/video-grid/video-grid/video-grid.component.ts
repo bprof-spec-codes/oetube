@@ -44,7 +44,7 @@ export class VideoGridComponent implements OnInit {
         Id: '3',
         Name: 'Informative video',
         Description: 'Something witty',
-        Duration: 20345,
+        Duration: 30,
         CreationTime: new Date(),
         CreatorId: 'guid2',
       } as Video,
@@ -65,5 +65,11 @@ export class VideoGridComponent implements OnInit {
         CreatorId: 'guid2',
       } as Video,
     ]);
+  }
+
+  fromatVideoDuration(duration: number) {
+    const date = new Date(null);
+    date.setSeconds(duration);
+    return date.toISOString().slice(11, 19);
   }
 }

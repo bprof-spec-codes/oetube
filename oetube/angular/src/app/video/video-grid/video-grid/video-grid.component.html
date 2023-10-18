@@ -1,8 +1,15 @@
-<div *ngIf="(videos$ | async)?.length === 0">No records found.</div>
+<div class="container mb-5">
+  <app-search-bar></app-search-bar>
+</div>
+
+<div *ngIf="(videos$ | async)?.length === 0">No videos found.</div>
 <div class="container">
   <div class="row gx-5 gy-4 row-cols-1 row-cols-md-3 row-cols-lg-4">
     <div *ngFor="let video of videos$ | async" class="col position-relative">
-      <img class="rounded my-1 w-100" [src]="'https://picsum.photos/300/200?r=' + video.Id" />
+      <div class="pic-container">
+        <img class="rounded my-1 w-100" [src]="'https://picsum.photos/300/200?r=' + video.Id" />
+        <div class="bottom-right">{{ fromatVideoDuration(video.Duration) }}</div>
+      </div>
       <div class="text-truncate" [title]="video.Name">
         <a
           [routerLink]="['video', 'watch', video.Id]"
