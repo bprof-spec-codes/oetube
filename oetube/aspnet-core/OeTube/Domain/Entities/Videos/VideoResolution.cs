@@ -8,7 +8,7 @@ namespace OeTube.Domain.Entities.Videos
         public Guid VideoId { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public VideoResolutionState State { get; private set; }
+        public bool IsReady { get; private set; }
         Resolution IHasAtomicKey<Resolution>.AtomicKey => GetResolution();
 
         private VideoResolution()
@@ -27,7 +27,6 @@ namespace OeTube.Domain.Entities.Videos
             }
             Width =resolution.Width;
             Height = resolution.Height;
-            State = VideoResolutionState.Uploading;
         }
         public Resolution GetResolution()
         {
@@ -35,11 +34,11 @@ namespace OeTube.Domain.Entities.Videos
         }
         public void MarkReady()
         {
-            if (State != VideoResolutionState.Uploading)
+            if (IsReady)
             {
-                throw new ArgumentException("The resolution has already been marked as ready.");
+                throw new InvalidOperationException();
             }
-            State = VideoResolutionState.Ready;
+            IsReady = true;
         }
 
         public override object[] GetKeys()
