@@ -42,7 +42,7 @@ namespace OeTube.Infrastructure.ProcessTemplate
             settings = settings.WithNewArguments(JoinArguments(PreArguments, settings.NamedArguments.Arguments, PostArguments),
                                                settings.NamedArguments.Name ?? FileName);
 
-            Process process = new Process()
+            Process process = new ()
             {
                 StartInfo = CreateStartInfo(settings)
             };
@@ -67,7 +67,20 @@ namespace OeTube.Infrastructure.ProcessTemplate
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
                 await process.WaitForExitAsync(cancellationToken);
+                if (process.ExitCode != 0)
+                {
+                    throw new ProcessException($"{settings.NamedArguments.Name} exited with error code: {process.ExitCode}",process.ExitCode,outSb.ToString(),errorSb.ToString());
+                }
                 return HandleProcessOutput(process, settings, outSb.ToString(), errorSb.ToString());
+                
+            }
+            catch (Exception ex)
+            {
+                if(ex is ProcessException)
+                {
+                    throw;
+                }
+                else throw new ProcessException(ex.Message,null, outSb.ToString(), errorSb.ToString());
             }
             finally
             {

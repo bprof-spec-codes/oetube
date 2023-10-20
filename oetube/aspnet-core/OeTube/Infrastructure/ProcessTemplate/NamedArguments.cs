@@ -1,6 +1,6 @@
 ﻿namespace OeTube.Infrastructure.ProcessTemplate
 {
-    public class NamedArguments
+    public struct NamedArguments
     {
         public string Arguments { get; }
         public string? Name { get; }
