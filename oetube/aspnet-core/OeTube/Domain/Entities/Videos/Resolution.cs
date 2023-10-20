@@ -3,20 +3,6 @@ using Volo.Abp.Domain.Values;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class ResolutionConverter : JsonConverter<Resolution>
-    {
-        public override Resolution ReadJson(JsonReader reader, Type objectType, Resolution existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            Resolution.TryParse(reader.ReadAsString(), out Resolution resolution);
-            return resolution;
-        }
-
-        public override void WriteJson(JsonWriter writer, Resolution value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value.ToString());
-        }
-    }
-    [JsonConverter(typeof(ResolutionConverter))]
     public readonly struct Resolution
     {
         private const char DefaultSeparator = 'x';
