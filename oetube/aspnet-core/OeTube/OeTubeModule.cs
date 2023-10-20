@@ -52,6 +52,9 @@ using Volo.Abp.BackgroundJobs;
 using System.Reflection;
 using Volo.Abp.AspNetCore.SignalR;
 using OeTube.Infrastructure.SignalR;
+using OeTube.Application.Dtos.Videos;
+using Volo.Abp.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OeTube;
 
@@ -105,7 +108,7 @@ namespace OeTube;
     [DependsOn(typeof(AbpBlobStoringFileSystemModule))]
     [DependsOn(typeof(AbpBackgroundJobsModule))]    
     [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
-    public class OeTubeModule : AbpModule
+public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
     private const bool IsMultiTenant = true;
@@ -139,7 +142,6 @@ namespace OeTube;
         {
             context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
         }
-
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureMultiTenancy();
@@ -155,6 +157,7 @@ namespace OeTube;
         ConfigureExceptions();
         ConfigureBlobStoring();
         ConfigureBackgroundJobs();
+        ConfigureNewtonsoftJson(context);
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -239,6 +242,12 @@ namespace OeTube;
             options.MapCodeNamespace("OeTube", typeof(OeTubeResource));
         });
     }
+    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context)
+    {
+        context.Services.AddControllers().AddNewtonsoftJson(options =>
+        {
+        });
+    }
 
     private void ConfigureVirtualFiles(IWebHostEnvironment hostingEnvironment)
     {
@@ -256,15 +265,17 @@ namespace OeTube;
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
+            options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(typeof(StartVideoUploadDto));
             options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly, opts =>
             {
-                opts.RootPath = "oetube";
+
             });
         });
     }
 
     private void ConfigureSwagger(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSwaggerGenNewtonsoftSupport();
         services.AddAbpSwaggerGenWithOAuth(
             configuration["AuthServer:Authority"],
             new Dictionary<string, string>
