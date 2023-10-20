@@ -2,9 +2,9 @@
     <input #fileUploader type="file">
     <input type="submit">
 </form>
-<video #video
-controls
-autoplay
-playsInline
-controls>
-</video>
+<div class="mt-3">
+    <dx-progress-bar [value]="progress" max="1"></dx-progress-bar>
+    <p>
+       <em> {{ log?.message }} </em>
+    </p>
+</div>

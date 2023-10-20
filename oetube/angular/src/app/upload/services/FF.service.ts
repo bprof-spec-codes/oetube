@@ -54,7 +54,7 @@ export class FFService {
     return Array.from(this.storedFiles.keys());
   }
 
-  getFile(fileName): File {
+  getFile(fileName:string): File {
     return this.storedFiles.get(fileName);
   }
 
@@ -74,7 +74,6 @@ export class FFService {
     return `-i ${inputFileName} ${args} ${outputFileName}`;
   }
   async transcode(inputFileName: string, outputFileName: string, args: string): Promise<File> {
-    debugger;
     if (!this.storedFiles.get(inputFileName)) {
       return undefined;
     }
@@ -82,7 +81,8 @@ export class FFService {
     try {
       this.transcoding = true;
       await this.ffmpeg.run(...this.getCommand(inputFileName, outputFileName, args).split(' '));
-      const data = this.ffmpeg.FS('readFile', outputFileName);
+    debugger;
+    const data = this.ffmpeg.FS('readFile', outputFileName);
       const file = new File([data.buffer], outputFileName, {
         type: mimeTypes.getType(outputFileName),
       });
