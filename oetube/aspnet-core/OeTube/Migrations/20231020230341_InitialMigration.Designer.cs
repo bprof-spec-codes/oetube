@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace OeTube.Migrations
 {
     [DbContext(typeof(OeTubeDbContext))]
-    [Migration("20231009181809_Initial")]
-    partial class Initial
+    [Migration("20231020230341_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,20 +207,30 @@ namespace OeTube.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<TimeSpan?>("Duration")
+                    b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
 
+                    b.Property<string>("InputFormat")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<bool>("IsReady")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
+                    b.Property<string>("OutputFormat")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -229,6 +239,25 @@ namespace OeTube.Migrations
                     b.HasIndex("CreatorId");
 
                     b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("OeTube.Domain.Entities.Videos.VideoResolution", b =>
+                {
+                    b.Property<Guid>("VideoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsReady")
+                        .HasColumnType("bit");
+
+                    b.HasKey("VideoId", "Width", "Height");
+
+                    b.ToTable("VideoResolution");
                 });
 
             modelBuilder.Entity("OeTube.Entities.OeTubeUser", b =>
@@ -1945,6 +1974,15 @@ namespace OeTube.Migrations
                         .HasForeignKey("CreatorId");
                 });
 
+            modelBuilder.Entity("OeTube.Domain.Entities.Videos.VideoResolution", b =>
+                {
+                    b.HasOne("OeTube.Domain.Entities.Videos.Video", null)
+                        .WithMany("Resolutions")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OeTube.Entities.OeTubeUser", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
@@ -2111,6 +2149,8 @@ namespace OeTube.Migrations
             modelBuilder.Entity("OeTube.Domain.Entities.Videos.Video", b =>
                 {
                     b.Navigation("AccessGroups");
+
+                    b.Navigation("Resolutions");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

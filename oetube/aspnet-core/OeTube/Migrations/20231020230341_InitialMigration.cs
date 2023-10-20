@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OeTube.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -715,11 +715,13 @@ namespace OeTube.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
                     Access = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    State = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    InputFormat = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    OutputFormat = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    IsReady = table.Column<bool>(type: "bit", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
@@ -875,6 +877,26 @@ namespace OeTube.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoItem_Videos_VideoId",
+                        column: x => x.VideoId,
+                        principalTable: "Videos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoResolution",
+                columns: table => new
+                {
+                    VideoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
+                    IsReady = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoResolution", x => new { x.VideoId, x.Width, x.Height });
+                    table.ForeignKey(
+                        name: "FK_VideoResolution_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
                         principalColumn: "Id",
@@ -1286,6 +1308,9 @@ namespace OeTube.Migrations
 
             migrationBuilder.DropTable(
                 name: "VideoItem");
+
+            migrationBuilder.DropTable(
+                name: "VideoResolution");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
