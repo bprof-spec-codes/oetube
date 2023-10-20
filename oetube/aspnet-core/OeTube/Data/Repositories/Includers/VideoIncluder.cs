@@ -10,6 +10,7 @@ namespace OeTube.Data.Repositories.Includers
         protected override IEnumerable<string> GetNavigationProperties()
         {
             yield return nameof(Video.AccessGroups);
+            yield return nameof(Video.Resolutions);
         }
     }
 
