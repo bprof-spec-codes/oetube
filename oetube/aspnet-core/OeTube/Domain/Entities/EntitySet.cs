@@ -17,6 +17,7 @@ namespace OeTube.Entities
         where TEntity : IEntity, IHasAtomicKey<TKey>
         where TKey : notnull
     {
+        TEntity Get(TKey key);
         bool Contains(TKey key);
         bool Remove(TKey key);
     }
@@ -92,6 +93,11 @@ namespace OeTube.Entities
         void ICollection<TEntity>.Add(TEntity item)
         {
             _dict.TryAdd(item.AtomicKey, item);
+        }
+
+        public TEntity Get(TKey key)
+        {
+            return _dict[key];
         }
     }
 
