@@ -24,6 +24,14 @@ namespace OeTube.Data.Repositories
         {
             return (await GetDbContextAsync()).Set<AccessGroup>();
         }
+        private async Task<DbSet<VideoResolution>> GetVideoResolutions()
+        {
+            return (await GetDbContextAsync()).Set<VideoResolution>();
+        }
+        public async Task<IQueryable<VideoResolution>> GetVideoResolutionsQueryableAsync()
+        {
+            return await GetVideoResolutions();
+        }
         public async Task<IQueryable<AccessGroup>> GetAccessGroupsQueryableAsync()
         {
             return await GetAccessGroupsAsync();
