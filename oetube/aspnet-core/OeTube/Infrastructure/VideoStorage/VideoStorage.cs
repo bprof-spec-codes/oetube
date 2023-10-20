@@ -1,8 +1,10 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Server;
+using OeTube.Domain.Entities.Videos;
 using OeTube.Infrastructure.FFmpeg;
-using OeTube.Infrastructure.FFmpeg.Info;
 using OeTube.Infrastructure.FFmpeg.Job;
+using OeTube.Infrastructure.FileContainers;
 using OeTube.Infrastructure.ProcessTemplate;
 using System.IO;
 using System.Numerics;
@@ -19,13 +21,65 @@ using Volo.Abp.Http;
 
 namespace OeTube.Infrastructure.VideoStorage
 {
-    [BlobContainerName("videos")]
-    public class VideoContainer
-    { }
 
-    [Dependency(ServiceLifetime.Transient)]
-    [ExposeServices(typeof(IVideoStorageService))]
-    public class VideoStorageService : IVideoStorageService
+    public class VideoStorage : ITransientDependency
+    {
+        private readonly IFileContainer _container;
+
+        public VideoStorage(IFileContainerFactory containerFactory)
+        {
+            _container = containerFactory.Create("videos");
+        }
+        private string[] GetSourcePath(Guid id,string? format=null)
+        {
+            return new string[]
+            {
+                id.ToString(),
+                "source."+format??""
+            };
+        }
+        public async Task SaveSourceAsync(Guid id, ByteContent content, CancellationToken cancellationToken = default)
+        {
+            content = content.WithNewPath(GetSourcePath(id, content.Format));
+            await _container.SaveAsync(content, true, cancellationToken);
+        }
+        public async Task<ByteContent?> GetSourceAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            string[] path = GetSourcePath(id);
+            return await _container.GetFirstOrNullAsync(path, cancellationToken);
+        }
+        public async Task<bool> DeleteSourceAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _container.DeleteFirstAsync(GetSourcePath(id), cancellationToken);
+        }
+        private string[] GetResizedPath(Guid id, Resolution resolution,string? format=null)
+        {
+            return new string[]
+            {
+                id.ToString(),
+                resolution.ToString(),
+                "resized."+format??""
+            };
+        }
+        public async Task SaveResizedAsync(Guid id, Resolution resolution,ByteContent content,CancellationToken cancellationToken=default)
+        {
+
+            content = content.WithNewPath(GetResizedPath(id,resolution, content.Format));
+            await _container.SaveAsync(content, true, cancellationToken);
+        }
+
+        public async Task<ByteContent?> GetResizedAsync(Guid id,Resolution resolution,CancellationToken cancellationToken=default)
+        {
+            return await _container.GetFirstOrNullAsync(GetResizedPath(id, resolution),cancellationToken);
+        }
+        public async Task<bool> DeleteResizedAsync(Guid id, Resolution resolution,CancellationToken cancellationToken=default)
+        {
+            return await _container.DeleteFirstAsync(GetResizedPath(id, resolution), cancellationToken);
+        }
+    }
+
+    /*
+    public class VideoStorageServiceOld : IVideoStorageService
     {
         private record Size(int Width, int Height);
         private static readonly Size SD = new Size(720, 480);
@@ -39,7 +93,7 @@ namespace OeTube.Infrastructure.VideoStorage
 
         private readonly IBlobContainer<VideoContainer> _container;
         private readonly IFFmpegService _ffmpeg;
-        public VideoStorageService(IFFmpegService ffmpeg,
+        public VideoStorageServiceOld(IFFmpegService ffmpeg,
                             IBlobContainer<VideoContainer> container,
                             IBlobFilePathCalculator calculator,
                             IBlobContainerConfigurationProvider provider
@@ -47,7 +101,6 @@ namespace OeTube.Infrastructure.VideoStorage
         {
             _container = container;
             _ffmpeg = ffmpeg;
-            _ffmpeg.WorkingDirectory = GetContainerDirectory(calculator,provider);
             _ffmpeg.WriteToDebug = true;
             
         }
@@ -170,5 +223,5 @@ namespace OeTube.Infrastructure.VideoStorage
         {
             throw new NotImplementedException();
         }
-    }
+    }*/
 }
