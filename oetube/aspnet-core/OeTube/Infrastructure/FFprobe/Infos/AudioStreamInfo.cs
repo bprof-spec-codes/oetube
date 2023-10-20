@@ -1,6 +1,6 @@
-﻿namespace OeTube.Infrastructure.FFmpeg.Info
+﻿namespace OeTube.Infrastructure.FFprobe.Infos
 {
-    public class AudioInfo : StreamInfo
+    public class AudioStreamInfo : StreamInfo
     {
         public int SampleRate { get; init; }
         public int Channels { get; init; }

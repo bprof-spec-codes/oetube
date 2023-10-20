@@ -1,26 +1,27 @@
 ﻿using Newtonsoft.Json.Linq;
-using OeTube.Infrastructure.FFmpeg.Info;
+using OeTube.Domain.Entities.Videos;
+using OeTube.Infrastructure.FFprobe.Infos;
 using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFmpeg.Processes
+namespace OeTube.Infrastructure.FFprobe
 {
 
-    public class FFprobeProcess : FFProcess<ProbeInfo>, ITransientDependency
+    public class FFprobeProcess : FFProcess<VideoInfo>, ITransientDependency
     {
         public static readonly string FFprobeExe = Path.Combine(FFmpegDir, "ffprobe.exe");
         public override string PreArguments => "-v quiet -print_format json -show_format -show_streams";
 
         public override string ExePath => FFprobeExe;
 
-        private ProbeInfo ParseProbeOutput(string jsonOutput)
+        private VideoInfo ParseProbeOutput(string jsonOutput)
         {
             var root = JToken.Parse(jsonOutput);
             var format = root["format"];
 
-            List<VideoInfo> videos = new List<VideoInfo>();
-            List<AudioInfo> audios = new List<AudioInfo>();
+            List<VideoStreamInfo> videos = new List<VideoStreamInfo>();
+            List<AudioStreamInfo> audios = new List<AudioStreamInfo>();
             var streams = root["streams"];
             if (streams != null)
             {
@@ -39,28 +40,27 @@ namespace OeTube.Infrastructure.FFmpeg.Processes
             }
 
 
-            return new ProbeInfo()
+            return new VideoInfo()
             {
                 Duration = TimeSpan.FromSeconds(format.Value<double>("duration")),
-                FileName = format.Value<string>("filename"),
+                FileName = format.Value<string>("filename")??string.Empty,
                 Size = format.Value<long>("size"),
                 AudioStreams = audios,
                 VideoStreams = videos
             };
 
         }
-        private VideoInfo ToVideoInfos(JToken token)
+        private VideoStreamInfo ToVideoInfos(JToken token)
         {
-            return new VideoInfo()
+            return new VideoStreamInfo()
             {
                 Bitrate = token.Value<long>("bit_rate"),
-                Codec = token.Value<string>("codec_name"),
+                Codec = token.Value<string>("codec_name")??string.Empty,
                 Duration = TimeSpan.FromSeconds(token.Value<double>("duration")),
                 Frames = token.Value<int>("nb_frames"),
                 Framerate = ToFrameRate(token["avg_frame_rate"]),
-                Width = token.Value<int>("width"),
-                Height = token.Value<int>("height"),
-                PixelFormat = token.Value<string>("pix_fmt"),
+                Resolution = new Resolution(token.Value<int>("width"), token.Value<int>("height")),
+                PixelFormat = token.Value<string>("pix_fmt")
             };
         }
         private double ToFrameRate(JToken? token)
@@ -91,12 +91,12 @@ namespace OeTube.Infrastructure.FFmpeg.Processes
 
 
         }
-        private AudioInfo ToAudioInfo(JToken token)
+        private AudioStreamInfo ToAudioInfo(JToken token)
         {
-            return new AudioInfo()
+            return new AudioStreamInfo()
             {
                 Bitrate = token.Value<long>("bit_rate"),
-                Codec = token.Value<string>("codec_name"),
+                Codec = token.Value<string>("codec_name")??string.Empty,
                 Duration = TimeSpan.FromSeconds(token.Value<double>("duration")),
                 Frames = token.Value<int>("nb_frames"),
                 Channels = token.Value<int>("channels"),
@@ -104,12 +104,8 @@ namespace OeTube.Infrastructure.FFmpeg.Processes
             };
         }
 
-        protected override ProbeInfo HandleProcessOutput(Process process, ProcessSettings argument, string standardOutput, string standardError)
+        protected override VideoInfo HandleProcessOutput(Process process, ProcessSettings argument, string standardOutput, string standardError)
         {
-            if (process.ExitCode != 0)
-            {
-                throw new FFmpegException($"FFprobe.exe exited with error code: {process.ExitCode}.", standardError);
-            }
             try
             {
                 var result = ParseProbeOutput(standardOutput);
@@ -117,7 +113,7 @@ namespace OeTube.Infrastructure.FFmpeg.Processes
             }
             catch
             {
-                throw new FFmpegException($"The output of ffprobe cannot be parsed.", standardOutput);
+                throw new ProcessException($"The output of ffprobe cannot be parsed.", null, standardOutput, standardError);
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using OeTube.Infrastructure.FFmpeg.Processes;
-using OeTube.Infrastructure.ProcessTemplate;
+﻿using OeTube.Infrastructure.ProcessTemplate;
 using OeTube.Infrastructure.VideoStorage;
 using System.Diagnostics;
 using Volo.Abp.BackgroundJobs;
@@ -9,7 +8,7 @@ using Volo.Abp.Threading;
 
 namespace OeTube.Infrastructure.FFmpeg.Job
 {
-  
+
     public class FFmpegJob : AsyncBackgroundJob<FFmpegJobArgs>, ITransientDependency
     {
         private readonly FFmpegProcess _ffmpeg;

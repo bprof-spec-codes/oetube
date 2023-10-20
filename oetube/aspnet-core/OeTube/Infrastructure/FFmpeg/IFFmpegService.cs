@@ -1,25 +1,14 @@
-﻿using OeTube.Infrastructure.FFmpeg.Info;
-using OeTube.Infrastructure.ProcessTemplate;
-using Volo.Abp.DependencyInjection;
-
-namespace OeTube.Infrastructure.FFmpeg
+﻿namespace OeTube.Infrastructure.FFmpeg
 {
-
     public interface IFFmpegService
     {
-        string WorkingDirectory
-        {
-            get; set;
-        }
+        Guid Id { get; }
+        bool WriteToDebug { get; set; }
 
-        bool WriteToDebug
-        {
-            get; set;
-        }
-
-        Task<ProbeInfo> AnalyzeAsync(string path, CancellationToken cancellationToken = default);
-        Task<ProcessResult> ConvertAsync(NamedArguments args, CancellationToken cancellationToken = default);
-        Task BulkBackgroundConvertAsync(Guid jobId, NamedArguments[] args);
+        Task CleanUpAsync(CancellationToken cancellationToken = default);
+        Task<FFmpegResult> ExecuteAsync(ByteContent? input, string arguments, string? processName = null, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(string name, CancellationToken cancellationToken = default);
+        Task<ByteContent> GetContentAsync(string name, CancellationToken cancellationToken = default);
+        HashSet<string> GetFiles();
     }
-
 }
