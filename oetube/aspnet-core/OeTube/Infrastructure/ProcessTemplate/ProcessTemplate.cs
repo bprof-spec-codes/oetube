@@ -37,8 +37,8 @@ namespace OeTube.Infrastructure.ProcessTemplate
 
         public virtual async Task<TOutput> StartProcessAsync(ProcessSettings settings, CancellationToken cancellationToken = default)
         {
-            StringBuilder outSb = new StringBuilder();
-            StringBuilder errorSb = new StringBuilder();
+            StringBuilder outSb = new();
+            StringBuilder errorSb = new();
             settings = settings.WithNewArguments(JoinArguments(PreArguments, settings.NamedArguments.Arguments, PostArguments),
                                                settings.NamedArguments.Name ?? FileName);
 
@@ -69,6 +69,7 @@ namespace OeTube.Infrastructure.ProcessTemplate
                 await process.WaitForExitAsync(cancellationToken);
                 if (process.ExitCode != 0)
                 {
+
                     throw new ProcessException($"{settings.NamedArguments.Name} exited with error code: {process.ExitCode}",process.ExitCode,outSb.ToString(),errorSb.ToString());
                 }
                 return HandleProcessOutput(process, settings, outSb.ToString(), errorSb.ToString());
@@ -76,8 +77,10 @@ namespace OeTube.Infrastructure.ProcessTemplate
             }
             catch (Exception ex)
             {
-                if(ex is ProcessException)
+                if(ex is ProcessException processEx)
                 {
+                    Debug.WriteLine(processEx.StandardError);
+                    Debug.WriteLine(processEx.StandardOutput);
                     throw;
                 }
                 else throw new ProcessException(ex.Message,null, outSb.ToString(), errorSb.ToString());
