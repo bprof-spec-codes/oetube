@@ -49,6 +49,11 @@ namespace OeTube.Data.Repositories
             }
             return video;
         }
+        public async Task<IQueryable<Video>> GetAvaliableVideosQueryableAsync()
+        {
+            var result = await GetQueryableAsync();
+           return result.Where(v => v.IsUploadCompleted);
+        }
         public override async Task<IQueryable<Video>> WithDetailsAsync()
         {
             return await _includer.IncludeAsync(GetQueryableAsync, true);
