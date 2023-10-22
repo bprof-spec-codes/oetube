@@ -19,11 +19,11 @@ namespace OeTube.Domain.Entities.Videos
             VideoId = videoId;
             if (resolution.Width <= 0)  
             {
-                throw new ArgumentOutOfRangeException(nameof(resolution.Width), resolution.Width, null);
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Width, null);
             }
             if (resolution.Height <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(resolution.Height), resolution.Height, null);
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Height, null);
             }
             Width =resolution.Width;
             Height = resolution.Height;
