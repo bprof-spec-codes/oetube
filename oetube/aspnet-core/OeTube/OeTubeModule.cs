@@ -360,7 +360,7 @@ public class OeTubeModule : AbpModule
             {
                 container.UseFileSystem(fileSystem =>
                 {
-                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
                 });
             });
         });
