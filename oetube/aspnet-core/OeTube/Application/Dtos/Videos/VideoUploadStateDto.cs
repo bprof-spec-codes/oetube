@@ -1,4 +1,4 @@
-﻿using OeTube.Infrastructure.VideoFileManager;
+﻿using OeTube.Infrastructure.FF;
 
 namespace OeTube.Application.Dtos.Videos
 {
@@ -9,5 +9,7 @@ namespace OeTube.Application.Dtos.Videos
         public string OutputFormat { get; set; } = string.Empty;
         public List<UploadTask> RemainingTasks { get; set; } = new List<UploadTask>();
     }
+
+
 
 }
