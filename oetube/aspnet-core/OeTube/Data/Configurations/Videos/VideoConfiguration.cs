@@ -21,14 +21,6 @@ namespace OeTube.Data.Configurations.Videos
             builder.Property(v => v.Description)
                    .HasMaxLength(VideoConstants.DescriptionMaxLength);
 
-            builder.Property(v => v.InputFormat)
-                   .HasMaxLength(VideoConstants.FormatMaxLength)
-                   .IsRequired();
-
-            builder.Property(v => v.OutputFormat)
-                   .HasMaxLength(VideoConstants.FormatMaxLength)
-                   .IsRequired();
-
             builder.Ignore(v => v.AccessGroups);
             builder.HasMany(v => v.AccessGroups)
                    .WithOne()
