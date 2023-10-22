@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UploadRoutingModule } from './upload-routing.module';
 import { UploadComponent } from './upload.component';
 import { FormsModule,ReactiveFormsModule} from '@angular/forms';
-import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule } from 'devextreme-angular';
+import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule, DxFormModule } from 'devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,8 @@ import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,
     DxButtonModule,
     DxSelectBoxModule,
     DxTextAreaModule,
-    DxProgressBarModule
+    DxProgressBarModule,
+    DxFormModule
   ]
 })
 export class UploadModule { }

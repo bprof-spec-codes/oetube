@@ -1,8 +1,24 @@
 <div class="container">
+  
   <div class="video-app">
     <div class="video-player">
-      <app-video-wrapper></app-video-wrapper>
+      <app-video-wrapper [src]="video"></app-video-wrapper>
       <app-control-bar></app-control-bar>
     </div>
   </div>
+  <div *ngIf="video!==undefined">
+    <h4>Name: {{ video.name }}</h4>
+    <h5>Description: {{ video.description }}</h5>
+    <h6>Id: {{ video.id }}</h6>
+    <h6>Duration: {{ video.duration }}</h6>
+    <h6>CreationTime: {{ video.creationTime | date:'short' }}</h6>
+    <div>
+      <h5>Resolutions</h5>
+     <div *ngFor="let item of video.resolutionsSrc">
+          <strong>{{item.resolution.width}}x{{item.resolution.height}}:</strong> {{ item.src }}
+     </div>
+  </div>
+  </div>
+
+  <div>
 </div>

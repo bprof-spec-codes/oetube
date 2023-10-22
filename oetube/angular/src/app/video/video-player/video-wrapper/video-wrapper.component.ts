@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Input, Component, ElementRef, OnInit, OnChanges, ViewChild, ViewEncapsulation, SimpleChanges } from '@angular/core';
 
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
+import { ResolutionSrcDto, VideoDto } from '@proxy/application/dtos/videos';
 
 @Component({
   selector: 'app-video-wrapper',
@@ -11,7 +12,7 @@ import { VolumeService } from 'src/app/services/video/volume.service';
   styleUrls: ['./video-wrapper.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class VideoWrapperComponent implements OnInit {
+export class VideoWrapperComponent implements OnInit, OnChanges {
   loading = true;
   playing = false;
   playNext = true;
@@ -35,7 +36,7 @@ export class VideoWrapperComponent implements OnInit {
       }
     },
   };
-
+  @Input() src?:VideoDto;
   @ViewChild('video', { static: true }) video: ElementRef<HTMLVideoElement> =
     {} as ElementRef<HTMLVideoElement>;
 
@@ -55,13 +56,14 @@ export class VideoWrapperComponent implements OnInit {
         );
       }
     });
-
+    debugger;
     // TODO videos should not be loaded from here
-    this.load(
-      'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-    );
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.src!=undefined) {
+      this.load(this.src.resolutionsSrc[0].src)
+    } 
+  } 
   /** Play/Pause video on click */
   onVideoClick() {
     if (this.playing) {
