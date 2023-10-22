@@ -1,2 +1,3 @@
 import * as Content from './content';
-export { Content };
+import * as Domain from './domain';
+export { Content, Domain };
