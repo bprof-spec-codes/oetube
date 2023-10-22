@@ -1,5 +1,6 @@
 ﻿using OeTube.Domain.Entities.Videos;
-using OeTube.Infrastructure.FFprobe.Infos;
+using OeTube.Infrastructure.FF;
+using OeTube.Infrastructure.FF.Probe.Infos;
 
 namespace OeTube.Infrastructure.VideoFileManager
 {
@@ -14,7 +15,7 @@ namespace OeTube.Infrastructure.VideoFileManager
         IEnumerable<Resolution> GetPossibleResolutions();
         IEnumerable<string> GetSupportedCodecs();
         IEnumerable<string> GetSupportedFormats();
-        bool IsInDesiredResolutionAndFormat(Video video, VideoStreamInfo videoStreamInfo);
+        bool IsInDesiredResolutionAndFormat(VideoInfo videoInfo);
         void ValidateResizedVideo(Video video, VideoInfo sourceInfo, VideoInfo resizedInfo);
         void ValidateSourceVideo(VideoInfo sourceInfo);
     }

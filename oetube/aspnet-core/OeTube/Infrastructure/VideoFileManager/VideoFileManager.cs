@@ -1,13 +1,14 @@
 ﻿using System.Runtime.Versioning;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using OeTube.Domain.Entities.Videos;
-using OeTube.Infrastructure.FFprobe.Infos;
+using OeTube.Infrastructure.FF;
+using OeTube.Infrastructure.FF.Probe.Infos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Services;
 
 namespace OeTube.Infrastructure.VideoFileManager
 {
-    public class VideoFileManager : ITransientDependency, IVideoFileManager
+    public class VideoFileManager : IVideoFileManager, ITransientDependency
     {
         private const long GB = 1024L * 1024 * 1024;
         public long MaxSizeInBytes => GB;
@@ -23,18 +24,19 @@ namespace OeTube.Infrastructure.VideoFileManager
         }
         public IEnumerable<Resolution> GetPossibleResolutions()
         {
-            IEnumerable<Resolution> getResolutions()
+            static IEnumerable<Resolution> getResolutions()
             {
                 yield return Resolution.HD;
                 yield return Resolution.FHD;
             }
             return getResolutions().OrderBy(r => r.Height);
         }
-        public bool IsInDesiredResolutionAndFormat(Video video, VideoStreamInfo videoStreamInfo)
+        public bool IsInDesiredResolutionAndFormat(VideoInfo videoInfo)
         {
-            return video.OutputFormat == OutputFormat &&
-                GetDesiredResolutions(videoStreamInfo.Resolution)
-                .Any(r => r == videoStreamInfo.Resolution);
+            var resolution = videoInfo.VideoStreams[0].Resolution;
+            return videoInfo.Format == OutputFormat &&
+                GetDesiredResolutions(resolution)
+                .Any(r => r == resolution);
         }
         public IEnumerable<Resolution> GetDesiredResolutions(Resolution originalResolution)
         {
@@ -48,14 +50,11 @@ namespace OeTube.Infrastructure.VideoFileManager
                 yield return item;
             }
         }
-        private string GetResizeArgument(Resolution resolution)
-        {
-            return $"-preset ultrafast -s {resolution} -c:a copy";
-        }
+
         public List<UploadTask> CreateUploadTasks(Video video)
         {
-            return video.GetNotReadyResolutions()
-                        .Select(r => new UploadTask(r, GetResizeArgument(r)))
+            return video.GetResolutionsBy(false)
+                        .Select(r => new UploadTask(r))
                         .ToList();
         }
 
@@ -67,16 +66,16 @@ namespace OeTube.Infrastructure.VideoFileManager
             var firstVideoStream = sourceInfo.VideoStreams[0];
             ValidateCodec(firstVideoStream.Codec);
         }
-        
+
         public void ValidateResizedVideo(Video video, VideoInfo sourceInfo, VideoInfo resizedInfo)
         {
-            ValidateResizedVideoSize(sourceInfo.Size,resizedInfo.Size);
-            ValidateResizedFormat(video,resizedInfo.Format);
+            ValidateResizedFormat(resizedInfo.Format);
             ValidateVideoStreams(resizedInfo.VideoStreams);
-            var firstVideoStream = resizedInfo.VideoStreams[0];
-            ValidateCodec(firstVideoStream.Codec);
+            var resizedVideoStream = resizedInfo.VideoStreams[0];
+            ValidateResolution(video, resizedVideoStream.Resolution);
+            ValidateCodec(resizedVideoStream.Codec);
             ValidateDuration(video, resizedInfo.Duration);
-            ValidateResolution(video, firstVideoStream.Resolution);
+            ValidateResizedVideoSize(sourceInfo, resizedInfo);
             ValidateAudioStreams(sourceInfo, resizedInfo.AudioStreams);
         }
         private void ValidateSize(long size)
@@ -86,13 +85,8 @@ namespace OeTube.Infrastructure.VideoFileManager
                 throw new ArgumentOutOfRangeException(nameof(size), size, MaxSizeInBytes.ToString());
             }
         }
-        private void ValidateResizedVideoSize(long sourceSize,long resizedSize)
+        private void ValidateResizedVideoSize(VideoInfo sourceInfo, VideoInfo resizedInfo)
         {
-            long epsilon = sourceSize / 2;
-            if(Math.Abs(sourceSize-resizedSize)>epsilon)
-            {
-                throw new ArgumentException(null, nameof(resizedSize));
-            }
         }
         private void ValidateSourceFormat(string format)
         {
@@ -102,9 +96,9 @@ namespace OeTube.Infrastructure.VideoFileManager
                 throw new ArgumentException(null, nameof(format));
             }
         }
-        private void ValidateResizedFormat(Video video,string format)
+        private void ValidateResizedFormat(string format)
         {
-            if (format != video.OutputFormat)
+            if (format != OutputFormat)
             {
                 throw new ArgumentException(null, nameof(format));
             }
@@ -113,7 +107,7 @@ namespace OeTube.Infrastructure.VideoFileManager
         {
             if (videoStreams.Count == 0)
             {
-                throw new ArgumentException(null,nameof(videoStreams));
+                throw new ArgumentException(null, nameof(videoStreams));
             }
         }
         private void ValidateCodec(string codec)
@@ -127,14 +121,14 @@ namespace OeTube.Infrastructure.VideoFileManager
         private void ValidateDuration(Video video, TimeSpan duration)
         {
             var epsilon = 0.05;
-            if (Math.Abs(video.Duration.Seconds-duration.Seconds)>epsilon)
+            if (Math.Abs(video.Duration.Seconds - duration.Seconds) > epsilon)
             {
                 throw new ArgumentException(null, nameof(duration));
             }
         }
         private void ValidateResolution(Video video, Resolution resolution)
         {
-            if (!video.GetNotReadyResolutions().Contains(resolution))
+            if (!video.GetResolutionsBy(false).Contains(resolution))
             {
                 throw new ArgumentException(null, nameof(resolution));
             }
@@ -143,7 +137,7 @@ namespace OeTube.Infrastructure.VideoFileManager
         {
             if (sourceInfo.AudioStreams.Count != audioStreams.Count)
             {
-                throw new ArgumentException(null,nameof(audioStreams));
+                throw new ArgumentException(null, nameof(audioStreams));
             }
             for (int i = 0; i < audioStreams.Count; i++)
             {
@@ -153,14 +147,13 @@ namespace OeTube.Infrastructure.VideoFileManager
         private void ValidateAudio(AudioStreamInfo sourceAudioStream, AudioStreamInfo resizedAudioStream)
         {
             var bitRateEpsilon = 100;
-            if(sourceAudioStream.Frames!=resizedAudioStream.Frames&&
-               sourceAudioStream.Duration!=resizedAudioStream.Duration&&
-               sourceAudioStream.Codec!=resizedAudioStream.Codec&&
-               Math.Abs(sourceAudioStream.Bitrate-resizedAudioStream.Bitrate)>bitRateEpsilon)
+            if (sourceAudioStream.Frames != resizedAudioStream.Frames &&
+               sourceAudioStream.Duration != resizedAudioStream.Duration &&
+               sourceAudioStream.Codec != resizedAudioStream.Codec &&
+               Math.Abs(sourceAudioStream.Bitrate - resizedAudioStream.Bitrate) > bitRateEpsilon)
             {
                 throw new ArgumentException(null, nameof(resizedAudioStream));
             }
         }
-
     }
 }
