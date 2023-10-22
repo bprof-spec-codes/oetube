@@ -13,7 +13,6 @@ namespace OeTube.Infrastructure.FileContainers
     {
         private readonly IBlobContainer _container;
         public string RootDirectory { get; }
-
         public string ContainerName { get; }
 
         public FileContainer(string containerName,
@@ -28,11 +27,7 @@ namespace OeTube.Infrastructure.FileContainers
         private string GetDirectory(IBlobFilePathCalculator calculator, IBlobContainerConfigurationProvider provider)
         {
             string? absolutePath = Path.GetDirectoryName(calculator.Calculate(new BlobProviderGetArgs(ContainerName, provider.Get(ContainerName), "_")));
-            if (absolutePath == null)
-            {
-                throw new NullReferenceException(nameof(GetDirectory));
-            }
-            return absolutePath;
+            return absolutePath ?? throw new NullReferenceException(nameof(GetDirectory));
         }
         public string GetAbsolutePath(string containerPath)
         {
@@ -42,28 +37,29 @@ namespace OeTube.Infrastructure.FileContainers
         {
             return absolutePath.Replace(RootDirectory + Path.DirectorySeparatorChar, "");
         }
-        public string? FindFirstOrNull(params string[] path)
+        public string? FindFirstOrNull(string path)
         {
             return Find(path).FirstOrDefault();
         }
-        public IEnumerable<string> Find(params string[] path)
+        public IEnumerable<string> Find(string path)
         {
-            if (path.Length == 0)
+            string[] parts = path.Split(Path.DirectorySeparatorChar);
+            if (parts.Length == 0)
             {
                 return Enumerable.Empty<string>();
             }
-            string directory = path.Length == 1 ? path[0] : Path.Combine(path[..^1]);
-            var file = path[^1];
+            string directory = path.Length == 1 ? parts[0] : Path.Combine(parts[..^1]);
+            var file = parts[^1];
             string absoluteDirectory = GetAbsolutePath(directory);
             string pattern = Path.HasExtension(file) ? file : file + "*";
             string[] files = Directory.GetFiles(absoluteDirectory, pattern, SearchOption.TopDirectoryOnly);
             return files.Select(GetContainerPath);
         }
-        public async Task<bool> DeleteFirstAsync(params string[] path)
+        public async Task<bool> DeleteFirstAsync(string path)
         {
             return await DeleteFirstAsync(path, default);
         }
-        public async Task<bool> DeleteFirstAsync(string[] path, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteFirstAsync(string path, CancellationToken cancellationToken = default)
         {
             var result = FindFirstOrNull(path);
             if (result is null) return false;
@@ -85,12 +81,12 @@ namespace OeTube.Infrastructure.FileContainers
             {
                 return result;
             }
+            
             var directory = Directory.GetParent(GetAbsolutePath(name));
-            if (directory == null || directory.FullName == RootDirectory || directory.GetFiles().Length > 0)
+            if(directory is not null && !directory.GetFileSystemInfos().Any())
             {
-                return result;
+                Directory.Delete(directory.FullName, true);
             }
-            Directory.Delete(directory.FullName, true);
             return result;
         }
 
@@ -112,11 +108,11 @@ namespace OeTube.Infrastructure.FileContainers
             var stream = await GetAsync(name, cancellationToken);
             return await ByteContent.FromStreamAsync(name, stream, cancellationToken);
         }
-        public async Task<ByteContent?> GetFirstOrNullAsync(params string[] path)
+        public async Task<ByteContent?> GetFirstOrNullAsync(string path)
         {
             return await GetFirstOrNullAsync(path, default);
         }
-        public async Task<ByteContent?> GetFirstOrNullAsync(string[] path, CancellationToken cancellationToken = default)
+        public async Task<ByteContent?> GetFirstOrNullAsync(string path, CancellationToken cancellationToken = default)
         {
             var result = FindFirstOrNull(path);
             if (result is null) return null;
