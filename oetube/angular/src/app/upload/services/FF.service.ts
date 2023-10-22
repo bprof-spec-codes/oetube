@@ -81,7 +81,6 @@ export class FFService {
     try {
       this.transcoding = true;
       await this.ffmpeg.run(...this.getCommand(inputFileName, outputFileName, args).split(' '));
-    debugger;
     const data = this.ffmpeg.FS('readFile', outputFileName);
       const file = new File([data.buffer], outputFileName, {
         type: mimeTypes.getType(outputFileName),
