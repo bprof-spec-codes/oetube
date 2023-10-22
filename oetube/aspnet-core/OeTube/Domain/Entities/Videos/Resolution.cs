@@ -3,13 +3,15 @@ using Volo.Abp.Domain.Values;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public readonly struct Resolution
+    public class Resolution:ValueObject
     {
+        public static readonly Resolution Zero = new(0, 0);
         private const char DefaultSeparator = 'x';
+
         public static bool TryParse(string input,out Resolution resolution,char separator=DefaultSeparator)
         {
             string[] parts = input.Split(separator);
-            resolution = new Resolution();
+            resolution = Zero;
             if (parts.Length == 2 && int.TryParse(parts[0], out int width)
                 && int.TryParse(parts[1], out int height))
             {
@@ -22,13 +24,14 @@ namespace OeTube.Domain.Entities.Videos
         {
             if(!TryParse(input, out Resolution resolution, separator))
             {
-                throw new ArgumentException(nameof(input));
+                throw new ArgumentException(input); 
             }
             return resolution;
+
         }
-        public static readonly Resolution SD = new Resolution(720, 480);
-        public static readonly Resolution HD = new Resolution(1280, 720);
-        public static readonly Resolution FHD = new Resolution(1920, 1080);
+        public static readonly Resolution SD = new (720, 480);
+        public static readonly Resolution HD = new (1280, 720);
+        public static readonly Resolution FHD = new (1920, 1080);
         
         public static bool operator ==(Resolution left, Resolution right)
         {
@@ -37,6 +40,12 @@ namespace OeTube.Domain.Entities.Videos
         public static bool operator !=(Resolution left, Resolution right)
         {
             return !(left == right);
+        }
+        public static double operator /(Resolution left,Resolution right)
+        {
+            double leftArea = left.Width * left.Height;
+            double rightArea = right.Width * right.Height;
+            return leftArea / rightArea;
         }
         public Resolution(int width, int height)
         {
@@ -47,9 +56,12 @@ namespace OeTube.Domain.Entities.Videos
         public int Height { get;}
         public override string ToString()
         {
-            return $"{Width}{DefaultSeparator}{Height}";
+            return ToString(DefaultSeparator);
         }
-
+        public string ToString(char separator)
+        {
+            return $"{Width}{separator}{Height}";
+        }
         public override bool Equals(object? obj)
         {
             return obj is Resolution resolution &&
@@ -60,6 +72,12 @@ namespace OeTube.Domain.Entities.Videos
         public override int GetHashCode()
         {
             return HashCode.Combine(Width, Height);
+        }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return Width;
+            yield return Height;
         }
     }
 }
