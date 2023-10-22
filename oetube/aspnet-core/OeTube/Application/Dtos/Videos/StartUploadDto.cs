@@ -2,6 +2,7 @@
 using Volo.Abp.Content;
 using OeTube.Domain.Entities.Videos;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OeTube.Application.Dtos.Videos
 {
@@ -12,7 +13,7 @@ namespace OeTube.Application.Dtos.Videos
         [StringLength(VideoConstants.DescriptionMaxLength)]
         public string? Description { get; set; } = string.Empty;
         [Required]
-        public IRemoteStreamContent Content { get; set; }
+        public IRemoteStreamContent? Content { get; set; }
     }
 
 }
