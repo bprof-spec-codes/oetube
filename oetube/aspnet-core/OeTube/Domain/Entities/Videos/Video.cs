@@ -23,10 +23,7 @@ namespace OeTube.Domain.Entities.Videos
         public DateTime CreationTime { get; private set; }
         public Guid? CreatorId { get; private set; }
         public TimeSpan Duration { get; private set; }
-        
-        public string InputFormat { get; private set; }
-        public string OutputFormat { get; private set; }
-        public bool IsReady { get; private set; }
+        public bool IsUploadCompleted { get; private set; }
 
         private readonly EntitySet<AccessGroup, Guid> accessGroups;
         public virtual IReadOnlyEntitySet<AccessGroup, Guid> AccessGroups => accessGroups;
@@ -37,32 +34,24 @@ namespace OeTube.Domain.Entities.Videos
         private Video()
         {
             Name = string.Empty;
-            InputFormat = string.Empty;
-            OutputFormat = string.Empty;
             accessGroups = new EntitySet<AccessGroup, Guid>();
             resolutions = new EntitySet<VideoResolution,Resolution>();
         }
 
-        public Video(Guid id, string name, Guid? creatorId,string inputFormat,string outputFormat, TimeSpan duration,IEnumerable<Resolution> resolutions) : this()
+        public Video(Guid id, string name, Guid? creatorId,TimeSpan duration,IEnumerable<Resolution> resolutions) : this()
         {
             Id = id;
             SetName(name);
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
             Duration = duration;
-            InputFormat = ValidateFormat(inputFormat);
-            OutputFormat = ValidateFormat(outputFormat);
+            
             foreach (var item in resolutions)
             {
                 this.resolutions.Add(new VideoResolution(Id, item));
             }
         }
-        private string ValidateFormat(string format, [CallerArgumentExpression(nameof(format))] string? name=null)
-        {
-            name ??= string.Empty;
-            Check.Length(format, name, VideoConstants.FormatMaxLength, VideoConstants.FormatMinLength);
-            return format;
-        }
+
         public Video SetName(string name)
         {
             Check.Length(name,
@@ -72,9 +61,9 @@ namespace OeTube.Domain.Entities.Videos
             Name = name;
             return this;
         }
-        public Video MarkReady()
+        public Video SetUploadCompleted()
         {
-            if(IsReady)
+            if(IsUploadCompleted)
             {
                 throw new InvalidOperationException();
             }
@@ -82,16 +71,16 @@ namespace OeTube.Domain.Entities.Videos
             {
                 throw new InvalidOperationException();
             }
-            IsReady = true;
+            IsUploadCompleted = true;
             return this;
+        }
+        public IEnumerable<Resolution> GetResolutionsBy(bool isReady)
+        {
+            return resolutions.Where(r => r.IsReady==isReady).Select(r => r.GetResolution());
         }
         public bool IsAllResolutionReady()
         {
             return resolutions.Count>0&&resolutions.All(r => r.IsReady);
-        }
-        public IEnumerable<Resolution> GetNotReadyResolutions()
-        {
-            return resolutions.Where(r => !r.IsReady).Select(r => r.GetResolution());
         }
 
         public Video SetDescription(string? description)
