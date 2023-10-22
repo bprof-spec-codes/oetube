@@ -1,4 +1,4 @@
-﻿namespace OeTube.Infrastructure.FFmpeg
+﻿namespace OeTube.Infrastructure.FF.Mpeg
 {
     public interface IFFmpegService
     {

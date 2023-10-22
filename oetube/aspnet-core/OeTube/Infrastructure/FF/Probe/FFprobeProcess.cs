@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using OeTube.Domain.Entities.Videos;
-using OeTube.Infrastructure.FFprobe.Infos;
+using OeTube.Infrastructure.FF.Probe.Infos;
 using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFprobe
+namespace OeTube.Infrastructure.FF.Probe
 {
 
     public class FFprobeProcess : FFProcess<VideoInfo>, ITransientDependency
@@ -18,10 +18,10 @@ namespace OeTube.Infrastructure.FFprobe
         private VideoInfo ParseProbeOutput(string jsonOutput)
         {
             var root = JToken.Parse(jsonOutput);
-            var format = root["format"];
+            var format = root["format"] ?? throw new ArgumentException(null,nameof(jsonOutput));
 
-            List<VideoStreamInfo> videos = new List<VideoStreamInfo>();
-            List<AudioStreamInfo> audios = new List<AudioStreamInfo>();
+            List<VideoStreamInfo> videos = new();
+            List<AudioStreamInfo> audios = new();
             var streams = root["streams"];
             if (streams != null)
             {
@@ -43,7 +43,7 @@ namespace OeTube.Infrastructure.FFprobe
             return new VideoInfo()
             {
                 Duration = TimeSpan.FromSeconds(format.Value<double>("duration")),
-                FileName = format.Value<string>("filename")??string.Empty,
+                FileName = format.Value<string>("filename") ?? string.Empty,
                 Size = format.Value<long>("size"),
                 AudioStreams = audios,
                 VideoStreams = videos
@@ -55,7 +55,7 @@ namespace OeTube.Infrastructure.FFprobe
             return new VideoStreamInfo()
             {
                 Bitrate = token.Value<long>("bit_rate"),
-                Codec = token.Value<string>("codec_name")??string.Empty,
+                Codec = token.Value<string>("codec_name") ?? string.Empty,
                 Duration = TimeSpan.FromSeconds(token.Value<double>("duration")),
                 Frames = token.Value<int>("nb_frames"),
                 Framerate = ToFrameRate(token["avg_frame_rate"]),
@@ -96,7 +96,7 @@ namespace OeTube.Infrastructure.FFprobe
             return new AudioStreamInfo()
             {
                 Bitrate = token.Value<long>("bit_rate"),
-                Codec = token.Value<string>("codec_name")??string.Empty,
+                Codec = token.Value<string>("codec_name") ?? string.Empty,
                 Duration = TimeSpan.FromSeconds(token.Value<double>("duration")),
                 Frames = token.Value<int>("nb_frames"),
                 Channels = token.Value<int>("channels"),

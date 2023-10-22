@@ -1,4 +1,4 @@
-﻿namespace OeTube.Infrastructure.FFprobe.Infos
+﻿namespace OeTube.Infrastructure.FF.Probe.Infos
 {
     public class VideoInfo
     {

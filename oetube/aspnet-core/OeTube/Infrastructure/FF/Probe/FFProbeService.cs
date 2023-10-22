@@ -1,4 +1,4 @@
-﻿using OeTube.Infrastructure.FFprobe.Infos;
+﻿using OeTube.Infrastructure.FF.Probe.Infos;
 using OeTube.Infrastructure.FileContainers;
 using OeTube.Infrastructure.ProcessTemplate;
 using System.Net.Http;
@@ -6,7 +6,7 @@ using Volo.Abp.BlobStoring;
 using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFprobe
+namespace OeTube.Infrastructure.FF.Probe
 {
 
     public class FFProbeService : ITransientDependency, IFFProbeService
@@ -16,9 +16,9 @@ namespace OeTube.Infrastructure.FFprobe
         public Guid Id { get; }
         public FFProbeService(FFprobeProcess ffprobe, IFileContainerFactory containerFactory)
         {
-            _ffprobe = ffprobe;
-            _container = containerFactory.Create("ffprobe");
             Id = Guid.NewGuid();
+            _ffprobe = ffprobe;
+            _container = containerFactory.Create(Path.Combine("ffprobe", Id.ToString()));
         }
         public async Task<VideoInfo> AnalyzeAsync(ByteContent? input, CancellationToken cancellationToken = default)
         {
@@ -29,19 +29,17 @@ namespace OeTube.Infrastructure.FFprobe
 
             try
             {
-              
-                string fileName = Path.Combine(Id.ToString(), Path.GetFileName(input.Path));
-                await _container.SaveAsync(input.WithNewPath(fileName), true, cancellationToken);
-                var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(fileName), _container.RootDirectory), cancellationToken);
-                await _container.DeleteAsync(fileName);
+                input = input.WithNewName("input");
+                await _container.SaveAsync(input, true, cancellationToken);
+                var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(input.Path), _container.RootDirectory), cancellationToken);
+                await _container.DeleteAsync(input.Path);
                 return videoInfo;
             }
             finally
             {
-                var directory=_container.GetAbsolutePath(Id.ToString());
-                if (Directory.Exists(directory))
+                if (Directory.Exists(_container.RootDirectory))
                 {
-                    Directory.Delete(directory, true);
+                    Directory.Delete(_container.RootDirectory, true);
                 }
             }
         }

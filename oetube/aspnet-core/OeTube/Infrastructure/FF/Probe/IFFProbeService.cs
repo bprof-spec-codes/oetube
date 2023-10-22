@@ -1,7 +1,7 @@
-﻿using OeTube.Infrastructure.FFprobe.Infos;
+﻿using OeTube.Infrastructure.FF.Probe.Infos;
 using Volo.Abp.Content;
 
-namespace OeTube.Infrastructure.FFprobe
+namespace OeTube.Infrastructure.FF.Probe
 {
     public interface IFFProbeService
     {
