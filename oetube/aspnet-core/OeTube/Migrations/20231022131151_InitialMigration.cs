@@ -719,9 +719,7 @@ namespace OeTube.Migrations
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    InputFormat = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    OutputFormat = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    IsReady = table.Column<bool>(type: "bit", nullable: false),
+                    IsUploadCompleted = table.Column<bool>(type: "bit", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
