@@ -17,6 +17,6 @@ export class VideoComponent implements OnInit{
     
   }
   ngOnInit(): void {
-    this.videoService.getList({maxResultCount:100}).subscribe(data=>this.pagedResult=data)
+    this.videoService.getList({},{maxResultCount:100}).subscribe(data=>this.pagedResult=data)
   }
 }

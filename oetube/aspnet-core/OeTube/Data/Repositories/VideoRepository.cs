@@ -58,5 +58,10 @@ namespace OeTube.Data.Repositories
         {
             return await _includer.IncludeAsync(GetQueryableAsync, true);
         }
+
+        public async Task<IQueryable<Video>> GetCompletedVideosQueryableAsync(string? name = null)
+        {
+            return (await GetQueryableAsync()).Where(v=>v.IsUploadCompleted).Where(v=>name==null||v.Name.ToLower()==name.ToLower());
+        }
     }
 }

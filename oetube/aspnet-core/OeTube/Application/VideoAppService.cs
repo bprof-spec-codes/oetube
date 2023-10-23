@@ -167,10 +167,9 @@ namespace OeTube.Application
 
         }
 
-
-        public async Task<PagedResultDto<VideoItemDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<VideoItemDto>> GetListAsync(VideoFilterDto filter, PagedAndSortedResultRequestDto input)
         {
-            var result = await _videoRepository.GetAvaliableVideosQueryableAsync();
+            var result = await _videoRepository.GetCompletedVideosQueryableAsync(filter.Name);
             return await result.ToPagedResultDtoAsync((v) =>
             {
                return new VideoItemDto()

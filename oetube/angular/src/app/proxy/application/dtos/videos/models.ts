@@ -27,6 +27,10 @@ export interface VideoDto {
   isUploadCompleted: boolean;
 }
 
+export interface VideoFilterDto {
+  name?: string;
+}
+
 export interface VideoItemDto {
   id?: string;
   name?: string;
