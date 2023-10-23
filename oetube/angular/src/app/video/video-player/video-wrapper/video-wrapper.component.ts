@@ -1,4 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
@@ -11,7 +20,7 @@ import { VolumeService } from 'src/app/services/video/volume.service';
   styleUrls: ['./video-wrapper.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class VideoWrapperComponent implements OnInit {
+export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   loading = true;
   playing = false;
   playNext = true;
@@ -36,8 +45,9 @@ export class VideoWrapperComponent implements OnInit {
     },
   };
 
-  @ViewChild('video', { static: true }) video: ElementRef<HTMLVideoElement> =
-    {} as ElementRef<HTMLVideoElement>;
+  @Input() videoUrl: string;
+
+  @ViewChild('video') video: ElementRef<HTMLVideoElement> = {} as ElementRef<HTMLVideoElement>;
 
   constructor(
     private videoService: VideoService,
@@ -45,7 +55,7 @@ export class VideoWrapperComponent implements OnInit {
     private videoTimeService: VideoTimeService
   ) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.subscriptions();
     Object.keys(this.videoListeners).forEach(videoListener => {
       if (this.video) {
@@ -56,10 +66,19 @@ export class VideoWrapperComponent implements OnInit {
       }
     });
 
-    // TODO videos should not be loaded from here
-    this.load(
-      'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-    );
+    this.load(this.videoUrl);
+  }
+
+  ngOnDestroy() {
+    Object.keys(this.videoListeners).forEach(videoListener => {
+      if (this.video) {
+        this.video.nativeElement.removeEventListener(
+          videoListener,
+          this.videoListeners[videoListener as keyof typeof this.videoListeners]
+        );
+      }
+    });
+    this.hls.detachMedia();
   }
 
   /** Play/Pause video on click */
@@ -87,6 +106,8 @@ export class VideoWrapperComponent implements OnInit {
    * Loads the video, if the browser supports HLS then the video use it, else play a video with native support
    */
   load(currentVideo: string): void {
+    this.videoTimeService.setVideoProgress(0);
+    this.videoTimeService.setCurrentTime(0);
     if (Hls.isSupported()) {
       this.loadVideoWithHLS(currentVideo);
     } else {
@@ -140,7 +161,6 @@ export class VideoWrapperComponent implements OnInit {
   private loadVideoWithHLS(currentVideo: string) {
     this.hls.loadSource(currentVideo);
     this.hls.attachMedia(this.video.nativeElement);
-    // this.hls.on(HLS.Events.MANIFEST_PARSED, () => this.video.nativeElement.play());
   }
 
   /**

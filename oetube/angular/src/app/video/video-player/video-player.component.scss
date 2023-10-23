@@ -7,10 +7,6 @@
   height: 95vh;
   margin: 2em 2em 0 2em;
 
-  h1 {
-    margin-bottom: 2rem;
-  }
-
   .video-app {
     margin-top: 1em;
     display: flex;
@@ -28,20 +24,10 @@
       justify-content: center;
     }
 
-    .list {
-      margin-left: 1.5em;
-      flex: 1;
-    }
-
     @media (max-width: 800px) {
       flex-direction: column;
 
       .video-player {
-        width: 90%;
-      }
-
-      .list {
-        margin: 2em 0 0 0;
         width: 90%;
       }
     }
