@@ -3,20 +3,12 @@
   align-items: center;
   justify-content: flex-start;
 
-  &:hover .bar,
-  .bar:focus {
-    pointer-events: all;
-    width: 100px;
-    margin-right: 1em;
-  }
-
   .icon {
     position: relative;
   }
 
   .bar {
-    width: 0;
-    overflow: hidden;
+    width: 100px;
     pointer-events: none;
   }
 }

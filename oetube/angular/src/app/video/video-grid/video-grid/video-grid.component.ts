@@ -1,17 +1,9 @@
-import {Input, Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import {PagedResultDto,PagedResultRequestDto} from '@abp/ng.core'
+import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
+
 import { VideoItemDto } from '@proxy/application/dtos/videos';
-// TODO Placeholder type!!! Remove as soon as possible
-export type Video = {
-  Id: string;
-  Name: string;
-  Description: string;
-  Duration: number;
-  CreationTime: Date;
-  CreatorId: string;
-  IsDeleted?: boolean;
-};
+import { VideoService } from '@proxy/application';
 
 @Component({
   selector: 'app-video-grid',
@@ -19,14 +11,32 @@ export type Video = {
   styleUrls: ['./video-grid.component.scss'],
 })
 export class VideoGridComponent implements OnInit {
-  //TODO make this @input
-  @Input() videos: VideoItemDto[];
+  public videos: VideoItemDto[];
+  public isLoading: boolean;
+
+  constructor(private readonly videoService: VideoService) {}
 
   ngOnInit(): void {
-    ;
+    this.refreshVideos();
   }
 
-  getCreationTime(item:VideoItemDto){
-    return Date.parse(item.creationTime)
+  onSearch(searchPhrase: string) {
+    this.refreshVideos(searchPhrase);
+  }
+
+  refreshVideos(searchPhrase?: string) {
+    //Observable from Create Method
+    this.videos = undefined;
+    this.isLoading = true;
+
+    this.videoService
+      .getList({}, { maxResultCount: 100 })
+      .subscribe(data => (this.videos = data.items));
+
+    this.isLoading = false;
+  }
+
+  fromatVideoDuration(duration: string) {
+    return duration.split('.')[0];
   }
 }
