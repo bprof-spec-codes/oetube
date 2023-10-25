@@ -74,6 +74,7 @@ public class OeTubeDbContext : AbpDbContext<OeTubeDbContext>,ITenantManagementDb
         builder.ApplyConfiguration(new AccessGroupConfiguration());
         builder.ApplyConfiguration(new PlaylistConfiguration());
         builder.ApplyConfiguration(new VideoItemConfiguration());
+        builder.ApplyConfiguration(new VideoResolutionConfiguration());
 
     }
 

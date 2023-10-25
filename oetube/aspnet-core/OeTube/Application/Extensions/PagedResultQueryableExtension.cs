@@ -17,14 +17,14 @@ namespace OeTube.Application.Extensions
 
         public async static Task<PagedResultDto<TDestination>> ToPagedResultDtoAsync<TSource, TDestination>
             (this IQueryable<TSource> queryable,
-            IObjectMapper mapper, IPagedAndSortedResultRequest request, CancellationToken cancellationToken = default)
+            Func<TSource,TDestination> mapper, IPagedAndSortedResultRequest request, CancellationToken cancellationToken = default)
             where TSource : class, IEntity
         {
             var result = queryable.ToPagedAndSorted(request);
             var list = new List<TDestination>();
             await foreach (var item in result.AsAsyncEnumerable().WithCancellation(cancellationToken))
             {
-                list.Add(mapper.Map<TSource, TDestination>(item));
+                list.Add(mapper(item));
             }
 
             return new PagedResultDto<TDestination>(list.Count, list);

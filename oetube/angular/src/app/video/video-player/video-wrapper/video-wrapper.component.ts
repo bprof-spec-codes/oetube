@@ -4,10 +4,11 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { ResolutionSrcDto, VideoDto } from '@proxy/application/dtos/videos';
 
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
@@ -27,15 +28,16 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   private videoEnded = false;
   private hls = new Hls();
   private videoListeners = {
-    loadedmetadata: () => this.videoTimeService.setVideoDuration(this.video.nativeElement.duration),
+    loadedmetadata: () =>
+      this.videoTimeService.setVideoDuration(this.videoElement.nativeElement.duration),
     canplay: () => this.videoService.setLoading(false),
     seeking: () => this.videoService.setLoading(true),
     timeupdate: () => {
-      this.videoTimeService.setVideoProgress(this.video.nativeElement.currentTime);
+      this.videoTimeService.setVideoProgress(this.videoElement.nativeElement.currentTime);
 
       if (
-        this.video.nativeElement.currentTime === this.video.nativeElement.duration &&
-        this.video.nativeElement.duration > 0
+        this.videoElement.nativeElement.currentTime === this.videoElement.nativeElement.duration &&
+        this.videoElement.nativeElement.duration > 0
       ) {
         this.videoService.pause();
         this.videoService.setVideoEnded(true);
@@ -44,10 +46,9 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
       }
     },
   };
-
-  @Input() videoUrl: string;
-
-  @ViewChild('video') video: ElementRef<HTMLVideoElement> = {} as ElementRef<HTMLVideoElement>;
+  @Input() video?: VideoDto;
+  @ViewChild('video', { static: true }) videoElement: ElementRef<HTMLVideoElement> =
+    {} as ElementRef<HTMLVideoElement>;
 
   constructor(
     private videoService: VideoService,
@@ -58,21 +59,21 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.subscriptions();
     Object.keys(this.videoListeners).forEach(videoListener => {
-      if (this.video) {
-        this.video.nativeElement.addEventListener(
+      if (this.videoElement) {
+        this.videoElement.nativeElement.addEventListener(
           videoListener,
           this.videoListeners[videoListener as keyof typeof this.videoListeners]
         );
       }
     });
 
-    this.load(this.videoUrl);
+    this.load(this.video.resolutionsSrc[0].src);
   }
 
   ngOnDestroy() {
     Object.keys(this.videoListeners).forEach(videoListener => {
-      if (this.video) {
-        this.video.nativeElement.removeEventListener(
+      if (this.videoElement) {
+        this.videoElement.nativeElement.removeEventListener(
           videoListener,
           this.videoListeners[videoListener as keyof typeof this.videoListeners]
         );
@@ -80,7 +81,11 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
     });
     this.hls.detachMedia();
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.video != undefined) {
+      this.load(this.video.resolutionsSrc[0].src);
+    }
+  }
   /** Play/Pause video on click */
   onVideoClick() {
     if (this.playing) {
@@ -111,7 +116,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
     if (Hls.isSupported()) {
       this.loadVideoWithHLS(currentVideo);
     } else {
-      if (this.video.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+      if (this.videoElement.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
         this.loadVideo(currentVideo);
       }
     }
@@ -139,7 +144,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
    */
   private playPauseVideo(playing: boolean) {
     this.playing = playing;
-    this.video.nativeElement[playing ? 'play' : 'pause']();
+    this.videoElement.nativeElement[playing ? 'play' : 'pause']();
   }
 
   /**
@@ -148,9 +153,11 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   private subscriptions() {
     this.videoService.playingState$.subscribe(playing => this.playPauseVideo(playing));
     this.videoTimeService.currentTime$.subscribe(
-      currentTime => (this.video.nativeElement.currentTime = currentTime)
+      currentTime => (this.videoElement.nativeElement.currentTime = currentTime)
     );
-    this.volumeService.volumeValue$.subscribe(volume => (this.video.nativeElement.volume = volume));
+    this.volumeService.volumeValue$.subscribe(
+      volume => (this.videoElement.nativeElement.volume = volume)
+    );
     this.videoService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
     this.videoService.loading$.subscribe(loading => (this.loading = loading));
   }
@@ -160,13 +167,13 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
    */
   private loadVideoWithHLS(currentVideo: string) {
     this.hls.loadSource(currentVideo);
-    this.hls.attachMedia(this.video.nativeElement);
+    this.hls.attachMedia(this.videoElement.nativeElement);
   }
 
   /**
    * Method that loads the video without HLS support
    */
   private loadVideo(currentVideo: string) {
-    this.video.nativeElement.src = currentVideo;
+    this.videoElement.nativeElement.src = currentVideo;
   }
 }

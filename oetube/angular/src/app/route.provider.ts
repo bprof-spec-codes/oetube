@@ -28,6 +28,12 @@ function configureRoutes(routesService: RoutesService) {
         order: 3,
         layout: eLayoutType.application,
       },
+      {
+        path: '/ffmpeg-test',
+        name: '::FFMPEG test',
+        order: 4,
+        layout: eLayoutType.application,
+      },
     ]);
   };
 }

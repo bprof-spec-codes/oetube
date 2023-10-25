@@ -20,7 +20,7 @@ namespace OeTube.Domain.Services
             this._playlistRepository = playlistRepository;
         }
 
-        public async Task<Playlist> UpdateMembersAsync(Playlist playlist, IEnumerable<Guid> items, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task<Playlist> UpdateItemsAsync(Playlist playlist, IEnumerable<Guid> items, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             items = items.Distinct();
             var videos = await _videoRepository.GetManyAsSetAsync(items, false, cancellationToken);

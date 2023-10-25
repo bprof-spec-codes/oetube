@@ -26,10 +26,15 @@ namespace OeTube.Data.Configurations.Videos
                    .WithOne()
                    .HasForeignKey(nameof(AccessGroup.VideoId))
                    .OnDelete(DeleteBehavior.Cascade);
+            builder.Ignore(v => v.Resolutions);
+
+            builder.HasMany(v => v.Resolutions)
+                   .WithOne()
+                   .HasForeignKey(nameof(VideoResolution.VideoId))
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.ConfigureCreator<IdentityUser, Video>();
             builder.ConfigureCreationTime();
-
             builder.HasIndex(v => v.CreationTime).IsUnique(false);
         }
     }

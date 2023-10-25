@@ -2,25 +2,24 @@
   <app-search-bar (searchClicked)="onSearch($event)"></app-search-bar>
 </div>
 
-<div *ngIf="!isLoading && (videos$ | async)?.length === 0">No videos found.</div>
+<div *ngIf="!isLoading && videos && videos.length === 0">No videos found.</div>
 <div *ngIf="isLoading" class="text-center">
   <dx-load-indicator [height]="60" [width]="60"> </dx-load-indicator>
 </div>
-<div class="container">
+<div class="container" *ngIf="videos">
   <div class="row gx-5 gy-4 row-cols-1 row-cols-md-3 row-cols-lg-4">
-    <div *ngFor="let video of videos$ | async" class="col position-relative">
+    <div *ngFor="let video of videos" class="col position-relative">
       <div class="pic-container">
-        <img class="rounded my-1 w-100" [src]="'https://picsum.photos/300/200?r=' + video.Id" />
-        <div class="bottom-right">{{ fromatVideoDuration(video.Duration) }}</div>
+        <img class="rounded my-1 w-100" crossorigin="anonymous" [src]="video.indexImageSrc" />
+        <div class="bottom-right">{{ fromatVideoDuration(video.duration) }}</div>
       </div>
-      <div class="text-truncate" [title]="video.Name">
+      <div class="text-truncate" [title]="video.name">
         <a
-          [routerLink]="['video', 'watch', video.Id]"
+          [routerLink]="['video', 'watch', video.id]"
           class="h5 my-1 stretched-link text-decoration-none text-reset"
-          >{{ video.Name }}</a
+          >{{ video.name }}</a
         >
       </div>
-      <p class="h6">Author</p>
     </div>
   </div>
 </div>

@@ -7,6 +7,7 @@ namespace OeTube.Domain.Repositories
 {
     public interface IVideoRepository : IRepository<Video, Guid>
     {
+        Task<IQueryable<Video>> GetCompletedVideosQueryableAsync(string? name=null);
         Task<Video> UpdateAccessGroupsAsync(Video video, IEnumerable<Group> groups, bool autoSave = false, CancellationToken cancellationToken = default);
     }
 }

@@ -42,7 +42,7 @@ namespace OeTube.Application
         {
             var group = await GetEntityByIdAsync(id);
             var result = await _userGroupQuery.GetGroupMembersAsync(group);
-            return await result.ToPagedResultDtoAsync<OeTubeUser, OeTubeUserItemDto>(ObjectMapper,input);
+            return await result.ToPagedResultDtoAsync(ObjectMapper.Map<OeTubeUser, OeTubeUserItemDto>,input);
         }
         
         public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)

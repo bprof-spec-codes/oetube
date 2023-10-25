@@ -24,6 +24,14 @@ namespace OeTube.Data.Repositories
         {
             return (await GetDbContextAsync()).Set<AccessGroup>();
         }
+        private async Task<DbSet<VideoResolution>> GetVideoResolutions()
+        {
+            return (await GetDbContextAsync()).Set<VideoResolution>();
+        }
+        public async Task<IQueryable<VideoResolution>> GetVideoResolutionsQueryableAsync()
+        {
+            return await GetVideoResolutions();
+        }
         public async Task<IQueryable<AccessGroup>> GetAccessGroupsQueryableAsync()
         {
             return await GetAccessGroupsAsync();
@@ -41,9 +49,19 @@ namespace OeTube.Data.Repositories
             }
             return video;
         }
+        public async Task<IQueryable<Video>> GetAvaliableVideosQueryableAsync()
+        {
+            var result = await GetQueryableAsync();
+           return result.Where(v => v.IsUploadCompleted);
+        }
         public override async Task<IQueryable<Video>> WithDetailsAsync()
         {
             return await _includer.IncludeAsync(GetQueryableAsync, true);
+        }
+
+        public async Task<IQueryable<Video>> GetCompletedVideosQueryableAsync(string? name = null)
+        {
+            return (await GetQueryableAsync()).Where(v=>v.IsUploadCompleted).Where(v=>name==null||v.Name.ToLower()==name.ToLower());
         }
     }
 }

@@ -21,6 +21,7 @@ namespace OeTube.Domain.Services
         }
         public async Task<Video> UpdateAccessGroupsAsync(Video video, IEnumerable<Guid> accessGroups, bool autoSave = false, CancellationToken cancellationToken = default)
         {
+            accessGroups=accessGroups.Distinct();
             var groups = await _groupRepository.GetManyAsSetAsync(accessGroups, false, cancellationToken);
             if (groups.Count != accessGroups.Count())
             {

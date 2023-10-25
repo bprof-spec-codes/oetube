@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,6 +46,15 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BackgroundJobs;
+using System.Reflection;
+using Volo.Abp.AspNetCore.SignalR;
+using OeTube.Infrastructure.SignalR;
+using OeTube.Application.Dtos.Videos;
+using Volo.Abp.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OeTube;
 
@@ -96,6 +105,9 @@ namespace OeTube;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule)
 )]
+    [DependsOn(typeof(AbpBlobStoringFileSystemModule))]
+    [DependsOn(typeof(AbpBackgroundJobsModule))]    
+    [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
 public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
@@ -130,7 +142,6 @@ public class OeTubeModule : AbpModule
         {
             context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
         }
-
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureMultiTenancy();
@@ -144,6 +155,9 @@ public class OeTubeModule : AbpModule
         ConfigureDataProtection(context);
         ConfigureEfCore(context);
         ConfigureExceptions();
+        ConfigureBlobStoring();
+        ConfigureBackgroundJobs();
+        ConfigureNewtonsoftJson(context);
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -180,6 +194,7 @@ public class OeTubeModule : AbpModule
             options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
             options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
+        
     }
     private void ConfigureExceptions()
     {
@@ -227,6 +242,12 @@ public class OeTubeModule : AbpModule
             options.MapCodeNamespace("OeTube", typeof(OeTubeResource));
         });
     }
+    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context)
+    {
+        context.Services.AddControllers().AddNewtonsoftJson(options =>
+        {
+        });
+    }
 
     private void ConfigureVirtualFiles(IWebHostEnvironment hostingEnvironment)
     {
@@ -240,20 +261,21 @@ public class OeTubeModule : AbpModule
             }
         });
     }
-
     private void ConfigureAutoApiControllers()
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
+            options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(typeof(StartVideoUploadDto));
             options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly, opts =>
             {
-                opts.RootPath = "oetube";
+
             });
         });
     }
 
     private void ConfigureSwagger(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSwaggerGenNewtonsoftSupport();
         services.AddAbpSwaggerGenWithOAuth(
             configuration["AuthServer:Authority"],
             new Dictionary<string, string>
@@ -330,7 +352,25 @@ public class OeTubeModule : AbpModule
         });
 
     }
-
+    private void ConfigureBlobStoring()
+    {
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+                });
+            });
+        });
+    }
+    private void ConfigureBackgroundJobs()
+    {
+        Configure<AbpBackgroundJobWorkerOptions>(options =>
+        {
+        });
+    }
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
