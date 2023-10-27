@@ -23,7 +23,8 @@ export class UploadComponent implements OnInit {
   }
   submitButtonOptions={
     text:"Submit",
-    useSubmitBehavior:true
+    useSubmitBehavior:true,
+    type:"default"
   }
 
   constructor(private videoService: VideoService, private ffService: FFService) {}
