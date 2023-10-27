@@ -7,11 +7,11 @@
             <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
         </div>
         <dxi-item>
-            <dx-file-uploader #fileUploader uploadMode="useForm" multiple="false"></dx-file-uploader>
+            <dx-file-uploader dialogTrigger="#upload" #fileUploader uploadMode="useForm" multiple="false"></dx-file-uploader>
         </dxi-item>
         <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
     </dx-form>
-    <dx-button>Hello</dx-button>
+    <dx-button id="upload" type="default" itemType="button">Hello World</dx-button>
 </form>
 
 <div class="mt-3">

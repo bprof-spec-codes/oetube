@@ -27,6 +27,10 @@ export class UploadComponent implements OnInit {
     type:"default"
   }
 
+  selectFileUploadButtonOptions={
+    type:"default"
+  }
+
   constructor(private videoService: VideoService, private ffService: FFService) {}
   subscription: any;
   ngOnInit(): void {
