@@ -11,12 +11,15 @@ namespace OeTube.Infrastructure.ProcessTemplate
         public virtual string? PostArguments => null;
 
         protected abstract TOutput HandleProcessOutput(Process process, ProcessSettings settings, string standardOutput, string standardError);
+
         protected virtual void HandleStandardOutputData(ProcessSettings settings, DataReceivedEventArgs dataArgs)
         {
         }
+
         protected virtual void HandleStandardErrorData(ProcessSettings settings, DataReceivedEventArgs dataArgs)
         {
         }
+
         protected virtual ProcessStartInfo CreateStartInfo(ProcessSettings settings)
         {
             return new ProcessStartInfo()
@@ -30,6 +33,7 @@ namespace OeTube.Infrastructure.ProcessTemplate
                 WorkingDirectory = settings.WorkingDirectory
             };
         }
+
         protected string JoinArguments(params string?[] arguments)
         {
             return string.Join(" ", arguments.Where(a => a is not null));
@@ -42,7 +46,7 @@ namespace OeTube.Infrastructure.ProcessTemplate
             settings = settings.WithNewArguments(JoinArguments(PreArguments, settings.NamedArguments.Arguments, PostArguments),
                                                settings.NamedArguments.Name ?? FileName);
 
-            Process process = new ()
+            Process process = new()
             {
                 StartInfo = CreateStartInfo(settings)
             };
@@ -69,21 +73,19 @@ namespace OeTube.Infrastructure.ProcessTemplate
                 await process.WaitForExitAsync(cancellationToken);
                 if (process.ExitCode != 0)
                 {
-
-                    throw new ProcessException($"{settings.NamedArguments.Name} exited with error code: {process.ExitCode}",process.ExitCode,outSb.ToString(),errorSb.ToString());
+                    throw new ProcessException($"{settings.NamedArguments.Name} exited with error code: {process.ExitCode}", process.ExitCode, outSb.ToString(), errorSb.ToString());
                 }
                 return HandleProcessOutput(process, settings, outSb.ToString(), errorSb.ToString());
-                
             }
             catch (Exception ex)
             {
-                if(ex is ProcessException processEx)
+                if (ex is ProcessException processEx)
                 {
                     Debug.WriteLine(processEx.StandardError);
                     Debug.WriteLine(processEx.StandardOutput);
                     throw;
                 }
-                else throw new ProcessException(ex.Message,null, outSb.ToString(), errorSb.ToString());
+                else throw new ProcessException(ex.Message, null, outSb.ToString(), errorSb.ToString());
             }
             finally
             {
@@ -91,6 +93,5 @@ namespace OeTube.Infrastructure.ProcessTemplate
                 process.ErrorDataReceived -= Error;
             }
         }
-
     }
 }
