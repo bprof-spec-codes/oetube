@@ -1,21 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using OeTube.Domain.Repositories;
-using System.Diagnostics;
+using OeTube.Data.Repositories.Playlists;
+using OeTube.Data.Repositories.Repos.GroupRepos;
+using OeTube.Data.Repositories.Videos;
+using OeTube.Domain.Entities.Groups;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
-using Volo.Abp.MultiTenancy;
-using Volo.Abp.TenantManagement;
 using Volo.Abp.Uow;
+
 using Abp = Volo.Abp.Identity;
-using System.Linq.Expressions;
-using System.Linq;
-using OeTube.Domain.Entities.Groups;
-using OeTube.Data.Repositories;
-using OeTube.Domain.Services;
 
 namespace OeTube.Data.SeedContributors
 {
@@ -31,6 +26,7 @@ namespace OeTube.Data.SeedContributors
         private readonly GroupRepository _groupRepository;
         private readonly VideoRepository _videoRepository;
         private readonly PlaylistRepository _playlistRepository;
+
         public OeTubeSeedContributor(IGuidGenerator guidGenerator,
                                        IdentityUserManager userManager,
                                        IdentityRoleManager roleManager,
@@ -53,13 +49,15 @@ namespace OeTube.Data.SeedContributors
             _videoRepository = videoRepository;
             _playlistRepository = playlistRepository;
         }
+
         [UnitOfWork]
         public void SeedEmailDomains(Group group, params string[] emailDomains)
         {
             group.UpdateEmailDomains(emailDomains);
         }
+
         [UnitOfWork]
-        public async Task SeedMembersAsync(Group group, params Abp.IdentityUser[] members)
+        public async Task SeedMembersAsync(Group group, params Guid[] members)
         {
             await _groupRepository.UpdateMembersAsync(group, members);
         }
@@ -75,6 +73,7 @@ namespace OeTube.Data.SeedContributors
             }
             return group;
         }
+
         [UnitOfWork]
         public async Task<Abp.IdentityUser> SeedUserAsync(string userName, string email, string password, string? roleName = null)
         {
@@ -142,12 +141,10 @@ namespace OeTube.Data.SeedContributors
             var random = await SeedGroupAsync("Random", user2);
             var empty = await SeedGroupAsync("Empty", user1);
 
-            await SeedMembersAsync(random, user4, user5, user3);
+            await SeedMembersAsync(random, user4.Id, user5.Id, user3.Id);
             SeedEmailDomains(oe, "uni-obuda.hu", "stud.uni-obuda.hu");
             SeedEmailDomains(oestud, "stud.uni-obuda.hu");
             SeedEmailDomains(random, "stud.uni-obuda.hu");
-
         }
     }
-
 }

@@ -1,8 +1,6 @@
-﻿using Autofac.Features.OwnedInstances;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OeTube.Domain.Entities.Videos;
-using System.Linq.Expressions;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Identity;
 

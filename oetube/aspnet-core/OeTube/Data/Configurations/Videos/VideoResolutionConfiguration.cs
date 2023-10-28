@@ -5,13 +5,12 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace OeTube.Data.Configurations.Videos
 {
-
-    public class VideoResolutionConfiguration:IEntityTypeConfiguration<VideoResolution>
+    public class VideoResolutionConfiguration : IEntityTypeConfiguration<VideoResolution>
     {
         public void Configure(EntityTypeBuilder<VideoResolution> builder)
         {
             builder.ConfigureByConvention();
-            builder.HasKey(nameof(VideoResolution.VideoId),nameof(VideoResolution.Width),nameof(VideoResolution.Height));
+            builder.HasKey(nameof(VideoResolution.VideoId), nameof(VideoResolution.Width), nameof(VideoResolution.Height));
         }
     }
 }

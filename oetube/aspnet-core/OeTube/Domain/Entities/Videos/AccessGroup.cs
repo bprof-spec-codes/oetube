@@ -12,7 +12,9 @@ namespace OeTube.Domain.Entities.Videos
 
         Guid IHasAtomicKey<Guid>.AtomicKey => GroupId;
 
-        private AccessGroup() { }
+        private AccessGroup()
+        { }
+
         public AccessGroup(Guid videoId, Guid groupId)
         {
             VideoId = videoId;

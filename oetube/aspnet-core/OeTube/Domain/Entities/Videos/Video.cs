@@ -1,20 +1,10 @@
-﻿using JetBrains.Annotations;
-using OeTube.Domain.Entities.Playlists;
-using OeTube.Entities;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
+﻿using OeTube.Entities;
 using Volo.Abp;
-using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Http.Modeling;
 
 namespace OeTube.Domain.Entities.Videos
 {
-
     public class Video : AggregateRoot<Guid>, IMayHaveCreator, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
@@ -27,25 +17,25 @@ namespace OeTube.Domain.Entities.Videos
 
         private readonly EntitySet<AccessGroup, Guid> accessGroups;
         public virtual IReadOnlyEntitySet<AccessGroup, Guid> AccessGroups => accessGroups;
-        private readonly EntitySet<VideoResolution,Resolution> resolutions;
-        public virtual IReadOnlyEntitySet<VideoResolution,Resolution> Resolutions => resolutions;
+        private readonly EntitySet<VideoResolution, Resolution> resolutions;
+        public virtual IReadOnlyEntitySet<VideoResolution, Resolution> Resolutions => resolutions;
         Guid IHasAtomicKey<Guid>.AtomicKey => Id;
 
         private Video()
         {
             Name = string.Empty;
             accessGroups = new EntitySet<AccessGroup, Guid>();
-            resolutions = new EntitySet<VideoResolution,Resolution>();
+            resolutions = new EntitySet<VideoResolution, Resolution>();
         }
 
-        public Video(Guid id, string name, Guid? creatorId,TimeSpan duration,IEnumerable<Resolution> resolutions) : this()
+        public Video(Guid id, string name, Guid? creatorId, TimeSpan duration, IEnumerable<Resolution> resolutions) : this()
         {
             Id = id;
             SetName(name);
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
             Duration = duration;
-            
+
             foreach (var item in resolutions)
             {
                 this.resolutions.Add(new VideoResolution(Id, item));
@@ -61,26 +51,29 @@ namespace OeTube.Domain.Entities.Videos
             Name = name;
             return this;
         }
+
         public Video SetUploadCompleted()
         {
-            if(IsUploadCompleted)
+            if (IsUploadCompleted)
             {
                 throw new InvalidOperationException();
             }
-            if(!IsAllResolutionReady())
+            if (!IsAllResolutionReady())
             {
                 throw new InvalidOperationException();
             }
             IsUploadCompleted = true;
             return this;
         }
+
         public IEnumerable<Resolution> GetResolutionsBy(bool isReady)
         {
-            return resolutions.Where(r => r.IsReady==isReady).Select(r => r.GetResolution());
+            return resolutions.Where(r => r.IsReady == isReady).Select(r => r.GetResolution());
         }
+
         public bool IsAllResolutionReady()
         {
-            return resolutions.Count>0&&resolutions.All(r => r.IsReady);
+            return resolutions.Count > 0 && resolutions.All(r => r.IsReady);
         }
 
         public Video SetDescription(string? description)

@@ -1,9 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace OeTube.Entities
 {
@@ -18,7 +14,9 @@ namespace OeTube.Entities
         where TKey : notnull
     {
         TEntity Get(TKey key);
+
         bool Contains(TKey key);
+
         bool Remove(TKey key);
     }
 
@@ -34,6 +32,7 @@ namespace OeTube.Entities
         {
             _dict = new Dictionary<TKey, TEntity>();
         }
+
         public EntitySet(IEnumerable<TEntity> entities) : this()
         {
             foreach (var item in entities)
@@ -100,5 +99,4 @@ namespace OeTube.Entities
             return _dict[key];
         }
     }
-
 }
