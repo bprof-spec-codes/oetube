@@ -1,10 +1,8 @@
 ﻿using OeTube.Domain.Entities.Groups;
-using OeTube.Domain.Repositories.Extensions;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Data.Repositories.Includers
+namespace OeTube.Data.Repositories.Groups
 {
-    [ExposeServices(typeof(IIncluder<Group>))]
     public class GroupIncluder : Includer<Group>, ITransientDependency
     {
         protected override IEnumerable<string> GetNavigationProperties()
@@ -13,5 +11,4 @@ namespace OeTube.Data.Repositories.Includers
             yield return nameof(Group.Members);
         }
     }
-
 }
