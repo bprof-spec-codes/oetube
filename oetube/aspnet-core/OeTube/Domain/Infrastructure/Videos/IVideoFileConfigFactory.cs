@@ -17,7 +17,7 @@ namespace OeTube.Domain.Infrastructure.Videos
             IReadOnlyList<string> supportedFormats = new string[] { "mp4" };
             IReadOnlyList<string> supportedCodecs = Array.Empty<string>();
             IReadOnlyList<Resolution> resolutions = new Resolution[] { Resolution.SD, Resolution.HD, Resolution.FHD };
-            return new VideoFileConfig(maxSizeInBytes, outputFormat, supportedFormats, supportedCodecs, resolutions);
+            return new VideoFileConfig(maxSizeInBytes, outputFormat, supportedCodecs,supportedFormats, resolutions);
         }
     }
 }
