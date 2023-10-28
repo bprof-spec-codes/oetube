@@ -10,18 +10,6 @@ import { Observable } from 'rxjs';
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
 })
-export class VideoComponent implements OnInit{
+export class VideoComponent{
 
-  pagedResult?:PagedResultDto<VideoListItemDto>
-  
-
-  constructor(private readonly videoService:VideoService) {
-    
-  }
-  ngOnInit(): void {
-    this.videoService.getList({}).subscribe((data)=>{
-      this.pagedResult=data
-      console.log(this.pagedResult)
-    })
-  }
 }
