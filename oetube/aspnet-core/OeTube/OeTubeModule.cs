@@ -55,6 +55,7 @@ using OeTube.Infrastructure.SignalR;
 using OeTube.Application.Dtos.Videos;
 using Volo.Abp.Json;
 using Microsoft.AspNetCore.Mvc;
+using OeTube.Swagger;
 
 namespace OeTube;
 
@@ -287,6 +288,7 @@ public class OeTubeModule : AbpModule
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "OeTube API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
+                options.DocumentFilter<ControllerCustomOrderFilter>();
             });
     }
 
