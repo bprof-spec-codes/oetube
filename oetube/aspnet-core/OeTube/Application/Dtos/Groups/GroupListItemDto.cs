@@ -5,14 +5,14 @@ using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Groups
 {
-    public class GroupItemMapper : IObjectMapper<Group, GroupItemDto>, ITransientDependency
+    public class GroupItemMapper : IObjectMapper<Group, GroupListItemDto>, ITransientDependency
     {
-        public GroupItemDto Map(Group source)
+        public GroupListItemDto Map(Group source)
         {
-            return Map(source, new GroupItemDto());
+            return Map(source, new GroupListItemDto());
         }
 
-        public GroupItemDto Map(Group source, GroupItemDto destination)
+        public GroupListItemDto Map(Group source, GroupListItemDto destination)
         {
             destination.Id = source.Id;
             destination.CreationTime = source.CreationTime;
@@ -21,7 +21,8 @@ namespace OeTube.Application.Dtos.Groups
             return destination;
         }
     }
-    public class GroupItemDto : EntityDto<Guid>
+
+    public class GroupListItemDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
         public DateTime CreationTime { get; set; }

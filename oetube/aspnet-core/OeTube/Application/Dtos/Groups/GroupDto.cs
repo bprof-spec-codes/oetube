@@ -1,5 +1,4 @@
-﻿using AutoMapper.Internal.Mappers;
-using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Domain.Entities.Groups;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
@@ -25,6 +24,7 @@ namespace OeTube.Application.Dtos.Groups
             return destination;
         }
     }
+
     public class GroupDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
@@ -33,6 +33,5 @@ namespace OeTube.Application.Dtos.Groups
         public Guid? CreatorId { get; set; }
         public List<string> EmailDomains { get; set; } = new List<string>();
         public List<Guid> Members { get; set; } = new List<Guid>();
-
     }
 }

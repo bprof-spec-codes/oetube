@@ -1,62 +1,56 @@
-﻿using AutoMapper.Execution;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using OeTube.Application.Dtos.Groups;
+﻿using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Extensions;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Repositories;
-using OeTube.Domain.Repositories.Queries;
-using OeTube.Domain.Services;
+using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Users;
 
 namespace OeTube.Application
 {
-
-    [Authorize]
-    public class GroupAppService : CreatorCrudAppService
-                                                <Group, GroupDto,
-                                                GroupItemDto, Guid,
-                                                PagedAndSortedResultRequestDto,
-                                                CreateUpdateGroupDto, CreateUpdateGroupDto>
+    public class GroupAppService :
+        ReadOnlyCustomAppService<IGroupRepository, Group, Guid, GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
+        ICreateAppService<GroupDto, CreateUpdateGroupDto>,
+        IUpdateAppService<GroupDto, Guid, CreateUpdateGroupDto>,
+        IDeleteAppService<Guid>
     {
-        private readonly IGroupRepository _groups;
-        private readonly IUserGroupQuery _userGroupQuery;
-        private readonly GroupMemberManager _groupMemberManager;
-
-        public GroupAppService(IGroupRepository groups, IUserGroupQuery userGroupQuery, GroupMemberManager groupMemberManager)
-        :base(groups)
+        public GroupAppService(IGroupRepository repository) : base(repository)
         {
-            _groups = groups;
-            _userGroupQuery = userGroupQuery;
-            _groupMemberManager = groupMemberManager;
         }
 
-        public async Task<PagedResultDto<OeTubeUserItemDto>> GetGroupMembersAsync(Guid id, PagedAndSortedResultRequestDto input)
+        public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
-            var group = await GetEntityByIdAsync(id);
-            var result = await _userGroupQuery.GetGroupMembersAsync(group);
-            return await result.ToPagedResultDtoAsync(ObjectMapper.Map<OeTubeUser, OeTubeUserItemDto>,input);
+            return await CreateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Repository, input);
         }
-        
-        public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)
-        {
-            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
-            await _groupMemberManager.UpdateMembersAsync(group, input.Members,true);
-        }
-        public async Task UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
-        {
-            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
-            group.UpdateEmailDomains(input.EmailDomains);
-            await _groups.UpdateAsync(group);
 
+        public async Task DeleteAsync(Guid id)
+        {
+            await DeleteAsync<IGroupRepository, Group, Guid>(Repository, id);
         }
-       
+
+        public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
+        {
+            return await UpdateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Repository, id, input);
+        }
+
+        public async Task<PagedResultDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
+        {
+            var group = await Repository.GetAsync(id);
+            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Repository.GetGroupMembersAsync(group, input));
+        }
+
+        public async Task<GroupDto> UpdateMembersAsync(Guid id, ModifyMembersDto input)
+        {
+            var group = await Repository.GetAsync(id);
+            return await UpdateAsync<Group, GroupDto>(async () => await Repository.UpdateMembersAsync(group, input.Members), group);
+        }
+
+        public async Task<GroupDto> UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
+        {
+            var group = await Repository.GetAsync(id);
+            return await UpdateAsync<Group, GroupDto>(async () =>
+                        await Task.FromResult(group.UpdateEmailDomains(input.EmailDomains)), group);
+        }
     }
 }

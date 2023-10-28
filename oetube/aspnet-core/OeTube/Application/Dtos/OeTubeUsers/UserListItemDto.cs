@@ -1,34 +1,31 @@
 ﻿using OeTube.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.OeTubeUsers
 {
-    public class OeTubeUserMapper : IObjectMapper<OeTubeUser, OeTubeUserDto>, ITransientDependency
+    public class UserListItemMapper : IObjectMapper<OeTubeUser, UserListItemDto>, ITransientDependency
     {
-        public OeTubeUserDto Map(OeTubeUser source)
+        public UserListItemDto Map(OeTubeUser source)
         {
-            return Map(source, new OeTubeUserDto());
+            return Map(source, new UserListItemDto());
         }
 
-        public OeTubeUserDto Map(OeTubeUser source, OeTubeUserDto destination)
+        public UserListItemDto Map(OeTubeUser source, UserListItemDto destination)
         {
             destination.Id = source.Id;
+            destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
             destination.RegistrationDate = source.CreationTime;
             return destination;
         }
     }
 
-    public class OeTubeUserDto : EntityDto<Guid>
+    public class UserListItemDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
-        public string? AboutMe { get; set; }
-        public string EmailDomain { get; set; } = string.Empty;
         public DateTime RegistrationDate { get; set; }
-
-
+        public string EmailDomain { get; set; } = string.Empty;
     }
 }
