@@ -1,18 +1,25 @@
-<div *ngIf="videos?.length === 0">No records found.</div>
-<div class="container">
+<div class="container mb-5">
+  <app-search-bar (searchClicked)="onSearch($event)"></app-search-bar>
+</div>
+
+<div *ngIf="!isLoading && videos && videos.length === 0">No videos found.</div>
+<div *ngIf="isLoading" class="text-center">
+  <dx-load-indicator [height]="60" [width]="60"> </dx-load-indicator>
+</div>
+<div class="container" *ngIf="videos">
   <div class="row gx-5 gy-4 row-cols-1 row-cols-md-3 row-cols-lg-4">
     <div *ngFor="let video of videos" class="col position-relative">
-      <img class="rounded my-1 w-100" crossorigin="anonymous" [src]="video.indexImageSource" />
-      <div class="text-truncate" [title]="video.Name">
+      <div class="pic-container">
+        <img class="rounded my-1 w-100" crossorigin="anonymous" [src]="video.indexImageSrc" />
+        <div class="bottom-right">{{ fromatVideoDuration(video.duration) }}</div>
+      </div>
+      <div class="text-truncate" [title]="video.name">
         <a
           [routerLink]="['video', 'watch', video.id]"
           class="h5 my-1 stretched-link text-decoration-none text-reset"
           >{{ video.name }}</a
         >
       </div>
-      <p>{{video.duration}}</p>
-      <p>{{video.id}}</p>
-      <p>{{ video.creationTime | date:'short'}}</p>
     </div>
   </div>
 </div>

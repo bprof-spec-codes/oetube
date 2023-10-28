@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
-import { VideoDto } from '@proxy/application/dtos/videos';
 import { Subscription } from 'rxjs';
-import { VideoService } from 'src/app/services/video/video.service';
 import { VideoService as VideoAppService } from '@proxy/application';
+import { VideoDto } from '@proxy/application/dtos/videos';
+import { VideoService } from 'src/app/services/video/video.service';
 
 @Component({
   selector: 'app-video-player',
@@ -14,20 +14,25 @@ import { VideoService as VideoAppService } from '@proxy/application';
 export class VideoPlayerComponent implements OnInit, OnDestroy {
   id: string;
   private sub: Subscription;
+  public videoUrl: string;
 
-  public video?:VideoDto
+  public video?: VideoDto;
 
-  constructor(private route: ActivatedRoute, private videoService: VideoService, private appService:VideoAppService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private videoService: VideoService,
+    private appService: VideoAppService
+  ) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
-      this.appService.get(this.id).subscribe(data=>{
-        this.video=data;
-      })
+      this.appService.get(this.id).subscribe(data => {
+        this.video = data;
+      });
     });
   }
- 
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
