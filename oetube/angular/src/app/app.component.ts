@@ -1,3 +1,4 @@
+import { RoutesService } from '@abp/ng.core';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
     <abp-dynamic-layout></abp-dynamic-layout>
   `,
 })
-export class AppComponent {}
+export class AppComponent {
+
+
+}

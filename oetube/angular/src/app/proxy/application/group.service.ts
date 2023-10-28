@@ -1,7 +1,7 @@
-import type { CreateUpdateGroupDto, GroupDto, GroupItemDto, ModifyEmailDomainsDto, ModifyMembersDto } from './dtos/groups/models';
-import type { OeTubeUserItemDto } from './dtos/oe-tube-users/models';
+import type { CreateUpdateGroupDto, GroupDto, GroupListItemDto, GroupQueryDto, ModifyEmailDomainsDto, ModifyMembersDto } from './dtos/groups/models';
+import type { UserListItemDto, UserQueryDto } from './dtos/oe-tube-users/models';
 import { RestService, Rest } from '@abp/ng.core';
-import type { PagedAndSortedResultRequestDto, PagedResultDto } from '@abp/ng.core';
+import type { PagedResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -36,20 +36,20 @@ export class GroupService {
     { apiName: this.apiName,...config });
   
 
-  getGroupMembers = (id: string, input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<OeTubeUserItemDto>>({
+  getGroupMembers = (id: string, input: UserQueryDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<UserListItemDto>>({
       method: 'GET',
       url: `/api/app/group/${id}/group-members`,
-      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
 
-  getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<GroupItemDto>>({
+  getList = (input: GroupQueryDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<GroupListItemDto>>({
       method: 'GET',
       url: '/api/app/group',
-      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -64,7 +64,7 @@ export class GroupService {
   
 
   updateEmailDomains = (id: string, input: ModifyEmailDomainsDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
+    this.restService.request<any, GroupDto>({
       method: 'PUT',
       url: `/api/app/group/${id}/email-domains`,
       body: input,
@@ -73,7 +73,7 @@ export class GroupService {
   
 
   updateMembers = (id: string, input: ModifyMembersDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
+    this.restService.request<any, GroupDto>({
       method: 'PUT',
       url: `/api/app/group/${id}/members`,
       body: input,

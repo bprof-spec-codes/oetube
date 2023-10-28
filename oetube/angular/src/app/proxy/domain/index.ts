@@ -1,2 +1,3 @@
 import * as Entities from './entities';
-export { Entities };
+import * as Infrastructure from './infrastructure';
+export { Entities, Infrastructure };

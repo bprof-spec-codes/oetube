@@ -14,10 +14,19 @@ export interface GroupDto extends EntityDto<string> {
   members: string[];
 }
 
-export interface GroupItemDto extends EntityDto<string> {
+export interface GroupListItemDto extends EntityDto<string> {
   name?: string;
   creationTime?: string;
   creatorId?: string;
+}
+
+export interface GroupQueryDto {
+  name?: string;
+  creationTimeMin?: string;
+  creationTimeMax?: string;
+  skipCount?: number;
+  maxResultCount?: number;
+  sorting?: string;
 }
 
 export interface ModifyEmailDomainsDto {

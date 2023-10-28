@@ -4,7 +4,7 @@ import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
-import { ResolutionSrcDto, VideoDto } from '@proxy/application/dtos/videos';
+import { HlsSourceDto, VideoDto } from '@proxy/application/dtos/videos';
 
 @Component({
   selector: 'app-video-wrapper',
@@ -61,7 +61,7 @@ export class VideoWrapperComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(this.src!=undefined) {
-      this.load(this.src.resolutionsSrc[0].src)
+      this.load(this.src.hlsSources[0].src)
     } 
   } 
   /** Play/Pause video on click */

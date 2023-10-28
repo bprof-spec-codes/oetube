@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { VideoService } from '@proxy/application';
-import { VideoItemDto } from '@proxy/application/dtos/videos';
+import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { PagedAndSortedResultRequestDto, PagedResultDto } from '@abp/ng.core';
 import { Observable } from 'rxjs';
 @Component({
@@ -10,13 +10,16 @@ import { Observable } from 'rxjs';
 })
 export class VideoComponent implements OnInit{
 
-  pagedResult?:PagedResultDto<VideoItemDto>
+  pagedResult?:PagedResultDto<VideoListItemDto>
   
 
   constructor(private readonly videoService:VideoService) {
     
   }
   ngOnInit(): void {
-    this.videoService.getList({},{maxResultCount:100}).subscribe(data=>this.pagedResult=data)
+    this.videoService.getList({}).subscribe((data)=>{
+      this.pagedResult=data
+      console.log(this.pagedResult)
+    })
   }
 }

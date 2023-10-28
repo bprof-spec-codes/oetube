@@ -5,6 +5,7 @@ import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dto
 import { firstValueFrom } from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms'
 import { DxFileUploaderComponent } from 'devextreme-angular';
+import { AccessType } from '@proxy/domain/entities/videos';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -19,6 +20,7 @@ export class UploadComponent implements OnInit {
   startVideoUpload:StartVideoUploadDto={
     name:"",
     description:"",
+    access:AccessType.Public,
     content:undefined
   }
   submitButtonOptions={

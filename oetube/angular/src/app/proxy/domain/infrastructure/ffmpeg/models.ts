@@ -1,4 +1,4 @@
-import type { Resolution } from '../../domain/entities/videos/models';
+import type { Resolution } from '../../entities/videos/models';
 
 export interface UploadTask {
   resolution: Resolution;

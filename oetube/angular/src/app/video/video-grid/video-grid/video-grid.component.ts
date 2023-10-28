@@ -1,7 +1,7 @@
 import {Input, Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {PagedResultDto,PagedResultRequestDto} from '@abp/ng.core'
-import { VideoItemDto } from '@proxy/application/dtos/videos';
+import { VideoListItemDto } from '@proxy/application/dtos/videos';
 // TODO Placeholder type!!! Remove as soon as possible
 export type Video = {
   Id: string;
@@ -20,13 +20,11 @@ export type Video = {
 })
 export class VideoGridComponent implements OnInit {
   //TODO make this @input
-  @Input() videos: VideoItemDto[];
+  @Input() videos: VideoListItemDto[];
 
   ngOnInit(): void {
     ;
   }
 
-  getCreationTime(item:VideoItemDto){
-    return Date.parse(item.creationTime)
-  }
+
 }
