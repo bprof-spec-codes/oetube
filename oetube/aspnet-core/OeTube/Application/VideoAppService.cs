@@ -30,13 +30,13 @@ namespace OeTube.Application
             });
         }
 
-        public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, IRemoteStreamContent remoteStreamContent)
+        public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, IRemoteStreamContent input)
         {
             var video = await Repository.GetAsync(id);
             return await UpdateAsync<Video, VideoUploadStateDto>(async () =>
             {
-                var content = await ByteContent.FromRemoteStreamContentAsync(remoteStreamContent);
-                return await Repository.ContinueUploadAsync(video, content);
+                var content = await ByteContent.FromRemoteStreamContentAsync(input);
+                return await Repository.ContinueUploadAsync(video, (ByteContent)content);
             }, video);
         }
 
