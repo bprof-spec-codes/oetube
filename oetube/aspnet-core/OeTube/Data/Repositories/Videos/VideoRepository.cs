@@ -25,7 +25,10 @@ namespace OeTube.Data.Repositories.Videos
             _groupFilter = groupFilter;
             _groupIncluder = groupIncluder;
         }
-
+        public override async Task<IQueryable<Video>> GetQueryableAsync()
+        {
+            return (await base.GetQueryableAsync());
+        }
         public async Task<IQueryable<AccessGroup>> GetAccessGroupsAsync()
         {
             return await GetQueryableAsync<AccessGroup>();
@@ -44,19 +47,6 @@ namespace OeTube.Data.Repositories.Videos
                          on accessGroup.GroupId equals @group.Id
                          select @group;
             return result;
-        }
-
-        public async Task<IQueryable<Video>> GetUncompletedVideosAsync(TimeSpan? old = null)
-        {
-            var result = from video in await GetQueryableAsync()
-                         where !video.IsUploadCompleted && video.CreationTime <= DateTime.Now - old
-                         select video;
-            return result;
-        }
-
-        public async Task<List<Video>> GetUncompletedVideosAsync(TimeSpan? old = null, IVideoQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
-        {
-            return await ListAsync(await GetUncompletedVideosAsync(old), _includer, _filter, args, includeDetails, cancellationToken);
         }
 
         public async Task<List<Group>> GetAccessGroupsAsync(Video video, IGroupQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
@@ -84,6 +74,18 @@ namespace OeTube.Data.Repositories.Videos
                 await SaveChangesAsync(cancellationToken);
             }
             return video;
+        }
+        public async Task<IQueryable<Video>> GetUncompletedVideosAsync(TimeSpan? old=null)
+        {
+            var date = DateTime.Now-old;
+            var result = from video in await GetQueryableAsync()
+                         where !video.IsUploadCompleted && video.CreationTime <= date
+                         select video;
+            return result;
+        }
+        public async Task<List<Video>> GetUncompletedVideosAsync(TimeSpan? old = null,IQueryArgs? args=null,bool includeDetails=false,CancellationToken cancellationToken=default)
+        {
+            return await ListAsync(await GetUncompletedVideosAsync(old), _includer, null, args, includeDetails, cancellationToken);
         }
     }
 }

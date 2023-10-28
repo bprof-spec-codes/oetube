@@ -14,7 +14,7 @@ using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Domain.Managers
 {
-    public class VideoManager : DomainService, IQueryVideoRepository, IReadRepository<Video, Guid>, IUpdateVideoRepository, IDeleteRepository<Video, Guid>
+    public class VideoManager : DomainService, IQueryVideoRepository, IReadRepository<Video, Guid>, IUpdateVideoRepository,IDeleteRepository<Video,Guid>
     {
         private readonly IVideoRepository _repository;
         private readonly IVideoStorage _videoStorage;
@@ -220,12 +220,6 @@ namespace OeTube.Domain.Managers
             await DeleteAsync(entity.Id, autoSave, cancellationToken);
         }
 
-        public async Task DeleteUncompletedVideosAsync(TimeSpan old, CancellationToken cancellationToken = default)
-        {
-            var videos = await _repository.GetUncompletedVideosAsync(old, null, false, cancellationToken);
-            await DeleteManyAsync(videos, true, cancellationToken);
-        }
-
         public async Task DeleteManyAsync(IEnumerable<Guid> ids, bool autoSave = true, CancellationToken cancellationToken = default)
         {
             await _repository.DeleteManyAsync(ids, autoSave, cancellationToken);
@@ -264,9 +258,10 @@ namespace OeTube.Domain.Managers
             return _repository.GetAccessGroupsAsync(video, args, includeDetails, cancellationToken);
         }
 
-        public Task<List<Video>> GetUncompletedVideosAsync(TimeSpan? old = null, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public Task<List<Video>> GetUncompletedVideosAsync(TimeSpan? old = null, IQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             return _repository.GetUncompletedVideosAsync(old, args, includeDetails, cancellationToken);
         }
+       
     }
 }

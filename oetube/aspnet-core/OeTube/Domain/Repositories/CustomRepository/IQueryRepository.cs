@@ -1,4 +1,5 @@
-﻿using OeTube.Domain.Repositories.QueryArgs;
+﻿using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Repositories.CustomRepository

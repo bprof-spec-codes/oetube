@@ -56,6 +56,8 @@ using OeTube.Application.Dtos.Videos;
 using Volo.Abp.Json;
 using Microsoft.AspNetCore.Mvc;
 using OeTube.Swagger;
+using Volo.Abp.BackgroundWorkers;
+using OeTube.Workers;
 
 namespace OeTube;
 
@@ -373,7 +375,11 @@ public class OeTubeModule : AbpModule
         {
         });
     }
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    private async Task AddBackgroundWorkers(ApplicationInitializationContext context)
+    {
+        await context.AddBackgroundWorkerAsync<PeriodicDeleteUncompletedVideos>();
+    }
+    public override async void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
@@ -418,5 +424,6 @@ public class OeTubeModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+        await AddBackgroundWorkers(context);
     }
 }
