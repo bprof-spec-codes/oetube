@@ -4,6 +4,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application.Services.Url
 {
+
     public interface IUrlService
     {
         string BaseUrl { get; }

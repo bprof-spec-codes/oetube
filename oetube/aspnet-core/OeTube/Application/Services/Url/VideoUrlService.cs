@@ -2,6 +2,7 @@
 
 namespace OeTube.Application.Services.Url
 {
+
     public interface IVideoUrlService
     {
         string GetHlsListUrl(Guid id, int width, int height);
@@ -10,7 +11,6 @@ namespace OeTube.Application.Services.Url
 
         string GetIndexImageUrl(Guid id);
     }
-
     public class VideoUrlService : IVideoUrlService, ITransientDependency
     {
         private readonly IUrlService _urlService;

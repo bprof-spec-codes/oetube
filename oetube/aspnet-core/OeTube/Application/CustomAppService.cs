@@ -1,9 +1,13 @@
-﻿using OeTube.Domain.Repositories.CustomRepository;
+﻿using OeTube.Domain.Infrastructure.FileContainers;
+using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Auditing;
+using Volo.Abp.Content;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace OeTube.Application
 {
@@ -23,7 +27,12 @@ namespace OeTube.Application
             var updateEntity = await updateMethod();
             return await Task.FromResult(ObjectMapper.Map<TEntity, TOutputDto>(updateEntity));
         }
-
+        protected virtual async Task UpdateAsync<TEntity>(Func<Task> updateMethod,TEntity entity)
+        {
+            await CheckPolicyAsync(UpdatePolicy);
+            CheckCreator(entity);
+            await updateMethod();
+        }
         protected virtual async Task<TOutputDto> UpdateAsync
             <TRepository, TEntity, TKey, TOutputDto, TInputDto>(TRepository repository, TKey id, TInputDto input)
             where TRepository : IUpdateRepository<TEntity, TKey>
@@ -102,7 +111,20 @@ namespace OeTube.Application
             }
             return await GetAsync<TEntity, TOutputDto>(Get);
         }
-
+        protected virtual async Task<IRemoteStreamContent> GetFileAsync(Func<Task<ByteContent>> getFileMethod)
+        {
+            await CheckPolicyAsync(GetPolicy);
+            var file = await getFileMethod();
+            return file.GetRemoteStreamContent();
+        }
+        protected virtual async Task<IRemoteStreamContent?> GetFileOrNullAsync(Func<Task<ByteContent?>> getFileMethod)
+        {
+            await CheckPolicyAsync(GetPolicy);
+            var file = await getFileMethod();
+            if(file is null) return null;
+            return file.GetRemoteStreamContent();
+        }
+ 
         protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync<TEntity, TOutputListItemDto>
             (Func<Task<List<TEntity>>> getListMethod)
         {
@@ -143,21 +165,21 @@ namespace OeTube.Application
        where TQueryArgs : IQueryArgs
        where TQueryArgsDto : TQueryArgs
     {
-        protected TRepository Repository { get; }
+        protected TRepository Manager { get; }
 
         protected ReadOnlyCustomAppService(TRepository repository)
         {
-            Repository = repository;
+            Manager = repository;
         }
 
         public async Task<TOutputDto> GetAsync(TKey id)
         {
-            return await GetAsync<TRepository, TEntity, TKey, TOutputDto>(Repository, id);
+            return await GetAsync<TRepository, TEntity, TKey, TOutputDto>(Manager, id);
         }
 
         public async Task<PagedResultDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
         {
-            return await GetListAsync<TRepository, TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Repository, input);
+            return await GetListAsync<TRepository, TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Manager, input);
         }
     }
 }

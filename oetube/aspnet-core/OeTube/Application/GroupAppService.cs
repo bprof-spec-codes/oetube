@@ -1,54 +1,75 @@
-﻿using OeTube.Application.Dtos.Groups;
+﻿using Microsoft.AspNetCore.Mvc;
+using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Dtos.Videos;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Infrastructure.Images;
+using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Managers;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Content;
 
 namespace OeTube.Application
 {
     public class GroupAppService :
-        ReadOnlyCustomAppService<IGroupRepository, Group, Guid, GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
+        ReadOnlyCustomAppService<GroupManager, Group, Guid, GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
         ICreateAppService<GroupDto, CreateUpdateGroupDto>,
         IUpdateAppService<GroupDto, Guid, CreateUpdateGroupDto>,
         IDeleteAppService<Guid>
     {
-        public GroupAppService(IGroupRepository repository) : base(repository)
+        public GroupAppService(GroupManager manager) : base(manager)
         {
         }
 
         public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
-            return await CreateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Repository, input);
+            return await CreateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, input);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            await DeleteAsync<IGroupRepository, Group, Guid>(Repository, id);
+            await DeleteAsync<IGroupRepository, Group, Guid>(Manager, id);
         }
 
         public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
         {
-            return await UpdateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Repository, id, input);
+            return await UpdateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, id, input);
         }
 
+        [HttpGet("api/app/group/{id}/image")]
+        public async Task<IRemoteStreamContent?> GetImageAsync(Guid id)
+        {
+            return await GetFileOrNullAsync(async () => await Manager.GetFileAsync(new ImageFileClass(id)));
+        }
+
+        public async Task UploadImageAsync(Guid id,IRemoteStreamContent input)
+        {
+            var group = await Manager.GetAsync(id);
+            await UpdateAsync(async () =>
+            {
+                var content = await ByteContent.FromRemoteStreamContentAsync(input);
+                await Manager.UploadImage(id, content);
+            }, group);
+        }
         public async Task<PagedResultDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
         {
-            var group = await Repository.GetAsync(id);
-            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Repository.GetGroupMembersAsync(group, input));
+            var group = await Manager.GetAsync(id);
+            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Manager.GetGroupMembersAsync(group, input));
         }
 
         public async Task<GroupDto> UpdateMembersAsync(Guid id, ModifyMembersDto input)
         {
-            var group = await Repository.GetAsync(id);
-            return await UpdateAsync<Group, GroupDto>(async () => await Repository.UpdateMembersAsync(group, input.Members), group);
+            var group = await Manager.GetAsync(id);
+            return await UpdateAsync<Group, GroupDto>(async () => await Manager.UpdateMembersAsync(group, input.Members), group);
         }
 
         public async Task<GroupDto> UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
         {
-            var group = await Repository.GetAsync(id);
+            var group = await Manager.GetAsync(id);
             return await UpdateAsync<Group, GroupDto>(async () =>
                         await Task.FromResult(group.UpdateEmailDomains(input.EmailDomains)), group);
         }

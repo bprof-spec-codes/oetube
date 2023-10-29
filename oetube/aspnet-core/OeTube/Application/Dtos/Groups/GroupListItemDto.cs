@@ -1,4 +1,5 @@
-﻿using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Application.Services.Url;
+using OeTube.Domain.Entities.Groups;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
@@ -7,6 +8,13 @@ namespace OeTube.Application.Dtos.Groups
 {
     public class GroupItemMapper : IObjectMapper<Group, GroupListItemDto>, ITransientDependency
     {
+        private readonly IUrlService _urlService;
+
+        public GroupItemMapper(IUrlService urlService)
+        {
+            _urlService = urlService;
+        }
+
         public GroupListItemDto Map(Group source)
         {
             return Map(source, new GroupListItemDto());
@@ -18,6 +26,7 @@ namespace OeTube.Application.Dtos.Groups
             destination.CreationTime = source.CreationTime;
             destination.CreatorId = source.CreatorId;
             destination.Name = source.Name;
+            destination.ImageSource= _urlService.GetUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), new RouteTemplateParameter(source.Id));
             return destination;
         }
     }
@@ -27,5 +36,6 @@ namespace OeTube.Application.Dtos.Groups
         public string Name { get; set; } = string.Empty;
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }
+        public string? ImageSource { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using OeTube.Application.Dtos.Videos;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Infrastructure.Videos.VideoFiles;
 using OeTube.Domain.Managers;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Application.Dtos;
@@ -17,7 +18,7 @@ namespace OeTube.Application
         IUpdateAppService<VideoDto, Guid, UpdateVideoDto>,
         IDeleteAppService<Guid>
     {
-        public VideoAppService(VideoManager repository) : base(repository)
+        public VideoAppService(VideoManager manager) : base(manager)
         {
         }
 
@@ -26,74 +27,65 @@ namespace OeTube.Application
             return await CreateAsync<Video, VideoUploadStateDto>(async () =>
             {
                 var content = await ByteContent.FromRemoteStreamContentAsync(input.Content);
-                return await Repository.StartUploadAsync(input.Name, input.Description, input.Access, CurrentUser.Id, content);
+                return await Manager.StartUploadAsync(input.Name, input.Description, input.Access, CurrentUser.Id, content);
             });
         }
 
         public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, IRemoteStreamContent input)
         {
-            var video = await Repository.GetAsync(id);
+            var video = await Manager.GetAsync(id);
             return await UpdateAsync<Video, VideoUploadStateDto>(async () =>
             {
                 var content = await ByteContent.FromRemoteStreamContentAsync(input);
-                return await Repository.ContinueUploadAsync(video, (ByteContent)content);
+                return await Manager.ContinueUploadAsync(video, content);
             }, video);
         }
 
         [HttpGet("api/app/video/{id}/{width}x{height}/list.m3u8")]
-        public async Task<IRemoteStreamContent> GetHlsListAsync(Guid id, int width, int height)
+        public async Task<IRemoteStreamContent?> GetHlsListAsync(Guid id, int width, int height)
         {
-            await CheckPolicyAsync(GetPolicy);
-            var content = await Repository.Files.ReadHlsListAsync(id, new Resolution(width, height));
-            return content.GetRemoteStreamContent();
+            return await GetFileOrNullAsync(async () =>await Manager.GetFileOrNullAsync(new  HlsListFileClass(id, new Resolution(width, height))));
         }
 
         [HttpGet("api/app/video/{id}/{width}x{height}/{segment}.ts")]
-        public async Task<IRemoteStreamContent> GetHlsSegmentAsync(Guid id, int width, int height, int segment)
+        public async Task<IRemoteStreamContent?> GetHlsSegmentAsync(Guid id, int width, int height, int segment)
         {
-            await CheckPolicyAsync(GetPolicy);
-            var content = await Repository.Files.ReadHlsSegmentAsync(id, new Resolution(width, height), segment);
-            return content.GetRemoteStreamContent();
+            return await GetFileOrNullAsync(async () => await Manager.GetFileOrNullAsync(new HlsSegmentFileClass(id,new Resolution(width,height),segment)));
         }
 
         [HttpGet("api/app/video/{id}/index_image")]
-        public async Task<IRemoteStreamContent> GetIndexImageAsync(Guid id)
+        public async Task<IRemoteStreamContent?> GetIndexImageAsync(Guid id)
         {
-            await CheckPolicyAsync(GetPolicy);
-            var content = await Repository.Files.ReadSelectedFrameAsync(id);
-            return content.GetRemoteStreamContent();
+            return await GetFileOrNullAsync(async () => await Manager.GetFileOrNullAsync(new SelectedFrameFileClass(id)));
         }
 
         public async Task SelectIndexImageAsync(Guid id, int index)
         {
-            await CheckPolicyAsync(UpdatePolicy);
-            var video = await Repository.GetAsync(id);
-            CheckCreator(video);
-            await Repository.SelectFrameAsync(id, index);
+            var video = await Manager.GetAsync(id);
+            await UpdateAsync(async () => await Manager.SelectFrameAsync(id, index),video);
         }
 
         public async Task<PagedResultDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
         {
-            var video = await Repository.GetAsync(id);
+            var video = await Manager.GetAsync(id);
             return await GetListAsync<Group, GroupListItemDto>
-                (async () => await Repository.GetAccessGroupsAsync(video, input));
+                (async () => await Manager.GetAccessGroupsAsync(video, input));
         }
 
         public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
-            return await UpdateAsync<VideoManager, Video, Guid, VideoDto, UpdateVideoDto>(Repository, id, input);
+            return await UpdateAsync<VideoManager, Video, Guid, VideoDto, UpdateVideoDto>(Manager, id, input);
         }
 
         public async Task<VideoDto> UpdateAccessGroupsAsync(Guid id, UpdateAccessGroupsDto input)
         {
-            var video = await Repository.GetAsync(id);
+            var video = await Manager.GetAsync(id);
             return await UpdateAsync<Video, VideoDto>
-                (async () => await Repository.UpdateAccessGroupsAsync(video, input.AccessGroups), video);
+                (async () => await Manager.UpdateAccessGroupsAsync(video, input.AccessGroups), video);
         }
-
         public async Task DeleteAsync(Guid id)
         {
-            await DeleteAsync<VideoManager, Video, Guid>(Repository, id);
+            await DeleteAsync<VideoManager, Video, Guid>(Manager, id);
         }
     }
 }
