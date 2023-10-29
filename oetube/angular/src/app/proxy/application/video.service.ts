@@ -11,11 +11,11 @@ export class VideoService {
   apiName = 'Default';
   
 
-  continueUpload = (id: string, remoteStreamContent: FormData, config?: Partial<Rest.Config>) =>
+  continueUpload = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
     this.restService.request<any, VideoUploadStateDto>({
       method: 'POST',
       url: `/api/app/video/${id}/continue-upload`,
-      body: remoteStreamContent,
+      body: input,
     },
     { apiName: this.apiName,...config });
   

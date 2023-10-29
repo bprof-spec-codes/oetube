@@ -45,6 +45,15 @@ export class GroupService {
     { apiName: this.apiName,...config });
   
 
+  getImage = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: `/api/app/group/${id}/image`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (input: GroupQueryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<GroupListItemDto>>({
       method: 'GET',
@@ -76,6 +85,15 @@ export class GroupService {
     this.restService.request<any, GroupDto>({
       method: 'PUT',
       url: `/api/app/group/${id}/members`,
+      body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  uploadImage = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'POST',
+      url: `/api/app/group/${id}/upload-image`,
       body: input,
     },
     { apiName: this.apiName,...config });

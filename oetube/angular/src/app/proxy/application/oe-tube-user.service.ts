@@ -47,6 +47,15 @@ export class OeTubeUserService {
     { apiName: this.apiName,...config });
   
 
+  getImage = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: `/api/app/oe-tube-user/${id}/image`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   getJoinedGroups = (id: string, input: GroupQueryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<GroupListItemDto>>({
       method: 'GET',
@@ -69,6 +78,15 @@ export class OeTubeUserService {
     this.restService.request<any, UserDto>({
       method: 'PUT',
       url: `/api/app/oe-tube-user/${id}`,
+      body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  uploadImage = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'POST',
+      url: `/api/app/oe-tube-user/${id}/upload-image`,
       body: input,
     },
     { apiName: this.apiName,...config });
