@@ -8,9 +8,9 @@ namespace OeTube.Application.Dtos.OeTubeUsers
 {
     public class UserListItemMapper : IObjectMapper<OeTubeUser, UserListItemDto>, ITransientDependency
     {
-        private readonly IUrlService _urlService;
+        private readonly IImageUrlService _urlService;
 
-        public UserListItemMapper(IUrlService urlService)
+        public UserListItemMapper(IImageUrlService urlService)
         {
             _urlService = urlService;
         }
@@ -26,8 +26,8 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
             destination.RegistrationDate = source.CreationTime;
-            destination.ImageSource = _urlService.GetUrl<OeTubeUserAppService>
-                         (nameof(OeTubeUserAppService.GetImageAsync), new RouteTemplateParameter(source.Id));
+            destination.ImageSource = _urlService.GetImageUrl<OeTubeUserAppService>(nameof(OeTubeUserAppService.GetImageAsync), source.Id);
+
             return destination;
         }
     }

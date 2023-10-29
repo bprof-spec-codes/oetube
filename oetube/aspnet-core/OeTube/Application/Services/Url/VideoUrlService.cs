@@ -3,6 +3,7 @@
 namespace OeTube.Application.Services.Url
 {
 
+
     public interface IVideoUrlService
     {
         string GetHlsListUrl(Guid id, int width, int height);

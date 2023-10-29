@@ -8,9 +8,9 @@ namespace OeTube.Application.Dtos.Groups
 {
     public class GroupItemMapper : IObjectMapper<Group, GroupListItemDto>, ITransientDependency
     {
-        private readonly IUrlService _urlService;
+        private readonly IImageUrlService _urlService;
 
-        public GroupItemMapper(IUrlService urlService)
+        public GroupItemMapper(IImageUrlService urlService)
         {
             _urlService = urlService;
         }
@@ -26,7 +26,7 @@ namespace OeTube.Application.Dtos.Groups
             destination.CreationTime = source.CreationTime;
             destination.CreatorId = source.CreatorId;
             destination.Name = source.Name;
-            destination.ImageSource= _urlService.GetUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), new RouteTemplateParameter(source.Id));
+            destination.ImageSource= _urlService.GetImageUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync),source.Id);
             return destination;
         }
     }

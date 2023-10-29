@@ -8,8 +8,8 @@ namespace OeTube.Application.Dtos.Groups
 {
     public class GroupMapper : IObjectMapper<Group, GroupDto>, ITransientDependency
     {
-        private readonly IUrlService _urlService;
-        public GroupMapper(IUrlService urlService)
+        private readonly IImageUrlService _urlService;
+        public GroupMapper(IImageUrlService urlService)
         {
             _urlService = urlService;
         }
@@ -27,7 +27,7 @@ namespace OeTube.Application.Dtos.Groups
             destination.Description = source.Description;
             destination.EmailDomains = source.EmailDomains.Select(ed => ed.Domain).ToList();
             destination.Members = source.Members.Select(m => m.UserId).ToList();
-            destination.ImageSource = _urlService.GetUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), new RouteTemplateParameter(source.Id));
+            destination.ImageSource = _urlService.GetImageUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), source.Id);
             return destination;
         }
     }
