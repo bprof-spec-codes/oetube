@@ -5,7 +5,7 @@ using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.Videos.FFmpeg
+namespace OeTube.Infrastructure.FFmpeg
 {
     public class FFprobeProcess : FFProcess<VideoInfo>, ITransientDependency
     {

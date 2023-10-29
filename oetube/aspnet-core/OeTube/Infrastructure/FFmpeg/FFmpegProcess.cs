@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.Videos.FFmpeg
+namespace OeTube.Infrastructure.FFmpeg
 {
     public class FFmpegProcess : FFProcess<ProcessResult>, ITransientDependency
     {

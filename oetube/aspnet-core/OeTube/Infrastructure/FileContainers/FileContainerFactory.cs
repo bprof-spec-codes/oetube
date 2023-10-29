@@ -1,28 +1,32 @@
-﻿using Volo.Abp.BlobStoring;
-using Volo.Abp.BlobStoring.FileSystem;
+﻿using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.BlobStoring;
+using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FileContainers
+namespace OeTube.Infrastructure.FileClassContainers
 {
-    [ExposeServices(typeof(IFileContainerFactory))]
-    public class FileContainerFactory : IFileContainerFactory, ITransientDependency
+
+    public class FileContainerFactory : IFileContainerFactory,ITransientDependency
     {
-        private readonly IBlobContainerFactory _containerFactory;
-        private readonly IBlobFilePathCalculator _calculator;
-        private readonly IBlobContainerConfigurationProvider _provider;
+        private readonly IBlobContainerFactory containerFactory;
+        private readonly IBlobFilePathCalculator calculator;
+        private readonly IBlobContainerConfigurationProvider provider;
 
-        public FileContainerFactory(IBlobContainerFactory containerFactory,
-                                    IBlobFilePathCalculator calculator,
-                                    IBlobContainerConfigurationProvider provider)
+        public FileContainerFactory(
+                             IBlobContainerFactory containerFactory,
+                             IBlobFilePathCalculator calculator,
+                             IBlobContainerConfigurationProvider provider)
         {
-            this._containerFactory = containerFactory;
-            this._calculator = calculator;
-            this._provider = provider;
+            this.containerFactory = containerFactory;
+            this.calculator = calculator;
+            this.provider = provider;
         }
 
-        public IFileContainer Create(string containerName)
+        public IFileContainer Create<TRelatedType>()
         {
-            return new FileContainer(containerName, _containerFactory, _calculator, _provider);
+            return new FileContainer(typeof(TRelatedType), containerFactory, calculator, provider);
+
         }
+
     }
 }

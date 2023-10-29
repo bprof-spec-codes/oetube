@@ -1,6 +1,6 @@
 ﻿using OeTube.Infrastructure.ProcessTemplate;
 
-namespace OeTube.Infrastructure.Videos.FFmpeg
+namespace OeTube.Infrastructure.FFmpeg
 {
     public abstract class FFProcess<TOutput> : ProcessTemplate<TOutput>
     {

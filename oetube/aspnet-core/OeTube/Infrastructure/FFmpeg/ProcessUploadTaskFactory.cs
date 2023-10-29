@@ -3,7 +3,7 @@ using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.Videos.FFmpeg
+namespace OeTube.Infrastructure.FFmpeg
 {
     public class ProcessUploadTaskFactory : IProcessUploadTaskFactory, ITransientDependency
     {
