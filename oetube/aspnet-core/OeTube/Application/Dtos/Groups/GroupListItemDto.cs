@@ -10,7 +10,7 @@ namespace OeTube.Application.Dtos.Groups
     {
         private readonly IImageUrlService _urlService;
 
-        public GroupItemMapper(IImageUrlService urlService)
+        public GroupItemMapper(GroupUrlService urlService)
         {
             _urlService = urlService;
         }

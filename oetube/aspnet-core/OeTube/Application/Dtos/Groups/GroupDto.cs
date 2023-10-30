@@ -9,7 +9,7 @@ namespace OeTube.Application.Dtos.Groups
     public class GroupMapper : IObjectMapper<Group, GroupDto>, ITransientDependency
     {
         private readonly IImageUrlService _urlService;
-        public GroupMapper(IImageUrlService urlService)
+        public GroupMapper(GroupUrlService urlService)
         {
             _urlService = urlService;
         }

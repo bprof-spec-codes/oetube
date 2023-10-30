@@ -10,7 +10,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
     {
         private readonly IImageUrlService _urlService;
 
-        public UserListItemMapper(IImageUrlService urlService)
+        public UserListItemMapper(UserUrlService urlService)
         {
             _urlService = urlService;
         }
