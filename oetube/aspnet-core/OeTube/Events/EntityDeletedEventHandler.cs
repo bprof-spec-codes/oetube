@@ -22,7 +22,7 @@ namespace OeTube.Events
 
         public async virtual Task HandleEventAsync(EntityDeletedEventData<TEntity> eventData)
         {
-            await FileContainer.DeleteKeyAsync(eventData.Entity.Id);
+            await FileContainer.DeleteKeyFilesAsync(eventData.Entity.Id);
         }
     }
     public class VideoDeletedEventHandler : EntityDeletedEventHandler<Video, Guid>,ITransientDependency

@@ -30,7 +30,7 @@ namespace OeTube.Infrastructure.FFmpeg
             string name = "input." + input.Format;
             await _container.SaveAsync(new SimpleFileClass(Id,name), input, cancellationToken);
             var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(name),RootDirectory), cancellationToken);
-            await _container.DeleteKeyAsync(Id, cancellationToken);
+            await _container.DeleteKeyFilesAsync(Id, cancellationToken);
             return videoInfo;
 
         }

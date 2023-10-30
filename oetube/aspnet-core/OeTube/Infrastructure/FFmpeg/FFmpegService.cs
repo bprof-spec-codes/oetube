@@ -62,7 +62,7 @@ namespace OeTube.Infrastructure.FFmpeg
 
         public async Task CleanUpAsync(CancellationToken cancellationToken = default)
         {
-            await _container.DeleteKeyAsync(Id, cancellationToken);
+            await _container.DeleteKeyFilesAsync(Id, cancellationToken);
         }
     }
 }

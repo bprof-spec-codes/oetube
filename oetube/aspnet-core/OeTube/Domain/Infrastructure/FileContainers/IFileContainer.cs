@@ -1,23 +1,35 @@
-﻿using OeTube.Domain.Infrastructure.Videos;
+﻿using OeTube.Domain.Infrastructure.FileClasses;
+using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Infrastructure.FileClasses;
 
 namespace OeTube.Domain.Infrastructure.FileContainers
 {
-    public interface IReadOnlyFileContainer
+    public interface IFileProvider
+    {
+        Task<ByteContent> GetFileAsync(IFileClass file, CancellationToken cancellationToken = default);
+        Task<ByteContent?> GetFileOrNullAsync(IFileClass file, CancellationToken cancellationToken = default);
+    }
+ 
+    public interface IReadOnlyFileContainer:IFileProvider
     {
         Type RelatedType { get; }
         string RootDirectory { get; }
 
-        string? Find(FileClass fileClass);
-        Task<ByteContent> GetAsync(FileClass file, CancellationToken cancellationToken = default);
+        string? Find(IFileClass fileClass);
         IEnumerable<string> GetFiles(object key);
-        Task<ByteContent?> GetOrNullAsync(FileClass file, CancellationToken cancellationToken = default);
     }
 
     public interface IFileContainer :IReadOnlyFileContainer
     {
       
-        Task<bool> DeleteAsync(FileClass file, CancellationToken cancellationToken = default);
-        Task DeleteKeyAsync(object key, CancellationToken cancellationToken = default);
-        Task SaveAsync(FileClass fileClass, ByteContent content, CancellationToken cancellationToken = default);
+        Task<bool> DeleteFileAsync(IFileClass file, CancellationToken cancellationToken = default);
+        Task DeleteKeyFilesAsync(object key, CancellationToken cancellationToken = default);
+        Task SaveFileAsync(IFileClass fileClass, ByteContent content, CancellationToken cancellationToken = default);
+    }
+    public interface IFileProvider<TFileClass>
+     where TFileClass : IFileClass
+    {
+        Task<ByteContent> GetFileAsync(TFileClass file, CancellationToken cancellationToken = default);
+        Task<ByteContent?> GetFileOrNullAsync(TFileClass file, CancellationToken cancellationToken = default);
     }
 }
