@@ -114,7 +114,7 @@ namespace OeTube;
 public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
-    private const bool IsMultiTenant = true;
+    private const bool IsMultiTenant = false;
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
