@@ -10,7 +10,7 @@ export const environment = {
     logoUrl: '/assets/images/logo/oe_logo.png',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44348',
+    issuer: 'https://localhost:44348/',
     redirectUri: baseUrl,
     clientId: 'OeTube_App',
     responseType: 'code',
