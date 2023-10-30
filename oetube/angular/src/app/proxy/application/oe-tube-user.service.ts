@@ -51,7 +51,7 @@ export class OeTubeUserService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/oe-tube-user/${id}/image`,
+      url: `/api/app/ou-tube-user/${id}/image`,
     },
     { apiName: this.apiName,...config });
   

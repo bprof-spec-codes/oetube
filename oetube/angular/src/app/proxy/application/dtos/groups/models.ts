@@ -12,12 +12,14 @@ export interface GroupDto extends EntityDto<string> {
   creatorId?: string;
   emailDomains: string[];
   members: string[];
+  imageSource?: string;
 }
 
 export interface GroupListItemDto extends EntityDto<string> {
   name?: string;
   creationTime?: string;
   creatorId?: string;
+  imageSource?: string;
 }
 
 export interface GroupQueryDto {

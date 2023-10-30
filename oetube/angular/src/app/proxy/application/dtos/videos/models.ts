@@ -1,6 +1,5 @@
 import type { Resolution } from '../../../domain/entities/videos/models';
 import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
-import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
 import type { UploadTask } from '../../../domain/infrastructure/ffmpeg/models';
 
 export interface HlsSourceDto {

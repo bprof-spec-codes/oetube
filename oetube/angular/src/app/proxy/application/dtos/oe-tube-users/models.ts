@@ -10,12 +10,14 @@ export interface UserDto extends EntityDto<string> {
   aboutMe?: string;
   emailDomain?: string;
   registrationDate?: string;
+  imageSource?: string;
 }
 
 export interface UserListItemDto extends EntityDto<string> {
   name?: string;
   registrationDate?: string;
   emailDomain?: string;
+  imageSource?: string;
 }
 
 export interface UserQueryDto {
