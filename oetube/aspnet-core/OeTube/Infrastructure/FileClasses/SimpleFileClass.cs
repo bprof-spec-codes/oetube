@@ -1,23 +1,23 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace OeTube.Domain.Infrastructure.FileContainers
+namespace OeTube.Infrastructure.FileClasses
 {
-    public sealed class SimpleFileClass:FileClass
+    public sealed class SimpleFileClass : FileClass
     {
-        public SimpleFileClass(object key,string subPath)
+        public SimpleFileClass(object key, string subPath)
         {
-            var keyStr= key?.ToString();
+            var keyStr = key?.ToString();
             if (string.IsNullOrWhiteSpace(keyStr))
             {
                 throw new ArgumentNullException(nameof(key));
             }
             Key = keyStr;
             var parts = subPath.Split(Path.DirectorySeparatorChar);
-            if(parts.IsNullOrEmpty())
+            if (parts.IsNullOrEmpty())
             {
-                throw new ArgumentNullException(nameof(subPath),subPath);
+                throw new ArgumentNullException(nameof(subPath), subPath);
             }
-            else if(parts.Length==1)
+            else if (parts.Length == 1)
             {
                 Name = parts[0];
             }
@@ -26,7 +26,7 @@ namespace OeTube.Domain.Infrastructure.FileContainers
                 this.subPath = parts[0..^1];
                 Name = parts[^1];
             }
-            if(string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name))
             {
                 throw new ArgumentNullException(nameof(subPath), subPath);
             }

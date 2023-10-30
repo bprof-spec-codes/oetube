@@ -3,10 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Metadata;
 using Volo.Abp.Http;
 using Microsoft.SqlServer.Server;
+using OeTube.Domain.Infrastructure.FileClasses;
 
-namespace OeTube.Domain.Infrastructure.FileContainers
+namespace OeTube.Infrastructure.FileClasses
 {
-    public abstract class FileClass
+
+    public abstract class FileClass : IFileClass
     {
         public virtual string Key => string.Empty;
         public virtual IEnumerable<string> SubPath => Enumerable.Empty<string>();
@@ -25,10 +27,10 @@ namespace OeTube.Domain.Infrastructure.FileContainers
         {
             return Path.Combine(absoluteRootDirectory, GetSubpathDirectory());
         }
-        public virtual string GetAbsolutePath(string absoluteRootDirectory,string? format=null)
+        public virtual string GetAbsolutePath(string absoluteRootDirectory, string? format = null)
         {
-        
-            return Path.Combine(absoluteRootDirectory,GetPath(format));
+
+            return Path.Combine(absoluteRootDirectory, GetPath(format));
         }
         public virtual string GetKeyDirectory()
         {
@@ -36,13 +38,13 @@ namespace OeTube.Domain.Infrastructure.FileContainers
         }
         public virtual string GetSubpathDirectory()
         {
-            return Path.Combine(Key,Path.Combine(SubPath.ToArray()));
+            return Path.Combine(Key, Path.Combine(SubPath.ToArray()));
         }
-        public virtual string GetPath(string? format=null)
+        public virtual string GetPath(string? format = null)
         {
             format ??= string.Empty;
             format = format.TrimStart('.');
-            return Path.Combine(GetSubpathDirectory(),Name+"."+format);
+            return Path.Combine(GetSubpathDirectory(), Name + "." + format);
         }
 
         public virtual string CombineWithKey(string localKeyPath)

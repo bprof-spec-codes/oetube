@@ -1,4 +1,4 @@
-﻿namespace OeTube.Domain.Infrastructure.Videos.VideoFiles
+﻿namespace OeTube.Infrastructure.FileClasses.VideoFiles
 {
     public class SourceFileClass : VideoFileClass
     {

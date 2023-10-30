@@ -1,8 +1,8 @@
-﻿using OeTube.Domain.Infrastructure.FileContainers;
+﻿using OeTube.Domain.Infrastructure.FileClasses;
 
-namespace OeTube.Domain.Infrastructure.Videos.VideoFiles
+namespace OeTube.Infrastructure.FileClasses.VideoFiles
 {
-    public abstract class VideoFileClass : FileClass
+    public abstract class VideoFileClass : FileClass,IVideoFileClass
     {
         public const long MaxSourceVideoSize = 1024L * 1024 * 1024;
 

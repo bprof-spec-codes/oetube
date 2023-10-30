@@ -1,13 +1,13 @@
-﻿using OeTube.Domain.Infrastructure.FileContainers;
+﻿using OeTube.Domain.Infrastructure.FileClasses;
+using OeTube.Domain.Infrastructure.Videos;
 
-namespace OeTube.Domain.Infrastructure.Images
+namespace OeTube.Infrastructure.FileClasses
 {
-    public class ImageFileClass : FileClass
+    public class ImageFileClass : FileClass,IGroupFileClass,IUserFileClass,IPlaylistFileClass
     {
         public override string Key { get; }
         public override string Name => "image";
         public override string MimeTypeCategory => "image";
-
 
         public ImageFileClass(Guid id)
         {
