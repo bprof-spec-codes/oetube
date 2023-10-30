@@ -58,6 +58,8 @@ using Microsoft.AspNetCore.Mvc;
 using OeTube.Swagger;
 using Volo.Abp.BackgroundWorkers;
 using OeTube.Workers;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace OeTube;
 
@@ -161,6 +163,7 @@ public class OeTubeModule : AbpModule
         ConfigureBlobStoring();
         ConfigureBackgroundJobs();
         ConfigureNewtonsoftJson(context);
+        ConfigureRequestSizeLimit();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -378,6 +381,24 @@ public class OeTubeModule : AbpModule
     private async Task AddBackgroundWorkers(ApplicationInitializationContext context)
     {
         await context.AddBackgroundWorkerAsync<PeriodicDeleteUncompletedVideos>();
+    }
+    private void ConfigureRequestSizeLimit()
+    {
+        long gb = 1024L * 1024 * 1024;
+        long requestSize = 1*gb;
+        Configure<IISServerOptions>(options =>
+        {
+            options.MaxRequestBodySize = requestSize;
+        });
+        Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = requestSize;
+        });
+        Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = requestSize;
+        });
+
     }
     public override async void OnApplicationInitialization(ApplicationInitializationContext context)
     {
