@@ -6,7 +6,7 @@ namespace OeTube.Infrastructure.FF
     {
         private static string GetFFmpegDir()
         {
-            string? dir = Environment.GetEnvironmentVariable("PATH")?.Split(';').FirstOrDefault(p => p.ToLower().Contains("ffmpeg"));
+            string? dir = Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg", "bin");
             if (dir is null)
             {
                 throw new ProcessException(
