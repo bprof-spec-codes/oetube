@@ -27,7 +27,7 @@ namespace OeTube.Application.Dtos.Groups
             destination.Description = source.Description;
             destination.EmailDomains = source.EmailDomains.Select(ed => ed.Domain).ToList();
             destination.Members = source.Members.Select(m => m.UserId).ToList();
-            destination.ImageSource = _urlService.GetImageUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), source.Id);
+            destination.ImageSource = _urlService.GetImageUrl(source.Id);
             return destination;
         }
     }

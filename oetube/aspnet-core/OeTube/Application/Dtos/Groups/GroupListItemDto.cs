@@ -26,7 +26,7 @@ namespace OeTube.Application.Dtos.Groups
             destination.CreationTime = source.CreationTime;
             destination.CreatorId = source.CreatorId;
             destination.Name = source.Name;
-            destination.ImageSource= _urlService.GetImageUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync),source.Id);
+            destination.ImageSource= _urlService.GetImageUrl(source.Id);
             return destination;
         }
     }

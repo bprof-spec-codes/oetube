@@ -26,7 +26,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
             destination.RegistrationDate = source.CreationTime;
-            destination.ImageSource = _urlService.GetImageUrl<OeTubeUserAppService>(nameof(OeTubeUserAppService.GetImageAsync), source.Id);
+            destination.ImageSource = _urlService.GetImageUrl( source.Id);
 
             return destination;
         }

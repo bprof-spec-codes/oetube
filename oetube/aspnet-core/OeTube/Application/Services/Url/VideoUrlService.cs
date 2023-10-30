@@ -4,13 +4,12 @@ namespace OeTube.Application.Services.Url
 {
 
 
-    public interface IVideoUrlService
+    public interface IVideoUrlService:IImageUrlService
     {
         string GetHlsListUrl(Guid id, int width, int height);
 
         string GetHlsSegmentUrl(Guid id, int width, int height, int segment);
 
-        string GetIndexImageUrl(Guid id);
     }
     public class VideoUrlService : IVideoUrlService, ITransientDependency
     {
@@ -40,7 +39,7 @@ namespace OeTube.Application.Services.Url
             throw new NullReferenceException(nameof(VideoAppService.GetHlsSegmentAsync));
         }
 
-        public string GetIndexImageUrl(Guid id)
+        public string GetImageUrl(Guid id)
         {
             return _urlService.GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageAsync), new RouteTemplateParameter(id))
               ?? throw new NullReferenceException(nameof(VideoAppService.GetIndexImageAsync));
