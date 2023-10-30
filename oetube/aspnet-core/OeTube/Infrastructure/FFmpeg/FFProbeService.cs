@@ -2,6 +2,7 @@
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Infrastructure.FileClasses;
 using OeTube.Infrastructure.ProcessTemplate;
 using Volo.Abp.DependencyInjection;
 
@@ -28,7 +29,7 @@ namespace OeTube.Infrastructure.FFmpeg
             }
 
             string name = "input." + input.Format;
-            await _container.SaveAsync(new SimpleFileClass(Id,name), input, cancellationToken);
+            await _container.SaveFileAsync(new SimpleFileClass(Id,name), input, cancellationToken);
             var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(name),RootDirectory), cancellationToken);
             await _container.DeleteKeyFilesAsync(Id, cancellationToken);
             return videoInfo;

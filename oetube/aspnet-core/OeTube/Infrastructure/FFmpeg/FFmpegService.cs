@@ -1,6 +1,7 @@
 ﻿using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Infrastructure.FileClasses;
 using OeTube.Infrastructure.ProcessTemplate;
 using Volo.Abp.DependencyInjection;
 
@@ -23,12 +24,12 @@ namespace OeTube.Infrastructure.FFmpeg
 
         public async Task<bool> DeleteAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _container.DeleteAsync(new SimpleFileClass(Id,name), cancellationToken);
+            return await _container.DeleteFileAsync(new SimpleFileClass(Id,name), cancellationToken);
         }
 
         public async Task<ByteContent> GetContentAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _container.GetAsync(new SimpleFileClass(Id,name),cancellationToken);
+            return await _container.GetFileAsync(new SimpleFileClass(Id,name),cancellationToken);
         }
 
         public HashSet<string> GetFiles()
@@ -46,7 +47,7 @@ namespace OeTube.Infrastructure.FFmpeg
             arguments = $"-i {name} {arguments}";
 
             var fileClass = new SimpleFileClass(Id, name); 
-            await _container.SaveAsync(fileClass, input, cancellationToken);
+            await _container.SaveFileAsync(fileClass, input, cancellationToken);
 
             var settings = new ProcessSettings(
                 new NamedArguments(arguments, processName ?? nameof(FFmpegService)),
