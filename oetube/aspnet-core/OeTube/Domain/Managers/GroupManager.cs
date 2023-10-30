@@ -1,11 +1,12 @@
 ﻿using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Domain.Infrastructure.Images;
 using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
+using OeTube.Infrastructure.FileClasses;
 using Volo.Abp.AspNetCore.Mvc.UI.Widgets;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Content;
@@ -13,7 +14,7 @@ using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Domain.Managers
 {
-    public class GroupManager : DomainManager<IGroupRepository,Group,Guid,IGroupQueryArgs>,IGroupRepository
+    public class GroupManager : DomainManager<IGroupRepository,Group,Guid,IGroupQueryArgs,IGroupFileClass>,IGroupRepository
     {
         public GroupManager(IGroupRepository repository,
                             IFileContainerFactory containerFactory,
@@ -24,7 +25,7 @@ namespace OeTube.Domain.Managers
 
         public async Task UploadImage(Guid id, ByteContent content, CancellationToken cancellationToken=default)
         {
-            await FileContainer.SaveAsync(new ImageFileClass(id), content,cancellationToken);
+            await FileContainer.SaveFileAsync(new ImageFileClass(id), content,cancellationToken);
         }
 
         public Task<List<Video>> GetAvaliableVideosAsync(Group group, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)

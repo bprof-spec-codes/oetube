@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Dtos.Videos;
 using OeTube.Domain.Entities.Groups;
-using OeTube.Domain.Infrastructure.Images;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Managers;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
+using OeTube.Infrastructure.FileClasses;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
@@ -16,7 +16,9 @@ using Volo.Abp.Content;
 namespace OeTube.Application
 {
     public class GroupAppService :
-        ReadOnlyCustomAppService<GroupManager, Group, Guid, GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
+        ReadOnlyCustomAppService
+        <GroupManager,IGroupRepository, Group, Guid, IGroupFileClass,
+            GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
         ICreateAppService<GroupDto, CreateUpdateGroupDto>,
         IUpdateAppService<GroupDto, Guid, CreateUpdateGroupDto>,
         IDeleteAppService<Guid>
@@ -27,17 +29,17 @@ namespace OeTube.Application
 
         public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
-            return await CreateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, input);
+            return await CreateAsync<Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, input);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            await DeleteAsync<IGroupRepository, Group, Guid>(Manager, id);
+            await DeleteAsync(Manager, id);
         }
 
         public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
         {
-            return await UpdateAsync<IGroupRepository, Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, id, input);
+            return await UpdateAsync<Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, id, input);
         }
 
         [HttpGet("api/app/group/{id}/image")]

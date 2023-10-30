@@ -4,11 +4,14 @@ using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Dtos.Videos;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
-using OeTube.Domain.Infrastructure.Images;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Managers;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
+using OeTube.Infrastructure.FileClasses;
+using OeTube.Infrastructure.FileClasses.VideoFiles;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
@@ -16,7 +19,8 @@ using Volo.Abp.Content;
 namespace OeTube.Application
 {
     public class OeTubeUserAppService :
-        ReadOnlyCustomAppService<OeTubeUserManager, OeTubeUser, Guid, UserDto, UserListItemDto, IUserQueryArgs, UserQueryDto>,
+        ReadOnlyCustomAppService<OeTubeUserManager,IUserRepository, OeTubeUser, Guid,IUserFileClass, 
+            UserDto, UserListItemDto, IUserQueryArgs, UserQueryDto>,
         IUpdateAppService<UserDto, Guid, UpdateUserDto>
     {
         public OeTubeUserAppService(OeTubeUserManager manager) : base(manager)
@@ -25,8 +29,7 @@ namespace OeTube.Application
 
         public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto input)
         {
-            return await UpdateAsync<OeTubeUserManager, OeTubeUser, Guid, UserDto, UpdateUserDto>
-                (Manager, id, input);
+            return await UpdateAsync<OeTubeUser,Guid,UserDto,UpdateUserDto>(Manager, id, input);
         }
 
         [HttpGet("api/app/ou-tube-user/{id}/image")]

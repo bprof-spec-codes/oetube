@@ -1,5 +1,7 @@
-﻿using OeTube.Domain.Infrastructure.FileContainers;
+﻿using OeTube.Domain.Infrastructure.FileClasses;
+using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Managers;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Application.Dtos;
@@ -34,8 +36,7 @@ namespace OeTube.Application
             await updateMethod();
         }
         protected virtual async Task<TOutputDto> UpdateAsync
-            <TRepository, TEntity, TKey, TOutputDto, TInputDto>(TRepository repository, TKey id, TInputDto input)
-            where TRepository : IUpdateRepository<TEntity, TKey>
+            <TEntity, TKey, TOutputDto, TInputDto>(IUpdateRepository<TEntity,TKey> repository, TKey id, TInputDto input)
             where TEntity : class, IEntity<TKey>
         {
             var entity = ObjectMapper.Map(input, await repository.GetAsync(id));
@@ -69,9 +70,8 @@ namespace OeTube.Application
             return await Task.FromResult(ObjectMapper.Map<TEntity, TOutputDto>(entity));
         }
 
-        protected virtual async Task<TOutputDto> CreateAsync<TRepository, TEntity, TKey, TOutputDto, TInputDto>
-            (TRepository repository, TInputDto input)
-            where TRepository : ICreateRepository<TEntity, TKey>
+        protected virtual async Task<TOutputDto> CreateAsync<TEntity, TKey, TOutputDto, TInputDto>
+            (ICreateRepository<TEntity,TKey> repository, TInputDto input)
             where TEntity : class, IEntity<TKey>
         {
             async Task<TEntity> Create()
@@ -83,8 +83,7 @@ namespace OeTube.Application
             return await CreateAsync<TEntity, TOutputDto>(Create);
         }
 
-        protected virtual async Task DeleteAsync<TRepository, TEntity, TKey>(TRepository repository, TKey id)
-            where TRepository : IDeleteRepository<TEntity, TKey>
+        protected virtual async Task DeleteAsync<TEntity, TKey>(IDeleteRepository<TEntity,TKey> repository, TKey id)
             where TEntity : class, IEntity<TKey>
         {
             await CheckPolicyAsync(DeletePolicy);
@@ -101,8 +100,8 @@ namespace OeTube.Application
             return output;
         }
 
-        protected virtual async Task<TOutputDto> GetAsync<TRepository, TEntity, TKey, TOutputDto>(TRepository repository, TKey id)
-        where TRepository : IReadRepository<TEntity, TKey>
+        protected virtual async Task<TOutputDto> GetAsync<TEntity, TKey, TOutputDto>
+            (IReadRepository<TEntity,TKey> repository, TKey id)
         where TEntity : class, IEntity<TKey>
         {
             async Task<TEntity> Get()
@@ -144,8 +143,8 @@ namespace OeTube.Application
         }
 
         protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync
-            <TRepository, TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(TRepository repository, TQueryArgsDto queryArgsDto)
-            where TRepository : IQueryRepository<TEntity, TQueryArgs>
+            <TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
+            (IQueryRepository<TEntity,TQueryArgs> repository, TQueryArgsDto queryArgsDto)
             where TQueryArgs : IQueryArgs
             where TQueryArgsDto : TQueryArgs
             where TEntity : class, IEntity
@@ -158,28 +157,33 @@ namespace OeTube.Application
         }
     }
 
-    public abstract class ReadOnlyCustomAppService<TRepository, TEntity, TKey, TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
+    public abstract class ReadOnlyCustomAppService
+        <TManager,TRepository, TEntity, TKey,TFileClass, 
+        TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
        : CustomAppService, IReadOnlyAppService<TOutputDto, TOutputListItemDto, TKey, TQueryArgsDto>
-       where TRepository : IReadRepository<TEntity, TKey>, IQueryRepository<TEntity, TQueryArgs>
+       where TManager : 
+        DomainManager<TRepository,TEntity,TKey,TQueryArgs,TFileClass>
+       where TRepository :
+        IReadRepository<TEntity, TKey>, IQueryRepository<TEntity, TQueryArgs>, IUpdateRepository<TEntity, TKey>
        where TEntity : class, IEntity<TKey>
        where TQueryArgs : IQueryArgs
+       where TFileClass : IFileClass
        where TQueryArgsDto : TQueryArgs
     {
-        protected TRepository Manager { get; }
+        protected TManager Manager { get; }
 
-        protected ReadOnlyCustomAppService(TRepository repository)
+        protected ReadOnlyCustomAppService(TManager manager)
         {
-            Manager = repository;
+            Manager = manager;
         }
-
         public async Task<TOutputDto> GetAsync(TKey id)
         {
-            return await GetAsync<TRepository, TEntity, TKey, TOutputDto>(Manager, id);
+            return await GetAsync<TEntity, TKey, TOutputDto>(Manager, id);
         }
 
         public async Task<PagedResultDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
         {
-            return await GetListAsync<TRepository, TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Manager, input);
+            return await GetListAsync<TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Manager, input);
         }
     }
 }

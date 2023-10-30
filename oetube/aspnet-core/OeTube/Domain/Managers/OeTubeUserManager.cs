@@ -1,18 +1,19 @@
 ﻿using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Domain.Infrastructure.Images;
 using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
+using OeTube.Infrastructure.FileClasses;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Domain.Managers
 {
-    public class OeTubeUserManager : DomainManager<IUserRepository, OeTubeUser, Guid, IUserQueryArgs>, IQueryUserRepository
+    public class OeTubeUserManager : DomainManager<IUserRepository, OeTubeUser, Guid, IUserQueryArgs,IUserFileClass>, IQueryUserRepository
     {
         public OeTubeUserManager(IUserRepository repository,
                            IFileContainerFactory containerFactory,
@@ -23,7 +24,7 @@ namespace OeTube.Domain.Managers
 
         public async Task UploadImage(Guid id, ByteContent content, CancellationToken cancellationToken = default)
         {
-            await FileContainer.SaveAsync(new ImageFileClass(id), content, cancellationToken);
+            await FileContainer.SaveFileAsync(new ImageFileClass(id), content, cancellationToken);
         }
 
         public Task<List<Video>> GetAvaliableVideosAsync(OeTubeUser user, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)

@@ -2,19 +2,20 @@
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.Videos;
-using OeTube.Domain.Infrastructure.Videos.VideoFiles;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Events;
+using OeTube.Infrastructure.FileClasses.VideoFiles;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Domain.Managers
 {
-    public class VideoManager : DomainManager<IVideoRepository,Video,Guid,IVideoQueryArgs>, IQueryVideoRepository, IReadRepository<Video, Guid>, IUpdateVideoRepository,IDeleteRepository<Video,Guid>
+    public class VideoManager : DomainManager<IVideoRepository,Video,Guid,IVideoQueryArgs,IVideoFileClass>, IQueryVideoRepository, IReadRepository<Video, Guid>, IUpdateVideoRepository,IDeleteRepository<Video,Guid>
     {
         private readonly IFFProbeService _ffprobeService;
         private readonly IFFmpegService _ffmpegService;
@@ -54,10 +55,10 @@ namespace OeTube.Domain.Managers
                         .SetDescription(description)
                         .SetAccess(access);
 
-            await FileContainer.SaveAsync(new SourceFileClass(video.Id), content,cancellationToken);
+            await FileContainer.SaveFileAsync(new SourceFileClass(video.Id), content,cancellationToken);
             if (_videoFileValidator.IsInDesiredResolutionAndFormat(sourceInfo))
             {
-                await FileContainer.SaveAsync(new ResizedFileClass(video.Id,resolution), content,cancellationToken);
+                await FileContainer.SaveFileAsync(new ResizedFileClass(video.Id,resolution), content,cancellationToken);
                 video.Resolutions.Get(resolution).MarkReady();
             }
             await Repository.InsertAsync(video, true);
@@ -67,14 +68,14 @@ namespace OeTube.Domain.Managers
 
         public async Task<Video> ContinueUploadAsync(Video video, ByteContent content,CancellationToken cancellationToken=default)
         {
-            var sourceFile = await FileContainer.GetAsync(new SourceFileClass(video.Id), cancellationToken);
+            var sourceFile = await FileContainer.GetFileAsync(new SourceFileClass(video.Id), cancellationToken);
             var sourceInfo = await _ffprobeService.AnalyzeAsync(sourceFile,cancellationToken);
             var resizedInfo = await _ffprobeService.AnalyzeAsync(content,cancellationToken);
 
             _videoFileValidator.ValidateResizedVideo(video, sourceInfo, resizedInfo);
             var resolution = resizedInfo.VideoStreams[0].Resolution;
 
-            await FileContainer.SaveAsync(new ResizedFileClass(video.Id,resolution), content);
+            await FileContainer.SaveFileAsync(new ResizedFileClass(video.Id,resolution), content);
 
             video.Resolutions.Get(resolution).MarkReady();
 
@@ -106,7 +107,7 @@ namespace OeTube.Domain.Managers
                 {
                     video.SetUploadCompleted();
                     await Repository.UpdateAsync(video, true, cancellationToken);
-                    await FileContainer.DeleteAsync(new SourceFileClass(video.Id), cancellationToken);
+                    await FileContainer.DeleteFileAsync(new SourceFileClass(video.Id), cancellationToken);
                     await LocalEventBus.PublishAsync(new VideoUploadCompletedEto(video));
                 }
             }
@@ -120,13 +121,13 @@ namespace OeTube.Domain.Managers
             string arguments = processUploadTask.GetExractFramesArguments(frameName);
             try
             {
-                var target = await FileContainer.GetAsync(new ResizedFileClass(id,targetResolution), cancellationToken);
+                var target = await FileContainer.GetFileAsync(new ResizedFileClass(id,targetResolution), cancellationToken);
                 var result = await _ffmpegService.ExecuteAsync(target, arguments, arguments, cancellationToken);
                 foreach (var item in result.OutputFiles)
                 {
                     var content = await _ffmpegService.GetContentAsync(item, cancellationToken);
                     int index = int.Parse(Path.GetFileNameWithoutExtension(item));
-                    await FileContainer.SaveAsync(new FrameFileClass(id,index), content, cancellationToken);
+                    await FileContainer.SaveFileAsync(new FrameFileClass(id,index), content, cancellationToken);
                     if (cancellationToken.IsCancellationRequested) break;
                 }
                 await SelectFrameAsync(id, 1, cancellationToken);
@@ -149,25 +150,25 @@ namespace OeTube.Domain.Managers
             {
                 try
                 {
-                    var content = await FileContainer.GetAsync(new ResizedFileClass(id, resolution), cancellationToken);
+                    var content = await FileContainer.GetFileAsync(new ResizedFileClass(id, resolution), cancellationToken);
                     var result = await _ffmpegService.ExecuteAsync(content, arguments, arguments, cancellationToken);
                     foreach (var fileName in result.OutputFiles)
                     {
                         var output = await _ffmpegService.GetContentAsync(fileName, cancellationToken);
                         if (fileName == hlsListName)
                         {
-                            await FileContainer.SaveAsync(new HlsListFileClass(id, resolution), output, cancellationToken);
+                            await FileContainer.SaveFileAsync(new HlsListFileClass(id, resolution), output, cancellationToken);
                         }
                         else if (output.Format == hlstSegmentFormat)
                         {
                             int segment = int.Parse(Path.GetFileNameWithoutExtension(fileName));
-                            await FileContainer.SaveAsync(new HlsSegmentFileClass(id, resolution, segment), output, cancellationToken);
+                            await FileContainer.SaveFileAsync(new HlsSegmentFileClass(id, resolution, segment), output, cancellationToken);
                         }
                         if (cancellationToken.IsCancellationRequested) break;
                     }
 
                     if (cancellationToken.IsCancellationRequested) break;
-                    await FileContainer.DeleteAsync(new ResizedFileClass(id, resolution), cancellationToken);
+                    await FileContainer.DeleteFileAsync(new ResizedFileClass(id, resolution), cancellationToken);
                 }
                 finally
                 {
@@ -178,8 +179,8 @@ namespace OeTube.Domain.Managers
 
         public async Task SelectFrameAsync(Guid id, int index, CancellationToken cancellationToken = default)
         {
-            var selectedFrame = await FileContainer.GetAsync(new FrameFileClass(id, index), cancellationToken);
-            await FileContainer.SaveAsync(new SelectedFrameFileClass(id), selectedFrame, cancellationToken);
+            var selectedFrame = await FileContainer.GetFileAsync(new FrameFileClass(id, index), cancellationToken);
+            await FileContainer.SaveFileAsync(new SelectedFrameFileClass(id), selectedFrame, cancellationToken);
         }
 
       

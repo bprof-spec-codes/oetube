@@ -3,10 +3,12 @@ using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.Videos;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.Infrastructure.FileClasses;
 using OeTube.Domain.Infrastructure.Videos;
-using OeTube.Domain.Infrastructure.Videos.VideoFiles;
 using OeTube.Domain.Managers;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
+using OeTube.Infrastructure.FileClasses.VideoFiles;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
@@ -14,7 +16,8 @@ using Volo.Abp.Content;
 namespace OeTube.Application
 {
     public class VideoAppService :
-        ReadOnlyCustomAppService<VideoManager, Video, Guid, VideoDto, VideoListItemDto, IVideoQueryArgs, VideoQueryDto>,
+        ReadOnlyCustomAppService<VideoManager,IVideoRepository, Video, Guid,IVideoFileClass,
+            VideoDto, VideoListItemDto, IVideoQueryArgs, VideoQueryDto>,
         IUpdateAppService<VideoDto, Guid, UpdateVideoDto>,
         IDeleteAppService<Guid>
     {
@@ -44,7 +47,7 @@ namespace OeTube.Application
         [HttpGet("api/app/video/{id}/{width}x{height}/list.m3u8")]
         public async Task<IRemoteStreamContent?> GetHlsListAsync(Guid id, int width, int height)
         {
-            return await GetFileOrNullAsync(async () =>await Manager.GetFileOrNullAsync(new  HlsListFileClass(id, new Resolution(width, height))));
+            return await GetFileOrNullAsync(async () =>await Manager.GetFileOrNullAsync(new HlsListFileClass(id, new Resolution(width, height))));
         }
 
         [HttpGet("api/app/video/{id}/{width}x{height}/{segment}.ts")]
@@ -74,7 +77,7 @@ namespace OeTube.Application
 
         public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
-            return await UpdateAsync<VideoManager, Video, Guid, VideoDto, UpdateVideoDto>(Manager, id, input);
+            return await UpdateAsync<Video, Guid, VideoDto, UpdateVideoDto>(Manager, id, input);
         }
 
         public async Task<VideoDto> UpdateAccessGroupsAsync(Guid id, UpdateAccessGroupsDto input)
@@ -85,7 +88,7 @@ namespace OeTube.Application
         }
         public async Task DeleteAsync(Guid id)
         {
-            await DeleteAsync<VideoManager, Video, Guid>(Manager, id);
+            await DeleteAsync(Manager, id);
         }
     }
 }
