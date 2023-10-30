@@ -29,7 +29,7 @@ namespace OeTube.Application.Dtos.Videos
                 Duration = video.Duration,
                 Name = video.Name,
                 PlaylistId = null,
-                IndexImageSource = _videoUrlService.GetIndexImageUrl(video.Id)
+                IndexImageSource = _videoUrlService.GetImageUrl(video.Id)
             };
         }
     }
@@ -38,7 +38,7 @@ namespace OeTube.Application.Dtos.Videos
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string IndexImageSource { get; set; } = string.Empty;
+        public string? IndexImageSource { get; set; } = string.Empty;
         public TimeSpan Duration { get; set; }
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }

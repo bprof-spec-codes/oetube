@@ -27,7 +27,7 @@ namespace OeTube.Application.Dtos.Videos
             destination.CreatorId = video.CreatorId;
             destination.Description = video.Description;
             destination.Duration = video.Duration;
-            destination.IndexImageSource = _videoUrlService.GetIndexImageUrl(video.Id);
+            destination.IndexImageSource = _videoUrlService.GetImageUrl(video.Id);
             destination.IsUploadCompleted = video.IsUploadCompleted;
             destination.Name = video.Name;
             destination.PlaylistId = null;
@@ -44,7 +44,7 @@ namespace OeTube.Application.Dtos.Videos
     {
         public Guid Id { get; set; }
         public List<HlsSourceDto> HlsSources { get; set; } = new();
-        public string IndexImageSource { get; set; } = string.Empty;
+        public string? IndexImageSource { get; set; } 
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public Guid? CreatorId { get; set; }
