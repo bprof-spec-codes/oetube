@@ -20,12 +20,12 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace OeTube.Data;
 
-public class OeTubeDbContext : AbpDbContext<OeTubeDbContext>,ITenantManagementDbContext,IIdentityDbContext
+public class OeTubeDbContext : AbpDbContext<OeTubeDbContext>, ITenantManagementDbContext, IIdentityDbContext
 {
-    public DbSet<OeTubeUser> OeTubeUsers { get;private set; }
-    public DbSet<Group> Groups { get;private set; }
+    public DbSet<OeTubeUser> OeTubeUsers { get; private set; }
+    public DbSet<Group> Groups { get; private set; }
     public DbSet<Playlist> Playlists { get; private set; }
-    public DbSet<Video> Videos { get;private set; }
+    public DbSet<Video> Videos { get; private set; }
 
     public DbSet<Tenant> Tenants { get; private set; }
 
@@ -48,7 +48,6 @@ public class OeTubeDbContext : AbpDbContext<OeTubeDbContext>,ITenantManagementDb
         : base(options)
     {
     }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -75,7 +74,5 @@ public class OeTubeDbContext : AbpDbContext<OeTubeDbContext>,ITenantManagementDb
         builder.ApplyConfiguration(new PlaylistConfiguration());
         builder.ApplyConfiguration(new VideoItemConfiguration());
         builder.ApplyConfiguration(new VideoResolutionConfiguration());
-
     }
-
 }

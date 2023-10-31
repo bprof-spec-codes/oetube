@@ -7,7 +7,6 @@ public class OeTubeDbContextFactory : IDesignTimeDbContextFactory<OeTubeDbContex
 {
     public OeTubeDbContext CreateDbContext(string[] args)
     {
-
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<OeTubeDbContext>()

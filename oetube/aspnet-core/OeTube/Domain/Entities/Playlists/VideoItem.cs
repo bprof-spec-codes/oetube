@@ -1,6 +1,6 @@
 ﻿using OeTube.Entities;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Playlists
 {
@@ -12,7 +12,8 @@ namespace OeTube.Domain.Entities.Playlists
 
         int IHasAtomicKey<int>.AtomicKey => Order;
 
-        private VideoItem() { }
+        private VideoItem()
+        { }
 
         public VideoItem(Guid playlistId, int order, Guid videoId)
         {
@@ -27,6 +28,7 @@ namespace OeTube.Domain.Entities.Playlists
             return new object[] { PlaylistId, Order };
         }
     }
+
     public static class VideoItemConstants
     {
         public const int VideoItemMinOrder = 0;

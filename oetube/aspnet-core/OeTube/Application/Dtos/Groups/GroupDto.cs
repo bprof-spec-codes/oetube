@@ -1,4 +1,4 @@
-﻿using AutoMapper.Internal.Mappers;
+﻿using OeTube.Application.Services.Url;
 using OeTube.Domain.Entities.Groups;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
@@ -8,6 +8,11 @@ namespace OeTube.Application.Dtos.Groups
 {
     public class GroupMapper : IObjectMapper<Group, GroupDto>, ITransientDependency
     {
+        private readonly IImageUrlService _urlService;
+        public GroupMapper(GroupUrlService urlService)
+        {
+            _urlService = urlService;
+        }
         public GroupDto Map(Group source)
         {
             return Map(source, new GroupDto());
@@ -22,9 +27,11 @@ namespace OeTube.Application.Dtos.Groups
             destination.Description = source.Description;
             destination.EmailDomains = source.EmailDomains.Select(ed => ed.Domain).ToList();
             destination.Members = source.Members.Select(m => m.UserId).ToList();
+            destination.ImageSource = _urlService.GetImageUrl(source.Id);
             return destination;
         }
     }
+
     public class GroupDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
@@ -33,6 +40,6 @@ namespace OeTube.Application.Dtos.Groups
         public Guid? CreatorId { get; set; }
         public List<string> EmailDomains { get; set; } = new List<string>();
         public List<Guid> Members { get; set; } = new List<Guid>();
-
+        public string? ImageSource { get; set; } 
     }
 }

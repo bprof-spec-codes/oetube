@@ -1,62 +1,79 @@
-﻿using AutoMapper.Execution;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Extensions;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Infrastructure.FileClasses;
+using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Managers;
 using OeTube.Domain.Repositories;
-using OeTube.Domain.Repositories.Queries;
-using OeTube.Domain.Services;
+using OeTube.Domain.Repositories.QueryArgs;
 using OeTube.Entities;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using OeTube.Infrastructure.FileClasses;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Users;
+using Volo.Abp.Content;
 
 namespace OeTube.Application
 {
-
-    [Authorize]
-    public class GroupAppService : CreatorCrudAppService
-                                                <Group, GroupDto,
-                                                GroupItemDto, Guid,
-                                                PagedAndSortedResultRequestDto,
-                                                CreateUpdateGroupDto, CreateUpdateGroupDto>
+    public class GroupAppService :
+        ReadOnlyCustomAppService
+        <GroupManager,IGroupRepository, Group, Guid, IGroupFileClass,
+            GroupDto, GroupListItemDto, IGroupQueryArgs, GroupQueryDto>,
+        ICreateAppService<GroupDto, CreateUpdateGroupDto>,
+        IUpdateAppService<GroupDto, Guid, CreateUpdateGroupDto>,
+        IDeleteAppService<Guid>
     {
-        private readonly IGroupRepository _groups;
-        private readonly IUserGroupQuery _userGroupQuery;
-        private readonly GroupMemberManager _groupMemberManager;
-
-        public GroupAppService(IGroupRepository groups, IUserGroupQuery userGroupQuery, GroupMemberManager groupMemberManager)
-        :base(groups)
+        public GroupAppService(GroupManager manager) : base(manager)
         {
-            _groups = groups;
-            _userGroupQuery = userGroupQuery;
-            _groupMemberManager = groupMemberManager;
         }
 
-        public async Task<PagedResultDto<OeTubeUserItemDto>> GetGroupMembersAsync(Guid id, PagedAndSortedResultRequestDto input)
+        public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
-            var group = await GetEntityByIdAsync(id);
-            var result = await _userGroupQuery.GetGroupMembersAsync(group);
-            return await result.ToPagedResultDtoAsync(ObjectMapper.Map<OeTubeUser, OeTubeUserItemDto>,input);
+            return await CreateAsync<Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, input);
         }
-        
-        public async Task UpdateMembersAsync(Guid id, ModifyMembersDto input)
-        {
-            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
-            await _groupMemberManager.UpdateMembersAsync(group, input.Members,true);
-        }
-        public async Task UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
-        {
-            var group = await GetEntityByIdWithCheckOwnerAndUpdatePolicyAsync(id);
-            group.UpdateEmailDomains(input.EmailDomains);
-            await _groups.UpdateAsync(group);
 
+        public async Task DeleteAsync(Guid id)
+        {
+            await DeleteAsync(Manager, id);
         }
-       
+
+        public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
+        {
+            return await UpdateAsync<Group, Guid, GroupDto, CreateUpdateGroupDto>(Manager, id, input);
+        }
+
+        [HttpGet("api/app/group/{id}/image")]
+        public async Task<IRemoteStreamContent?> GetImageAsync(Guid id)
+        {
+            return await GetFileOrNullAsync(async () => await Manager.GetFileAsync(new ImageFileClass(id)));
+        }
+
+        public async Task UploadImageAsync(Guid id,IRemoteStreamContent input)
+        {
+            var group = await Manager.GetAsync(id);
+            await UpdateAsync(async () =>
+            {
+                var content = await ByteContent.FromRemoteStreamContentAsync(input);
+                await Manager.UploadImage(id, content);
+            }, group);
+        }
+        public async Task<PagedResultDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
+        {
+            var group = await Manager.GetAsync(id);
+            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Manager.GetGroupMembersAsync(group, input));
+        }
+
+        public async Task<GroupDto> UpdateMembersAsync(Guid id, ModifyMembersDto input)
+        {
+            var group = await Manager.GetAsync(id);
+            return await UpdateAsync<Group, GroupDto>(async () => await Manager.UpdateMembersAsync(group, input.Members), group);
+        }
+
+        public async Task<GroupDto> UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
+        {
+            var group = await Manager.GetAsync(id);
+            return await UpdateAsync<Group, GroupDto>(async () =>
+                        await Task.FromResult(group.UpdateEmailDomains(input.EmailDomains)), group);
+        }
     }
 }

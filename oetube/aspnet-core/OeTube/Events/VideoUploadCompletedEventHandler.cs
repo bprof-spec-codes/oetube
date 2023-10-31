@@ -7,6 +7,7 @@ namespace OeTube.Events
     public class VideoUploadCompletedEto
     {
         public Video Video { get; }
+
         public VideoUploadCompletedEto(Video video)
         {
             Video = video;

@@ -6,7 +6,7 @@
         public string? StandardError { get; }
         public int? ErrorCode { get; }
 
-        public ProcessException(string message,int? errorCode=null, string? standardOutput = null, string? standardError = null) : base(message)
+        public ProcessException(string message, int? errorCode = null, string? standardOutput = null, string? standardError = null) : base(message)
         {
             StandardOutput = standardOutput;
             StandardError = standardError;

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
-import { VideoItemDto } from '@proxy/application/dtos/videos';
+import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
 
 @Component({
@@ -11,7 +11,7 @@ import { VideoService } from '@proxy/application';
   styleUrls: ['./video-grid.component.scss'],
 })
 export class VideoGridComponent implements OnInit {
-  public videos: VideoItemDto[];
+  public videos: VideoListItemDto[];
   public isLoading: boolean;
 
   constructor(private readonly videoService: VideoService) {}
@@ -30,7 +30,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({}, { maxResultCount: 100 })
+      .getList({name:searchPhrase})
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;

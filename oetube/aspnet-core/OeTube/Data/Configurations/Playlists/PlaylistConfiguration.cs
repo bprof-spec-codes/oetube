@@ -1,5 +1,4 @@
-﻿using Autofac.Features.OwnedInstances;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OeTube.Domain.Entities.Playlists;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -7,7 +6,6 @@ using Volo.Abp.Identity;
 
 namespace OeTube.Data.Configurations.Playlists
 {
-
     public class PlaylistConfiguration : IEntityTypeConfiguration<Playlist>
     {
         public void Configure(EntityTypeBuilder<Playlist> builder)

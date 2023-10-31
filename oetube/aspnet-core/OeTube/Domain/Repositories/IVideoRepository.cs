@@ -1,13 +1,22 @@
 ﻿using OeTube.Domain.Entities.Groups;
-using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
-using Volo.Abp.Domain.Repositories;
+using OeTube.Domain.Repositories.CustomRepository;
+using OeTube.Domain.Repositories.QueryArgs;
 
 namespace OeTube.Domain.Repositories
 {
-    public interface IVideoRepository : IRepository<Video, Guid>
+    public interface IQueryVideoRepository : IQueryRepository<Video, IVideoQueryArgs>
     {
-        Task<IQueryable<Video>> GetCompletedVideosQueryableAsync(string? name=null);
-        Task<Video> UpdateAccessGroupsAsync(Video video, IEnumerable<Group> groups, bool autoSave = false, CancellationToken cancellationToken = default);
+        Task<List<Group>> GetAccessGroupsAsync(Video video, IGroupQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
+        Task<List<Video>> GetUncompletedVideosAsync(TimeSpan? old = null, IQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default);
+    }
+
+    public interface IUpdateVideoRepository : IUpdateRepository<Video, Guid>
+    {
+        Task<Video> UpdateAccessGroupsAsync(Video video, IEnumerable<Guid> groupIds, bool autoSave = false, CancellationToken cancellationToken = default);
+    }
+
+    public interface IVideoRepository : ICustomRepository<Video, Guid, IVideoQueryArgs>, IQueryVideoRepository, IUpdateVideoRepository,IDeleteRepository<Video,Guid>
+    {
     }
 }

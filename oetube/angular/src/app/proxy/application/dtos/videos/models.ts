@@ -1,8 +1,8 @@
 import type { Resolution } from '../../../domain/entities/videos/models';
-import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
-import type { UploadTask } from '../../../infrastructure/ff/models';
+import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
+import type { UploadTask } from '../../../domain/infrastructure/ffmpeg/models';
 
-export interface ResolutionSrcDto {
+export interface HlsSourceDto {
   resolution: Resolution;
   src?: string;
 }
@@ -10,13 +10,24 @@ export interface ResolutionSrcDto {
 export interface StartVideoUploadDto {
   name?: string;
   description?: string;
+  access: AccessType;
   content: FormData;
+}
+
+export interface UpdateAccessGroupsDto {
+  accessGroups: string[];
+}
+
+export interface UpdateVideoDto {
+  name?: string;
+  description?: string;
+  access: AccessType;
 }
 
 export interface VideoDto {
   id?: string;
-  resolutionsSrc: ResolutionSrcDto[];
-  indexImageSrc?: string;
+  hlsSources: HlsSourceDto[];
+  indexImageSource?: string;
   name?: string;
   description?: string;
   creatorId?: string;
@@ -27,18 +38,25 @@ export interface VideoDto {
   isUploadCompleted: boolean;
 }
 
-export interface VideoFilterDto {
-  name?: string;
-}
-
-export interface VideoItemDto {
+export interface VideoListItemDto {
   id?: string;
   name?: string;
-  indexImageSrc?: string;
+  indexImageSource?: string;
   duration?: string;
   creationTime?: string;
   creatorId?: string;
   playlistId?: string;
+}
+
+export interface VideoQueryDto {
+  name?: string;
+  creationTimeMin?: string;
+  creationTimeMax?: string;
+  durationMin?: string;
+  durationMax?: string;
+  skipCount?: number;
+  maxResultCount?: number;
+  sorting?: string;
 }
 
 export interface VideoUploadStateDto {
