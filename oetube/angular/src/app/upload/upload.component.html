@@ -1,3 +1,5 @@
+<div class="component-title">
+<h4>Upload your video</h4>
 <form  (submit)="onSubmit($event)">
     <dx-form 
     [formData]="startVideoUpload">
@@ -9,9 +11,22 @@
         <dxi-item>
             <dx-file-uploader accept="video/mp4" dialogTrigger="#upload" #fileUploader uploadMode="useForm" multiple="false"></dx-file-uploader>
         </dxi-item>
+        <dxi-item
+          dataField="Choose visibility"
+          editorType="dxRadioGroup"
+          [editorOptions]="{ dataSource: 'visibilityOptions', layout:'horizontal', valueExpr: 'value', displayExpr: 'text' }"
+        >
+            <dx-radio-group
+                [dataSource]="visibilityOptions"
+                [value]="selectedVisibility"
+                displayExpr="text">
+            </dx-radio-group>
+        </dxi-item>
         <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
+        
+        
+
     </dx-form>
-    <dx-button id="upload" type="default" itemType="button">Hello World</dx-button>
 </form>
 
 <div class="mt-3">
@@ -19,4 +34,5 @@
     <p>
        <em> {{ log?.message }} </em>
     </p>
+</div>
 </div>

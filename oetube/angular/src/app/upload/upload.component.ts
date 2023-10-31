@@ -5,7 +5,7 @@ import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dto
 import { firstValueFrom } from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms'
 import { DxFileUploaderComponent } from 'devextreme-angular';
-import { DxRadioGroupModule } from "devextreme-angular";
+
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -17,10 +17,18 @@ export class UploadComponent implements OnInit {
   progress: number;
   log:any
 
+  visibilityOptions = [
+    { text : "Public", value : "Public" },
+    { text : "Private", value : "Private"},
+    { text : "OE", value : "Custom Group"}]
+
+  selectedVisibility = this.visibilityOptions[0]
+
   startVideoUpload:StartVideoUploadDto={
     name:"",
     description:"",
-    content:undefined
+    content:undefined,
+
   }
   submitButtonOptions={
     text:"Submit",
