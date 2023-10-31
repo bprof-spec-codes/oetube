@@ -20,7 +20,8 @@ export class UploadComponent implements OnInit {
   visibilityOptions = [
     { text : "Public", value : "Public" },
     { text : "Private", value : "Private"},
-    { text : "OE", value : "Custom Group"}]
+    { text : "OE", value : "OE"},
+    { text : "Custom Group", value : "Custom Group"}]
 
   selectedVisibility = this.visibilityOptions[0]
 
