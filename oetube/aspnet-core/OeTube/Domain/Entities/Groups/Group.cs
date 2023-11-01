@@ -1,14 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using JetBrains.Annotations;
-using OeTube.Entities;
+﻿using OeTube.Entities;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
-
 namespace OeTube.Domain.Entities.Groups
 {
-
     public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
@@ -30,7 +26,7 @@ namespace OeTube.Domain.Entities.Groups
             emailDomains = new EntitySet<EmailDomain, string>();
         }
 
-        public Group(Guid id, string name, Guid creatorId) : this()
+        public Group(Guid id, string name, Guid? creatorId) : this()
         {
             Id = id;
             CreationTime = DateTime.Now;
@@ -44,6 +40,7 @@ namespace OeTube.Domain.Entities.Groups
             Description = description;
             return this;
         }
+
         public Group SetName(string name)
         {
             Check.Length(name, nameof(name),
@@ -62,9 +59,8 @@ namespace OeTube.Domain.Entities.Groups
             }
             return this;
         }
-
-
     }
+
     public static class GroupConstants
     {
         public const int NameMaxLength = 100;

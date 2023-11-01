@@ -88,19 +88,35 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <Content Remove="Localization\OeTube\*.json" />
     <EmbeddedResource Include="Localization\OeTube\*.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <Compile Remove="Logs\**" />
     <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <None Remove="Logs\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="$(UserProfile)\.nuget\packages\*\*\contentFiles\any\*\*.abppkg*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ffmpeg\bin\ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ffmpeg\bin\ffplay.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ffmpeg\bin\ffprobe.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -16,12 +16,12 @@ namespace OeTube.Entities
 
         Guid IHasAtomicKey<Guid>.AtomicKey => Id;
 
-
         private OeTubeUser()
         {
             Name = string.Empty;
             EmailDomain = string.Empty;
         }
+
         public OeTubeUser(IdentityUser user) : this()
         {
             Id = user.Id;
@@ -51,6 +51,7 @@ namespace OeTube.Entities
             return this;
         }
     }
+
     public static class OeTubeUserConstants
     {
         public const int NameMinLength = 3;

@@ -12,7 +12,8 @@ namespace OeTube.Domain.Entities.Groups
 
         Guid IHasAtomicKey<Guid>.AtomicKey => UserId;
 
-        private Member() { }
+        private Member()
+        { }
 
         public Member(Guid groupId, Guid userId)
         {

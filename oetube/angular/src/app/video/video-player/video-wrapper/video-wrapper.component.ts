@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ResolutionSrcDto, VideoDto } from '@proxy/application/dtos/videos';
+import { HlsSourceDto, VideoDto } from '@proxy/application/dtos/videos';
 
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
@@ -67,7 +67,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    this.load(this.video.resolutionsSrc[0].src);
+    this.load(this.video.hlsSources[0].src);
   }
 
   ngOnDestroy() {
@@ -83,7 +83,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.video != undefined) {
-      this.load(this.video.resolutionsSrc[0].src);
+      this.load(this.video.hlsSources[0].src);
     }
   }
   /** Play/Pause video on click */

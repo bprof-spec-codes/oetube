@@ -10,6 +10,5 @@
             Arguments = arguments;
             Name = name;
         }
-
     }
 }

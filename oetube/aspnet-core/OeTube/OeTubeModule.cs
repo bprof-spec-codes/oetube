@@ -55,6 +55,11 @@ using OeTube.Infrastructure.SignalR;
 using OeTube.Application.Dtos.Videos;
 using Volo.Abp.Json;
 using Microsoft.AspNetCore.Mvc;
+using OeTube.Swagger;
+using Volo.Abp.BackgroundWorkers;
+using OeTube.Workers;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace OeTube;
 
@@ -111,7 +116,7 @@ namespace OeTube;
 public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
-    private const bool IsMultiTenant = true;
+    private const bool IsMultiTenant = false;
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
@@ -158,6 +163,7 @@ public class OeTubeModule : AbpModule
         ConfigureBlobStoring();
         ConfigureBackgroundJobs();
         ConfigureNewtonsoftJson(context);
+        ConfigureRequestSizeLimit();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -287,6 +293,7 @@ public class OeTubeModule : AbpModule
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "OeTube API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
+                options.DocumentFilter<ControllerCustomOrderFilter>();
             });
     }
 
@@ -371,7 +378,29 @@ public class OeTubeModule : AbpModule
         {
         });
     }
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    private async Task AddBackgroundWorkers(ApplicationInitializationContext context)
+    {
+        await context.AddBackgroundWorkerAsync<PeriodicDeleteUncompletedVideos>();
+    }
+    private void ConfigureRequestSizeLimit()
+    {
+        long gb = 1024L * 1024 * 1024;
+        long requestSize = 1*gb;
+        Configure<IISServerOptions>(options =>
+        {
+            options.MaxRequestBodySize = requestSize;
+        });
+        Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = requestSize;
+        });
+        Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = requestSize;
+        });
+
+    }
+    public override async void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
@@ -416,5 +445,6 @@ public class OeTubeModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+        await AddBackgroundWorkers(context);
     }
 }

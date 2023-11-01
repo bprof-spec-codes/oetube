@@ -13,6 +13,7 @@ namespace OeTube.Data.SeedContributors;
 /* Creates initial data that is needed to property run the application
  * and make client-to-server communication possible.
  */
+
 public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
     private readonly IConfiguration _configuration;

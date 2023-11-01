@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.Identity.Client;
-using OeTube.Entities;
+﻿using OeTube.Entities;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
@@ -15,7 +13,7 @@ namespace OeTube.Domain.Entities.Playlists
 
         private EntitySet<VideoItem, int> items;
 
-        public virtual IReadOnlyEntitySet<VideoItem,int> Items => items;
+        public virtual IReadOnlyEntitySet<VideoItem, int> Items => items;
 
         public DateTime CreationTime { get; private set; }
 
@@ -25,18 +23,17 @@ namespace OeTube.Domain.Entities.Playlists
 
         public Playlist()
         {
-            items = new EntitySet<VideoItem,int>();
+            items = new EntitySet<VideoItem, int>();
             Name = string.Empty;
         }
 
-        public Playlist(Guid id,string name, Guid creatorId):this()
+        public Playlist(Guid id, string name, Guid creatorId) : this()
         {
             Id = id;
             SetName(name);
             CreationTime = DateTime.Now;
             CreatorId = creatorId;
         }
-
 
         public Playlist SetName(string name)
         {
@@ -56,9 +53,10 @@ namespace OeTube.Domain.Entities.Playlists
             return this;
         }
     }
+
     public static class PlaylistConstants
     {
-        public const int NameMinLength = 3; 
+        public const int NameMinLength = 3;
         public const int NameMaxLength = 100;
 
         public const int DescriptionMaxLength = 1000;

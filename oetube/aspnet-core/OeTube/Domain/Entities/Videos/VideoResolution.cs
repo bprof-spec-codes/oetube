@@ -3,7 +3,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class VideoResolution:Entity,IHasAtomicKey<Resolution>
+    public class VideoResolution : Entity, IHasAtomicKey<Resolution>
     {
         public Guid VideoId { get; private set; }
         public int Width { get; private set; }
@@ -14,10 +14,11 @@ namespace OeTube.Domain.Entities.Videos
         private VideoResolution()
         {
         }
-        public VideoResolution(Guid videoId,Resolution resolution)
+
+        public VideoResolution(Guid videoId, Resolution resolution)
         {
             VideoId = videoId;
-            if (resolution.Width <= 0)  
+            if (resolution.Width <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Width, null);
             }
@@ -25,13 +26,15 @@ namespace OeTube.Domain.Entities.Videos
             {
                 throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Height, null);
             }
-            Width =resolution.Width;
+            Width = resolution.Width;
             Height = resolution.Height;
         }
+
         public Resolution GetResolution()
         {
             return new Resolution(Width, Height);
         }
+
         public void MarkReady()
         {
             if (IsReady)
@@ -43,7 +46,7 @@ namespace OeTube.Domain.Entities.Videos
 
         public override object[] GetKeys()
         {
-            return new object[]{ VideoId, Width,Height }; 
+            return new object[] { VideoId, Width, Height };
         }
     }
 }

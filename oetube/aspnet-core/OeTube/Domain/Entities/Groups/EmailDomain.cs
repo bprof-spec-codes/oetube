@@ -1,19 +1,18 @@
 ﻿using JetBrains.Annotations;
 using OeTube.Entities;
-using System.Runtime.Intrinsics.Arm;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class EmailDomain : Entity,IHasAtomicKey<string>
+    public class EmailDomain : Entity, IHasAtomicKey<string>
     {
         public Guid GroupId { get; private set; }
         public string Domain { get; private set; }
 
         string IHasAtomicKey<string>.AtomicKey => Domain;
 
-        public EmailDomain(Guid groupId, [NotNull]string domain)
+        public EmailDomain(Guid groupId, [NotNull] string domain)
         {
             GroupId = groupId;
             Check.Length(domain, nameof(domain),
@@ -27,6 +26,7 @@ namespace OeTube.Domain.Entities.Groups
             return new object[] { GroupId, Domain };
         }
     }
+
     public static class EmailDomainConstants
     {
         public const int DomainMaxLength = 255;
