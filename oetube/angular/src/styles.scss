@@ -40,7 +40,10 @@ nav{
   margin-bottom: 48px;
 }
 
-.nav-link{
+.nav-link, .navbar-brand{
   color: white !important;
 }
 
+#main-navbar{
+  background-color: #1D294D !important;
+}
