@@ -15,12 +15,17 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { environment } from '../environments/environment';
 import { registerLocale } from '@abp/ng.core/locale';
+import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
+import { DxRadioGroupModule } from "devextreme-angular";
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    DxDropDownBoxModule,
+    DxListModule,
+    DxRadioGroupModule,
     CoreModule.forRoot({
       environment,
       registerLocaleFn: registerLocale(),
