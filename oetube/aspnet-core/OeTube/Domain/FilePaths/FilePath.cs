@@ -3,21 +3,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Metadata;
 using Volo.Abp.Http;
 using Microsoft.SqlServer.Server;
-using OeTube.Domain.Infrastructure.FileClasses;
 
-namespace OeTube.Infrastructure.FileClasses
+namespace OeTube.Domain.FilePaths
 {
 
-    public abstract class FileClass : IFileClass
+    public abstract class FilePath : IFilePath
     {
         public virtual string Key => string.Empty;
         public virtual IEnumerable<string> SubPath => Enumerable.Empty<string>();
         public abstract string Name { get; }
-
-
-        public virtual string MimeTypeCategory => string.Empty;
-        public virtual IEnumerable<string> ExplicitFormats => Enumerable.Empty<string>();
-        public virtual long MaxFileSize => long.MaxValue;
 
         public virtual string GetAbsoluteKeyDirectory(string absoluteRootDirectory)
         {
@@ -50,29 +44,6 @@ namespace OeTube.Infrastructure.FileClasses
         public virtual string CombineWithKey(string localKeyPath)
         {
             return Path.Combine(Key, localKeyPath);
-        }
-
-        public virtual void CheckContent(ByteContent content)
-        {
-            if (!string.IsNullOrEmpty(MimeTypeCategory))
-            {
-                var typeParts = content.ContentType.Split('/');
-                if (typeParts.Length != 2 || typeParts[0].ToLower() != MimeTypeCategory)
-                {
-                    throw new ArgumentException(content.ContentType, nameof(content));
-                }
-            }
-
-            if (!ExplicitFormats.IsNullOrEmpty() && !ExplicitFormats.Select(f => f.TrimStart('.').ToLower())
-                                                                 .Contains(content.Format.ToLower()))
-            {
-                throw new ArgumentException(content.Format, nameof(content));
-            }
-
-            if (content.Bytes.LongLength > MaxFileSize)
-            {
-                throw new ArgumentException(content.Bytes.Length.ToString(), nameof(content));
-            }
         }
     }
 }

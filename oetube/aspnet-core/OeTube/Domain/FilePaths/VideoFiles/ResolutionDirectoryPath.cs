@@ -1,8 +1,8 @@
 ﻿using OeTube.Domain.Entities.Videos;
 
-namespace OeTube.Infrastructure.FileClasses.VideoFiles
+namespace OeTube.Domain.FilePaths.VideoFiles
 {
-    public abstract class ResolutionDirectoryFileClass : VideoFileClass
+    public abstract class ResolutionDirectoryPath : VideoPath
     {
         public override IEnumerable<string> SubPath
         {
@@ -13,7 +13,7 @@ namespace OeTube.Infrastructure.FileClasses.VideoFiles
         }
 
         public Resolution Resolution { get; }
-        protected ResolutionDirectoryFileClass(Guid key, Resolution resolution) : base(key)
+        protected ResolutionDirectoryPath(Guid key, Resolution resolution) : base(key)
         {
             Resolution = resolution;
         }

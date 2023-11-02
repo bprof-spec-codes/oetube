@@ -1,7 +1,7 @@
-﻿namespace OeTube.Infrastructure.FileClasses.VideoFiles
+﻿namespace OeTube.Domain.FilePaths.VideoFiles
 {
 
-    public abstract class FramesDirectoryFileClass : VideoFileClass
+    public abstract class FramesDirectoryPath : VideoPath
     {
         public override IEnumerable<string> SubPath
         {
@@ -10,7 +10,7 @@
                 yield return "frames";
             }
         }
-        protected FramesDirectoryFileClass(Guid key) : base(key)
+        protected FramesDirectoryPath(Guid key) : base(key)
         {
         }
     }

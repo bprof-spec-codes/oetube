@@ -1,10 +1,10 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace OeTube.Infrastructure.FileClasses
+namespace OeTube.Domain.FilePaths
 {
-    public sealed class SimpleFileClass : FileClass
+    public sealed class CustomFilePath : FilePath
     {
-        public SimpleFileClass(object key, string subPath)
+        public CustomFilePath(object key, string subPath)
         {
             var keyStr = key?.ToString();
             if (string.IsNullOrWhiteSpace(keyStr))
