@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFmpeg
+namespace OeTube.Infrastructure.FFMpeg
 {
-    public class FFmpegProcess : FFProcess<ProcessResult>, ITransientDependency
+    public class FFMpegProcess : FFProcess<ProcessResult>, ITransientDependency
     {
         private static readonly string FFmpegExe = Path.Combine(FFmpegDir, "ffmpeg.exe");
 
