@@ -8,98 +8,96 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.7.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.12" />
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.BackgroundJobs" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Imaging.Abstractions" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Imaging.ImageSharp" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Autofac" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Swashbuckle" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Swashbuckle" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Account.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.Account.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Identity.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.Identity.EntityFrameworkCore" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.OpenIddict.EntityFrameworkCore" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.Identity.EntityFrameworkCore" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.OpenIddict.EntityFrameworkCore" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.TenantManagement.EntityFrameworkCore" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.TenantManagement.EntityFrameworkCore" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.EntityFrameworkCore" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.EntityFrameworkCore" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="7.3.3" />
-    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="7.4.1" />
+    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" Version="2.3.*-*" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" Version="2.4.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>compile; contentFiles; build; buildMultitargeting; buildTransitive; analyzers; native</PrivateAssets>
+      <PrivateAssets>compile; build; native; contentfiles; analyzers; buildtransitive</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <Content Remove="Localization\OeTube\*.json" />
     <EmbeddedResource Include="Localization\OeTube\*.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <Compile Remove="Logs\**" />
     <Content Remove="Logs\**" />
-    <EmbeddedResource Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <EmbeddedResource Remove="Logs\**" />
-    <None Remove="Domain\Infrastructure\Videos\VideoStorage\**" />
     <None Remove="Logs\**" />
   </ItemGroup>
 
