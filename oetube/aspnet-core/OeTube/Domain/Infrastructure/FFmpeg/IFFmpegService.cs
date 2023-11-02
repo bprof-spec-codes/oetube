@@ -2,7 +2,7 @@
 
 namespace OeTube.Domain.Infrastructure.FFmpeg
 {
-    public interface IFFmpegService
+    public interface IFFMpegService
     {
         Guid Id { get; }
         bool WriteToDebug { get; set; }
