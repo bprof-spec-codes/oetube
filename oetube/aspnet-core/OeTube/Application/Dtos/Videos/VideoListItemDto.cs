@@ -1,5 +1,7 @@
-﻿using OeTube.Application.Services.Url;
+﻿using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Services.Url;
 using OeTube.Domain.Entities.Videos;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
 
@@ -25,23 +27,22 @@ namespace OeTube.Application.Dtos.Videos
             {
                 Id = video.Id,
                 CreationTime = video.CreationTime,
-                CreatorId = video.CreatorId,
                 Duration = video.Duration,
                 Name = video.Name,
                 PlaylistId = null,
-                IndexImageSource = _videoUrlService.GetImageUrl(video.Id)
+                IndexImage = _videoUrlService.GetIndexImageUrl(video.Id)
             };
         }
     }
 
-    public class VideoListItemDto
+    public class VideoListItemDto:EntityDto<Guid>,IMayHaveCreatorDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string? IndexImageSource { get; set; } = string.Empty;
+        public string? IndexImage { get; set; } = string.Empty;
         public TimeSpan Duration { get; set; }
         public DateTime CreationTime { get; set; }
-        public Guid? CreatorId { get; set; }
         public Guid? PlaylistId { get; set; }
+        public CreatorDto? Creator { get; set; }
+
     }
 }

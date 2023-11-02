@@ -1,6 +1,9 @@
-﻿using OeTube.Application.Services.Url;
+﻿using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Services.Url;
 using OeTube.Domain.Entities.Videos;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Videos
@@ -24,34 +27,33 @@ namespace OeTube.Application.Dtos.Videos
             destination.Id = video.Id;
             destination.AccessGroups = video.AccessGroups.Select(ag => ag.GroupId).ToList();
             destination.CreationTime = video.CreationTime;
-            destination.CreatorId = video.CreatorId;
             destination.Description = video.Description;
             destination.Duration = video.Duration;
-            destination.IndexImageSource = _videoUrlService.GetImageUrl(video.Id);
+            destination.IndexImage = _videoUrlService.GetIndexImageUrl(video.Id);
             destination.IsUploadCompleted = video.IsUploadCompleted;
             destination.Name = video.Name;
             destination.PlaylistId = null;
-            destination.HlsSources = video.GetResolutionsBy(true).Select(r => new HlsSourceDto()
+            destination.HlsResolutions = video.GetResolutionsBy(true).Select(r => new HlsResolutionDto()
             {
-                Resolution = r,
-                Src = _videoUrlService.GetHlsListUrl(video.Id, r.Width, r.Height)
+                Width=r.Width,
+                Height=r.Height,
+                HlsList = _videoUrlService.GetHlsListUrl(video.Id, r.Width, r.Height)
             }).ToList();
             return destination;
         }
     }
-
-    public class VideoDto
+ 
+    public class VideoDto:EntityDto<Guid>,IMayHaveCreatorDto
     {
-        public Guid Id { get; set; }
-        public List<HlsSourceDto> HlsSources { get; set; } = new();
-        public string? IndexImageSource { get; set; } 
+        public List<HlsResolutionDto> HlsResolutions { get; set; } = new();
+        public string? IndexImage { get; set; } 
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public Guid? CreatorId { get; set; }
         public DateTime CreationTime { get; set; }
         public TimeSpan Duration { get; set; }
         public List<Guid> AccessGroups { get; set; } = new List<Guid>();
         public Guid? PlaylistId { get; set; }
         public bool IsUploadCompleted { get; set; }
+        public CreatorDto? Creator { get; set; }
     }
 }
