@@ -4,6 +4,10 @@ using OeTube.Data.Repositories.Playlists;
 using OeTube.Data.Repositories.Repos.GroupRepos;
 using OeTube.Data.Repositories.Videos;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Infrastructure;
+using OeTube.Domain.Infrastructure.FileHandlers;
+using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Entities;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -26,7 +30,7 @@ namespace OeTube.Data.SeedContributors
         private readonly GroupRepository _groupRepository;
         private readonly VideoRepository _videoRepository;
         private readonly PlaylistRepository _playlistRepository;
-
+        private readonly IDefaultImageUploadHandler _defaultImageUploadHandler;
         public OeTubeSeedContributor(IGuidGenerator guidGenerator,
                                        IdentityUserManager userManager,
                                        IdentityRoleManager roleManager,
@@ -36,7 +40,8 @@ namespace OeTube.Data.SeedContributors
                                        IOptions<IdentityOptions> options,
                                        GroupRepository groupRepository,
                                        VideoRepository videoRepository,
-                                       PlaylistRepository playlistRepository)
+                                       PlaylistRepository playlistRepository,
+                                       IDefaultImageUploadHandler defaultImageUploadHandler)
         {
             _guidGenerator = guidGenerator;
             _userManager = userManager;
@@ -48,6 +53,7 @@ namespace OeTube.Data.SeedContributors
             _groupRepository = groupRepository;
             _videoRepository = videoRepository;
             _playlistRepository = playlistRepository;
+            _defaultImageUploadHandler = defaultImageUploadHandler;
         }
 
         [UnitOfWork]
@@ -113,8 +119,21 @@ namespace OeTube.Data.SeedContributors
         }
 
         [UnitOfWork]
+        public async Task SetDefaultImageAsync<TRelatedType>(string filename)
+        {
+            var path = Path.Combine(nameof(Data), nameof(SeedContributors), "Files",filename);
+            using var stream = File.OpenRead(path);
+            var content = await ByteContent.FromStreamAsync(Path.GetExtension(path), stream);
+            await _defaultImageUploadHandler.HandleFileAsync<TRelatedType>(content);
+
+        }
+
+
+        [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)
         {
+            await SetDefaultImageAsync<Group>("group-default.png");
+            await SetDefaultImageAsync<OeTubeUser>("user-default.png");
             string obudaMail = "@uni-obuda.hu";
             string studObudaMail = "@stud.uni-obuda.hu";
             string gmail = "@gmail.com";
