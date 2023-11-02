@@ -3,16 +3,23 @@ using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.BlobStoring;
 using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.DependencyInjection;
-using OeTube.Infrastructure.FileClasses;
-using OeTube.Domain.Infrastructure.FileClasses;
+using OeTube.Domain.FilePaths;
+using OeTube.Domain.Infrastructure.FileHandlers;
+using System.Runtime.CompilerServices;
+using System.IO;
+using OeTube.Domain.Infrastructure;
 
-namespace OeTube.Infrastructure.FileClassContainers
+namespace OeTube.Infrastructure.FileContainers
 {
+
+
+
     public class FileContainer: ITransientDependency, IFileContainer
     { 
         public Type RelatedType { get; }
         private readonly IBlobContainer _container;
         public string RootDirectory { get; }
+
 
         public FileContainer(Type relatedType,
                              IBlobContainerFactory containerFactory,
@@ -24,31 +31,31 @@ namespace OeTube.Infrastructure.FileClassContainers
             RootDirectory = GetDirectory(calculator, provider);
         }
 
-        public string? Find(IFileClass fileClass)
+        public string? FindFile(IFilePath path)
         {
-            var directory = fileClass.GetAbsoluteSubPathDirectory(RootDirectory);
-            var pattern = fileClass.Name + ".*";
+            var directory = path.GetAbsoluteSubPathDirectory(RootDirectory);
+            var pattern = path.Name + ".*";
             if (!Directory.Exists(directory))
             {
                 return null;
             }
-            return Directory.GetFiles(directory, pattern, SearchOption.TopDirectoryOnly)
-                           .Select(f => ToLocalKeyPath(fileClass.Key, f))
+            return Directory.EnumerateFiles(directory, pattern, SearchOption.TopDirectoryOnly)
+                           .Select(f => ToLocalKeyPath(path.Key, f))
                            .FirstOrDefault();
         }
 
-        public async Task<ByteContent?> GetFileOrNullAsync(IFileClass fileClass, CancellationToken cancellationToken = default)
+        public async Task<ByteContent?> GetFileOrNullAsync(IFilePath path, CancellationToken cancellationToken = default)
         {
-            var result = Find(fileClass);
+            var result = FindFile(path);
             if (result is null) return null;
-            var stream = await _container.GetAsync(fileClass.CombineWithKey(result), cancellationToken);
+            var stream = await _container.GetAsync(path.CombineWithKey(result), cancellationToken);
 
             return await ByteContent.FromStreamAsync(Path.GetExtension(result), stream, cancellationToken);
         }
-        public async Task<ByteContent> GetFileAsync(IFileClass fileClass, CancellationToken cancellationToken = default)
+        public async Task<ByteContent> GetFileAsync(IFilePath path, CancellationToken cancellationToken = default)
         {
-            var result = await GetFileOrNullAsync(fileClass, cancellationToken);
-            if (result is null) throw new ArgumentException(fileClass.GetPath(), nameof(fileClass));
+            var result = await GetFileOrNullAsync(path, cancellationToken);
+            if (result is null) throw new ArgumentException(path.GetPath(), nameof(path));
             return result;
         }
         public IEnumerable<string> GetFiles(object key)
@@ -58,15 +65,15 @@ namespace OeTube.Infrastructure.FileClassContainers
                              .Select(f => ToLocalKeyPath(keyStr, f));
         }
 
-        public async Task<bool> DeleteFileAsync(IFileClass fileClass, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteFileAsync(IFilePath path, CancellationToken cancellationToken = default)
         {
-            var result = Find(fileClass);
+            var result = FindFile(path);
             if (result is null) return false;
 
-            await _container.DeleteAsync(fileClass.CombineWithKey(result), cancellationToken);
+            await _container.DeleteAsync(path.CombineWithKey(result), cancellationToken);
             await Try(() =>
             {
-                var directory = fileClass.GetAbsoluteKeyDirectory(RootDirectory);
+                var directory = path.GetAbsoluteKeyDirectory(RootDirectory);
                 if (Directory.Exists(directory) && !Directory.EnumerateFileSystemEntries(directory).Any())
                 {
                     Directory.Delete(directory, true);
@@ -88,14 +95,58 @@ namespace OeTube.Infrastructure.FileClassContainers
                 }
             }, 100, 5, cancellationToken);
         }
-
-        public async Task SaveFileAsync(IFileClass fileClass, ByteContent content, CancellationToken cancellationToken = default)
+     
+        public async Task SaveFileAsync(IFilePath path, ByteContent content, CancellationToken cancellationToken = default)
         {
-            fileClass.CheckContent(content);
-            await DeleteFileAsync(fileClass, cancellationToken);
-            await _container.SaveAsync(fileClass.GetPath(content.Format), content.Bytes, false, cancellationToken);
+            await DeleteFileAsync(path, cancellationToken);
+            await _container.SaveAsync(path.GetPath(content.Format), content.Bytes, false, cancellationToken);
         }
 
+        public async Task<ByteContent> GetFileOrDefault<TDefaultFilePath>(TDefaultFilePath path,CancellationToken cancellationToken=default)
+            where TDefaultFilePath:IDefaultFilePath
+        {
+            var result=await GetFileOrNullAsync(path,cancellationToken);
+            if(result is null)
+            {
+               var defaultFile=await GetDefaultFileOrNullAsync<TDefaultFilePath>(cancellationToken) ?? throw new ArgumentException(TDefaultFilePath.GetDefaultPath(), nameof(path));
+                return defaultFile;
+            }
+            return result;
+        }
+        public async Task<ByteContent?> GetDefaultFileOrNullAsync<TDefaultFilePath>(CancellationToken cancellationToken=default)
+        where TDefaultFilePath:IDefaultFilePath
+        {
+            var result = FindDefaultFile<TDefaultFilePath>();
+            if (result is null) return null;
+            var stream = await _container.GetAsync(result, cancellationToken);
+            return await ByteContent.FromStreamAsync(Path.GetExtension(result), stream, cancellationToken);
+        }
+        public async Task SaveDefaultFileAsync<TDefaultFilePath>(ByteContent content,CancellationToken cancellationToken = default)
+        where TDefaultFilePath:IDefaultFilePath
+        {
+            await DeleteDefaultFileAsync<TDefaultFilePath>(cancellationToken);
+            await _container.SaveAsync(TDefaultFilePath.GetDefaultPath(content.Format), content.Bytes, false, cancellationToken);
+        }
+        public async Task<bool> DeleteDefaultFileAsync<TDefaultFilePath>(CancellationToken cancellationToken=default)
+        where TDefaultFilePath:IDefaultFilePath
+        {
+            var result = FindDefaultFile<TDefaultFilePath>();
+            if (result is null) return false;
+            return await _container.DeleteAsync(result, cancellationToken);
+        }
+        public string? FindDefaultFile<TDefaultFilePath>()
+        where TDefaultFilePath:IDefaultFilePath
+        {
+            var directory = RootDirectory;
+            var pattern =TDefaultFilePath.GetDefaultPath() + "*";
+            if (!Directory.Exists(directory))
+            {
+                return null;
+            }
+            return Directory.EnumerateFiles(directory, pattern, SearchOption.TopDirectoryOnly)
+                           .Select(f=>f.Replace(RootDirectory+Path.DirectorySeparatorChar,""))
+                           .FirstOrDefault();
+        }
 
         protected virtual string GetDirectory(IBlobFilePathCalculator calculator, IBlobContainerConfigurationProvider provider)
         {

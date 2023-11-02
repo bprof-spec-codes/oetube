@@ -3,7 +3,7 @@ using Volo.Abp.BlobStoring;
 using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FileClassContainers
+namespace OeTube.Infrastructure.FileContainers
 {
 
     public class FileContainerFactory : IFileContainerFactory,ITransientDependency
