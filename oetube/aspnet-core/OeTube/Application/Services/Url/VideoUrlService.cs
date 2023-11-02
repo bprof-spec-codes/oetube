@@ -4,45 +4,44 @@ namespace OeTube.Application.Services.Url
 {
 
 
-    public interface IVideoUrlService:IImageUrlService
+    public interface IVideoUrlService:IUrlService
     {
         string GetHlsListUrl(Guid id, int width, int height);
-
         string GetHlsSegmentUrl(Guid id, int width, int height, int segment);
+        string GetIndexImageByIndexUrl(Guid id, int index);
+        string GetIndexImageUrl(Guid id);
 
     }
-    public class VideoUrlService : IVideoUrlService, ITransientDependency
+    public class VideoUrlService : UrlService, IVideoUrlService, ITransientDependency
     {
-        private readonly IUrlService _urlService;
-
-        public VideoUrlService(IUrlService urlService)
+        public VideoUrlService(IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
-            _urlService = urlService;
         }
 
         public string GetHlsListUrl(Guid id, int width, int height)
         {
-            return _urlService.GetUrl<VideoAppService>(nameof(VideoAppService.GetHlsListAsync),
+            return GetUrl<VideoAppService>(nameof(VideoAppService.GetHlsListAsync),
                                               new(id),
                                               new(width),
-                                              new(height)) ??
-              throw new NullReferenceException(nameof(VideoAppService.GetHlsListAsync));
+                                              new(height));
         }
 
         public string GetHlsSegmentUrl(Guid id, int width, int height, int segment)
         {
-            return _urlService.GetUrl<VideoAppService>(nameof(VideoAppService.GetHlsSegmentAsync),
+            return GetUrl<VideoAppService>(nameof(VideoAppService.GetHlsSegmentAsync),
                                             new(id),
                                             new(width),
                                             new(height),
-                                            new(segment)) ??
-            throw new NullReferenceException(nameof(VideoAppService.GetHlsSegmentAsync));
+                                            new(segment));
         }
 
-        public string GetImageUrl(Guid id)
+        public string GetIndexImageUrl(Guid id)
         {
-            return _urlService.GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageAsync), new RouteTemplateParameter(id))
-              ?? throw new NullReferenceException(nameof(VideoAppService.GetIndexImageAsync));
+            return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageAsync), new RouteTemplateParameter(id));
+        }
+        public string GetIndexImageByIndexUrl(Guid id, int index)
+        {
+            return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageByIndexAsync), new(id),new(index));
         }
     }
 }

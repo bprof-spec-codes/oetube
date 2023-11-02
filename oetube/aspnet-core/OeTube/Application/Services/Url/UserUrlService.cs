@@ -8,12 +8,15 @@ namespace OeTube.Application.Services.Url
         {
         }
 
-        public string? GetImageUrl(Guid id)
+        public string GetImageUrl(Guid id)
         {
-            return GetUrl<GroupAppService>(nameof(OeTubeUserAppService.GetImageAsync), new RouteTemplateParameter(id));
+            return GetUrl<OeTubeUserAppService>(nameof(OeTubeUserAppService.GetImageAsync), new RouteTemplateParameter(id));
         }
 
-      
+        public string GetThumbnailImageUrl(Guid id)
+        {
+            return GetUrl<OeTubeUserAppService>(nameof(OeTubeUserAppService.GetThumbnailImageAsync), new RouteTemplateParameter(id));
+        }
     }
 
  
