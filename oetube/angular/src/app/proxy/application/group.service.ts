@@ -49,7 +49,7 @@ export class GroupService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/group/${id}/image`,
+      url: `/api/src/group/${id}/image`,
     },
     { apiName: this.apiName,...config });
   
@@ -59,6 +59,15 @@ export class GroupService {
       method: 'GET',
       url: '/api/app/group',
       params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getThumbnailImage = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: `/api/src/group/${id}/thumbnail-image`,
     },
     { apiName: this.apiName,...config });
   
@@ -85,6 +94,15 @@ export class GroupService {
     this.restService.request<any, GroupDto>({
       method: 'PUT',
       url: `/api/app/group/${id}/members`,
+      body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  uploadDefaultImage = (input: FormData, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'POST',
+      url: '/api/app/group/upload-default-image',
       body: input,
     },
     { apiName: this.apiName,...config });

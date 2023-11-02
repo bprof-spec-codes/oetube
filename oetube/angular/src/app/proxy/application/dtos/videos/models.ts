@@ -1,10 +1,12 @@
-import type { Resolution } from '../../../domain/entities/videos/models';
 import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
-import type { UploadTask } from '../../../domain/infrastructure/ffmpeg/models';
+import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
+import type { EntityDto } from '@abp/ng.core';
+import type { CreatorDto } from '../oe-tube-users/models';
 
-export interface HlsSourceDto {
-  resolution: Resolution;
-  src?: string;
+export interface HlsResolutionDto {
+  width: number;
+  height: number;
+  hlsList?: string;
 }
 
 export interface StartVideoUploadDto {
@@ -24,28 +26,36 @@ export interface UpdateVideoDto {
   access: AccessType;
 }
 
-export interface VideoDto {
-  id?: string;
-  hlsSources: HlsSourceDto[];
-  indexImageSource?: string;
+export interface UploadTaskDto {
+  width: number;
+  height: number;
+  arguments?: string;
+}
+
+export interface VideoDto extends EntityDto<string> {
+  hlsResolutions: HlsResolutionDto[];
+  indexImage?: string;
   name?: string;
   description?: string;
-  creatorId?: string;
   creationTime?: string;
   duration?: string;
   accessGroups: string[];
   playlistId?: string;
   isUploadCompleted: boolean;
+  creator: CreatorDto;
 }
 
-export interface VideoListItemDto {
-  id?: string;
+export interface VideoIndexImagesDto extends EntityDto<string> {
+  indexImages: string[];
+}
+
+export interface VideoListItemDto extends EntityDto<string> {
   name?: string;
-  indexImageSource?: string;
+  indexImage?: string;
   duration?: string;
   creationTime?: string;
-  creatorId?: string;
   playlistId?: string;
+  creator: CreatorDto;
 }
 
 export interface VideoQueryDto {
@@ -63,5 +73,5 @@ export interface VideoUploadStateDto {
   id?: string;
   isCompleted: boolean;
   outputFormat?: string;
-  remainingTasks: UploadTask[];
+  remainingTasks: UploadTaskDto[];
 }

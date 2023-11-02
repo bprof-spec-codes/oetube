@@ -3,12 +3,13 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { HlsSourceDto, VideoDto } from '@proxy/application/dtos/videos';
+import { HlsResolutionDto, VideoDto } from '@proxy/application/dtos/videos';
 
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
@@ -21,7 +22,7 @@ import { VolumeService } from 'src/app/services/video/volume.service';
   styleUrls: ['./video-wrapper.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
+export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChanges {
   loading = true;
   playing = false;
   playNext = true;
@@ -67,7 +68,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    this.load(this.video.hlsSources[0].src);
+    this.load(this.video.hlsResolutions[0].hlsList);
   }
 
   ngOnDestroy() {
@@ -83,7 +84,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.video != undefined) {
-      this.load(this.video.hlsSources[0].src);
+      this.load(this.video.hlsResolutions[0].hlsList);
     }
   }
   /** Play/Pause video on click */

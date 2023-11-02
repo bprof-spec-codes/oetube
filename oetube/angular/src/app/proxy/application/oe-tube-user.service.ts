@@ -51,7 +51,7 @@ export class OeTubeUserService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/ou-tube-user/${id}/image`,
+      url: `/api/src/ou-tube-user/${id}/image`,
     },
     { apiName: this.apiName,...config });
   
@@ -74,10 +74,28 @@ export class OeTubeUserService {
     { apiName: this.apiName,...config });
   
 
+  getThumbnailImage = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: `/api/src/ou-tube-user/${id}/thumbnail-image`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   update = (id: string, input: UpdateUserDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, UserDto>({
       method: 'PUT',
       url: `/api/app/oe-tube-user/${id}`,
+      body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  uploadDefaultImage = (input: FormData, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'POST',
+      url: '/api/app/oe-tube-user/upload-default-image',
       body: input,
     },
     { apiName: this.apiName,...config });

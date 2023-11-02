@@ -1,4 +1,5 @@
 import type { EntityDto } from '@abp/ng.core';
+import type { CreatorDto } from '../oe-tube-users/models';
 
 export interface CreateUpdateGroupDto {
   name: string;
@@ -9,17 +10,17 @@ export interface GroupDto extends EntityDto<string> {
   name?: string;
   description?: string;
   creationTime?: string;
-  creatorId?: string;
   emailDomains: string[];
   members: string[];
-  imageSource?: string;
+  image?: string;
+  creator: CreatorDto;
 }
 
 export interface GroupListItemDto extends EntityDto<string> {
   name?: string;
   creationTime?: string;
-  creatorId?: string;
-  imageSource?: string;
+  thumbnailImage?: string;
+  creator: CreatorDto;
 }
 
 export interface GroupQueryDto {
