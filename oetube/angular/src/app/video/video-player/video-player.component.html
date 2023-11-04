@@ -32,7 +32,7 @@
     </div>
     <div class="col-3 col-videos">
       
-      <app-video-grid [IsOneCol]="true"></app-video-grid>
+      <app-video-grid [IsOneCol]="true" *ngIf="!video.playlistId"></app-video-grid>
 
     </div>
   </div>
