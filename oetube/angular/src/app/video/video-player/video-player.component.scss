@@ -7,6 +7,15 @@
   height: 95vh;
   margin: 2em 2em 0 2em;
 
+  .col-video {
+    background: red;
+  }
+
+  .col-videos {
+    background: blue;
+  }
+
+  /*
   .video-app {
     margin-top: 1em;
     display: flex;
@@ -32,4 +41,5 @@
       }
     }
   }
+  */
 }
