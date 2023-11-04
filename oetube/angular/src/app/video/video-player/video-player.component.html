@@ -9,9 +9,13 @@
         </div>
       </div>
       <div *ngIf="video !== undefined">
-        <h4>Name: {{ video.name }}</h4>
-        <h5>Description: {{ video.description }}</h5>
-        <h6>Id: {{ video.id }}</h6>
+        <h4 class="pt-3 pb-1">{{ video.name }}</h4>
+        <h6>{{ video.creatorId ?? "Unknown" }}</h6>
+        <p class="pt-1">{{ video.description }}</p>
+
+
+        <!--
+          <h6>Id: {{ video.id }}</h6>
         <h6>Duration: {{ video.duration }}</h6>
         <h6>CreationTime: {{ video.creationTime | date : 'short' }}</h6>
         <div>
@@ -20,8 +24,11 @@
             <strong>{{ item.resolution.width }}x{{ item.resolution.height }}:</strong> {{ item.src }}
           </div>
         </div>
+        -->
+
+
       </div>
-      
+
     </div>
     <div class="col-3 col-videos">
       
@@ -34,7 +41,6 @@
 
 
 <!--
-
 <div class="video-app">
         <div class="video-player">
           <app-video-wrapper [video]="video"></app-video-wrapper>
@@ -54,5 +60,4 @@
           </div>
         </div>
       </div>
-
 -->
