@@ -39,6 +39,7 @@ namespace OeTube.Application
             _imageUploadHandler = imageUploadHandler;
             _defaultImageUploadHandler = defaultImageUploadHandler;
             _videoAccessCache = videoAccessCache;
+            CheckCreatorEnabled = true;
         }
 
         public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto input)
@@ -62,6 +63,7 @@ namespace OeTube.Application
             var user = await Repository.GetAsync(id);
             await UpdateAsync(async () =>
             {
+                CheckCreator(id);
                 var content = await ByteContent.FromRemoteStreamContentAsync(input);
                 await _imageUploadHandler.HandleFileAsync<OeTubeUser>(content, new ImageUploadHandlerArgs(id));
             }, user);
