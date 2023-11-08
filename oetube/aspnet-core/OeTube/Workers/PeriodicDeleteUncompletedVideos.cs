@@ -26,9 +26,8 @@ namespace OeTube.Workers
             PaginationResult<Video> videos;
             var args = new QueryArgs()
             {
-                Page = 100
+                ItemPerPage = 100
             };
-
             do
             {
                 videos = await repository.GetUncompletedVideosAsync(period, args);
