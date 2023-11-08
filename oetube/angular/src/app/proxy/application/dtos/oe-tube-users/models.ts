@@ -15,13 +15,13 @@ export interface UserDto extends EntityDto<string> {
   name?: string;
   aboutMe?: string;
   emailDomain?: string;
-  registrationDate?: string;
+  creationTime?: string;
   image?: string;
 }
 
 export interface UserListItemDto extends EntityDto<string> {
   name?: string;
-  registrationDate?: string;
+  creationTime?: string;
   emailDomain?: string;
   thumbnailImageSource?: string;
 }
