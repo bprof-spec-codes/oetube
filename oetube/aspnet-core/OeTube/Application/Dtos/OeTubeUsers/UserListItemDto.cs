@@ -25,7 +25,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.Id = source.Id;
             destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
-            destination.RegistrationDate = source.CreationTime;
+            destination.CreationTime = source.CreationTime;
             destination.ThumbnailImageSource = _urlService.GetThumbnailImageUrl( source.Id);
 
             return destination;
@@ -35,7 +35,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
     public class UserListItemDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
-        public DateTime RegistrationDate { get; set; }
+        public DateTime CreationTime { get; set; }
         public string EmailDomain { get; set; } = string.Empty;
         public string? ThumbnailImageSource { get; set; }
     }

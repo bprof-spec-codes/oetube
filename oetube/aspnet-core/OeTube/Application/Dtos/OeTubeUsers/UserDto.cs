@@ -24,7 +24,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         {
             destination.Id = source.Id;
             destination.Name = source.Name;
-            destination.RegistrationDate = source.CreationTime;
+            destination.CreationTime = source.CreationTime;
             destination.Image = _urlService.GetImageUrl(source.Id);
             return destination;
         }
@@ -35,7 +35,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         public string Name { get; set; } = string.Empty;
         public string? AboutMe { get; set; }
         public string EmailDomain { get; set; } = string.Empty;
-        public DateTime RegistrationDate { get; set; }
+        public DateTime CreationTime { get; set; }
         public string? Image { get; set; }
     }
 }
