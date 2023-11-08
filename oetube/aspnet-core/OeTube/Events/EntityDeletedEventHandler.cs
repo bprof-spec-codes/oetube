@@ -1,7 +1,7 @@
-﻿using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Entities;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Events;

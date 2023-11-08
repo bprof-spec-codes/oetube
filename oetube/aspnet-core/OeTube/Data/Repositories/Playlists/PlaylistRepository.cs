@@ -1,60 +1,60 @@
-﻿using OeTube.Data.Repositories.Videos;
+﻿using OeTube.Data.Repositories.Users;
+using OeTube.Data.Repositories.Videos;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace OeTube.Data.Repositories.Playlists
 {
-    public class PlaylistRepository : CustomRepository<Playlist, Guid, PlaylistIncluder, PlaylistFilter, IPlaylistQueryArgs>, IPlaylistRepository, ITransientDependency
+    public class PlaylistRepository :
+        OeTubeRepository<Playlist, Guid, PlaylistIncluder, PlaylistFilter, IPlaylistQueryArgs>,
+        IPlaylistRepository,
+        ITransientDependency
     {
-        private readonly VideoIncluder _videoIncluder;
-        private readonly VideoFilter _videoFilter;
-
-        public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider, PlaylistIncluder includer, PlaylistFilter filter, VideoIncluder videoIncluder, VideoFilter videoFilter) : base(dbContextProvider, includer, filter)
+        public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
-            _videoIncluder = videoIncluder;
-            _videoFilter = videoFilter;
         }
 
-        public async Task<IQueryable<Video>> GetPlaylistVideosAsync(Playlist playlist)
+        public async Task<PaginationResult<Playlist>> GetAvaliableAsync(Guid? requesterId, IPlaylistQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
-            var result = from videoItem in await GetQueryableAsync<VideoItem>()
-                         where videoItem.PlaylistId == playlist.Id
-                         join video in await GetQueryableAsync<Video>()
-                         on videoItem.VideoId equals video.Id
-                         orderby videoItem.Order
-                         select video;
-            return result;
+            return await CreateListAsync<Playlist, PlaylistIncluder, PlaylistFilter, IPlaylistQueryArgs>
+                (await GetAvaliablePlaylistsAsync(requesterId), args, includeDetails, cancellationToken);
         }
 
-        public async Task<List<Video>> GetPlaylistVideosAsync(Playlist playlist, IVideoQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async Task<PaginationResult<Video>> GetChildEntitiesAsync(Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
-            return await ListAsync(await GetPlaylistVideosAsync(playlist), _videoIncluder, _videoFilter, args, includeDetails, cancellationToken);
+            return await CreateListAsync<Video, VideoIncluder, VideoFilter, IVideoQueryArgs>
+                (await GetChildEntitiesAsync<Playlist, Guid, VideoItem, Video, Guid>(entity), args, includeDetails, cancellationToken);
         }
 
-        public async Task<Playlist> UpdateItemsAsync(Playlist playlist, IEnumerable<Guid> videoIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task<OeTubeUser?> GetCreatorAsync(Playlist entity, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
-            videoIds = videoIds.Distinct();
-            var videoSet = (await GetDbContextAsync()).Set<Video>();
-            var videos = videoSet.Where(v => videoIds.Contains(v.Id));
+            return await GetCreatorAsync<Playlist, OeTubeUser, UserIncluder>(entity, includeDetails, cancellationToken);
+        }
 
-            if (videos.Any(v => v.Id != playlist.CreatorId))
-            {
-                throw new InvalidOperationException("Video and playlist creators do not match.");
-            }
-            var videoItemsSet = (await GetDbContextAsync()).Set<VideoItem>();
+        public async Task<bool> HasAccessAsync(Guid? requesterId, Playlist entity)
+        {
+            return await HasPlaylistAccessAsync(requesterId, entity);
+        }
 
-            videoItemsSet.RemoveRange(playlist.Items);
-            await videoItemsSet.AddRangeAsync(videos.Select((i, idx) => new VideoItem(playlist.Id, idx, i.Id)), cancellationToken);
+        public async Task<Playlist> UpdateChildEntitiesAsync(Playlist entity, IEnumerable<Video> childEntities, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            var videoItemsSet = await GetDbSetAsync<VideoItem>();
+            childEntities = childEntities.Where(e => e.CreatorId == entity.CreatorId);
+            videoItemsSet.RemoveRange(entity.Items);
+            await videoItemsSet.AddRangeAsync(childEntities.Select((i, idx) => new VideoItem(entity.Id, idx, i.Id)), cancellationToken);
 
             if (autoSave)
             {
                 await SaveChangesAsync(cancellationToken);
             }
-            return playlist;
+            return entity;
         }
     }
 }

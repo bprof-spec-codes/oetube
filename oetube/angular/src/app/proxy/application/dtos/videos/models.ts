@@ -14,9 +14,6 @@ export interface StartVideoUploadDto {
   description?: string;
   access: AccessType;
   content: FormData;
-}
-
-export interface UpdateAccessGroupsDto {
   accessGroups: string[];
 }
 
@@ -24,6 +21,7 @@ export interface UpdateVideoDto {
   name?: string;
   description?: string;
   access: AccessType;
+  accessGroups: string[];
 }
 
 export interface UploadTaskDto {
@@ -64,8 +62,8 @@ export interface VideoQueryDto {
   creationTimeMax?: string;
   durationMin?: string;
   durationMax?: string;
-  skipCount?: number;
-  maxResultCount?: number;
+  itemPerPage?: number;
+  page?: number;
   sorting?: string;
 }
 

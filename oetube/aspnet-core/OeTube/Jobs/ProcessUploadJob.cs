@@ -13,11 +13,9 @@ namespace OeTube.Jobs
     public class ProcessUploadJob : AsyncBackgroundJob<ProcessVideoUploadArgs>, ITransientDependency
     {
         IProcessVideoUploadHandler _processVideoUploadHandler;
-        IFileContainer _fileContainer;
-        public ProcessUploadJob(IProcessVideoUploadHandler processVideoUploadHandler, IFileContainerFactory fileContainerFactory)
+        public ProcessUploadJob(IProcessVideoUploadHandler processVideoUploadHandler)
         {
             _processVideoUploadHandler = processVideoUploadHandler;
-            _fileContainer = fileContainerFactory.Create<Video>();
         }
 
         public override async Task ExecuteAsync(ProcessVideoUploadArgs args)

@@ -182,7 +182,7 @@ namespace OeTube.Infrastructure.FileContainers
                 }
                 catch
                 {
-                    maxTry++;
+                    count++;
                     await Task.Delay(delayMs, cancellationToken);
                 }
             } while (count < maxTry && !cancellationToken.IsCancellationRequested);

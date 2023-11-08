@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.FilePaths.ImageFiles;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
-using Volo.Abp.Imaging;
 
 namespace OeTube.Application
 {
@@ -26,7 +25,11 @@ namespace OeTube.Application
     {
         private readonly IImageUploadHandler _imageUploadHandler;
         private readonly IDefaultImageUploadHandler _defaultImageUploadHandler;
-        public GroupAppService(IGroupRepository repository, IFileContainerFactory fileContainerFactory, IUserRepository userRepository, IImageUploadHandler imageUploadHandler, IDefaultImageUploadHandler defaultImageUploadHandler) : base(repository, fileContainerFactory, userRepository)
+        public GroupAppService(IGroupRepository repository,
+                               IFileContainerFactory fileContainerFactory,
+                               IUserRepository userRepository,
+                               IImageUploadHandler imageUploadHandler,
+                               IDefaultImageUploadHandler defaultImageUploadHandler) : base(repository, fileContainerFactory, userRepository)
         {
             _imageUploadHandler = imageUploadHandler;
             _defaultImageUploadHandler = defaultImageUploadHandler;
@@ -35,6 +38,7 @@ namespace OeTube.Application
         public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
             return await CreateAsync<Group, Guid, GroupDto, CreateUpdateGroupDto>(Repository, input);
+         
         }
 
         public async Task DeleteAsync(Guid id)
@@ -66,25 +70,12 @@ namespace OeTube.Application
             }, group);
         }
 
-        public async Task<PagedResultDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
+        public async Task<PaginationDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
         {
             var group = await Repository.GetAsync(id);
-            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Repository.GetGroupMembersAsync(group, input));
+            return await GetListAsync<OeTubeUser, UserListItemDto>(() => Repository.GetChildEntitiesAsync(group, input));
         }
-
-        public async Task<GroupDto> UpdateMembersAsync(Guid id, ModifyMembersDto input)
-        {
-            var group = await Repository.GetAsync(id);
-            return await UpdateAsync<Group, GroupDto>(async () => await Repository.UpdateMembersAsync(group, input.Members), group);
-        }
-
-        public async Task<GroupDto> UpdateEmailDomainsAsync(Guid id, ModifyEmailDomainsDto input)
-        {
-            var group = await Repository.GetAsync(id);
-            return await UpdateAsync<Group, GroupDto>(async () =>
-                        await Task.FromResult(group.UpdateEmailDomains(input.EmailDomains)), group);
-        }
-
+       
         [HttpGet("api/src/group/{id}/image")]
         public async Task<IRemoteStreamContent?> GetImageAsync(Guid id)
         {

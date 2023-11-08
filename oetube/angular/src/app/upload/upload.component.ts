@@ -21,7 +21,8 @@ export class UploadComponent implements OnInit {
     name:"",
     description:"",
     access:AccessType.Public,
-    content:undefined
+    content:undefined,
+    accessGroups:undefined
   }
   submitButtonOptions={
     text:"Submit",

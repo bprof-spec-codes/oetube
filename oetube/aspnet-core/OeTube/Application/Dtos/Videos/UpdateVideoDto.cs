@@ -29,5 +29,6 @@ namespace OeTube.Application.Dtos.Videos
         public string? Description { get; set; }
 
         public AccessType Access { get; set; } = AccessType.Public;
+        public List<Guid> AccessGroups { get; set; } = new List<Guid>();
     }
 }

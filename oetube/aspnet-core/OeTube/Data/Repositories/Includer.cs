@@ -6,9 +6,8 @@ namespace OeTube.Data.Repositories
     public interface IIncluder<T>
      where T : class, IEntity
     {
-        IQueryable<T> Include(IQueryable<T> queryable, bool includeDetails);
+        IQueryable<T> Include(IQueryable<T> queryable);
 
-        Task<IQueryable<T>> IncludeAsync(Func<Task<IQueryable<T>>> awaitableQueryable, bool includeDetails);
     }
 
     public abstract class Includer<T> : IIncluder<T>
@@ -16,24 +15,14 @@ namespace OeTube.Data.Repositories
     {
         protected abstract IEnumerable<string> GetNavigationProperties();
 
-        public IQueryable<T> Include(IQueryable<T> queryable, bool includeDetails)
+        public IQueryable<T> Include(IQueryable<T> queryable)
         {
-            if (!includeDetails)
-            {
-                return queryable;
-            }
-
             foreach (string item in GetNavigationProperties())
             {
                 queryable = queryable.Include(item);
             }
             return queryable;
         }
-
-        public async Task<IQueryable<T>> IncludeAsync(Func<Task<IQueryable<T>>> awaitableQueryable, bool includeDetails)
-        {
-            var queryable = await awaitableQueryable();
-            return Include(queryable, includeDetails);
-        }
     }
+
 }

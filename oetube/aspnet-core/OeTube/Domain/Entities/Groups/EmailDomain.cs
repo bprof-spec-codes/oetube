@@ -1,17 +1,17 @@
 ﻿using JetBrains.Annotations;
-using OeTube.Entities;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class EmailDomain : Entity, IHasAtomicKey<string>
+    public class EmailDomain : Entity, IHasAtomicKey<string>,IHasForeignKey<Group,Guid>
     {
         public Guid GroupId { get; private set; }
         public string Domain { get; private set; }
 
         string IHasAtomicKey<string>.AtomicKey => Domain;
 
+        Guid IHasForeignKey<Group, Guid>.ForeignKey => GroupId;
         public EmailDomain(Guid groupId, [NotNull] string domain)
         {
             GroupId = groupId;

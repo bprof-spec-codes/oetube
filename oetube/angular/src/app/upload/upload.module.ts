@@ -14,14 +14,14 @@ import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,
     CommonModule,
     UploadRoutingModule,
     FormsModule,
+    DxFormModule,
     ReactiveFormsModule,
     DxFileUploaderModule,
     DxTextBoxModule,
+    DxTextAreaModule,
     DxButtonModule,
     DxSelectBoxModule,
-    DxTextAreaModule,
     DxProgressBarModule,
-    DxFormModule
   ]
 })
 export class UploadModule { }

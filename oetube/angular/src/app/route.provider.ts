@@ -31,11 +31,11 @@ function configureRoutes(routesService: RoutesService) {
         layout: eLayoutType.application,
       },
       {
-        path: '/ffmpeg-test',
-        name: '::FFMPEG test',
-        order: 4,
-        layout: eLayoutType.application,
-      },
+        path:'/group/create',
+        name:'Create Group',
+        order: 5,
+        layout:eLayoutType.application
+      }
     ]);
   };
 }

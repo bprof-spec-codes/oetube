@@ -1,4 +1,4 @@
-﻿using OeTube.Entities;
+﻿using OeTube.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace OeTube.Application.Dtos.OeTubeUsers

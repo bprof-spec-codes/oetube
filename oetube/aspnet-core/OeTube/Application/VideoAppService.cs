@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.Videos;
+using OeTube.Application.Services.Caches.VideoAccess;
 using OeTube.Application.Services.Url;
+using OeTube.Data.Repositories.Groups;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
@@ -23,23 +27,29 @@ namespace OeTube.Application
         IUpdateAppService<VideoDto, Guid, UpdateVideoDto>,
         IDeleteAppService<Guid>
     {
+        private readonly IGroupRepository _groupRepository;
         private readonly IStartVideoUploadHandler _startVideoUpload;
         private readonly IContinueVideoUploadHandler _continueVideoUpload;
         private readonly ISelectVideoFrameHandler _selectVideoFrame;
         private readonly IVideoUrlService _urlService;
+        private readonly IVideoAccessCacheService _videoAccessCache;
         public VideoAppService(IVideoRepository repository,
                                IFileContainerFactory fileContainerFactory,
                                IUserRepository userRepository,
                                IStartVideoUploadHandler startVideoUpload,
                                IContinueVideoUploadHandler continueVideoUpload,
                                ISelectVideoFrameHandler selectVideoFrame,
-                               IVideoUrlService urlService) :
+                               IVideoUrlService urlService,
+                               IGroupRepository groupRepository,
+                               IVideoAccessCacheService videoAccessCache) :
             base(repository, fileContainerFactory, userRepository)
         {
             _startVideoUpload = startVideoUpload;
             _continueVideoUpload = continueVideoUpload;
             _selectVideoFrame = selectVideoFrame;
             _urlService = urlService;
+            _groupRepository = groupRepository;
+            _videoAccessCache = videoAccessCache;
         }
 
         public async Task<VideoUploadStateDto> StartUploadAsync(StartVideoUploadDto input)
@@ -48,8 +58,9 @@ namespace OeTube.Application
             {
                 var content = await ByteContent.FromRemoteStreamContentAsync(input.Content);
                 var args = await Task.FromResult(ObjectMapper.Map<StartVideoUploadDto, StartVideoUploadHandlerArgs>(input));
-
-                return await _startVideoUpload.HandleFileAsync<Video>(content,args);
+                var video= await _startVideoUpload.HandleFileAsync<Video>(content,args);
+                var groups = await _groupRepository.GetManyAsync(input.AccessGroups);
+                return await Repository.UpdateChildEntitiesAsync(video, groups, true);
             });
         }
 
@@ -63,6 +74,24 @@ namespace OeTube.Application
                 return await _continueVideoUpload.HandleFileAsync<Video>(content, args);
             }, video);
         }
+        public override async Task<VideoDto> GetAsync(Guid id)
+        {
+            return await GetAsync<Video, VideoDto>(async () =>
+            {
+                var video = await Repository.GetAsync(id, true);
+                await _videoAccessCache.CheckAccessAsync(CurrentUser.Id,video);
+                return video;
+            });
+        }
+        public override async Task<PaginationDto<VideoListItemDto>> GetListAsync(VideoQueryDto input)
+        {
+            return await GetListAsync<Video, VideoListItemDto>(async () =>
+            {
+                var result = await Repository.GetAvaliableAsync(CurrentUser.Id, input);
+                await _videoAccessCache.SetManyCacheAsync(CurrentUser.Id, result.Items);
+                return result;
+            });
+        }
 
         public async Task SelectIndexImageAsync(Guid id, int index)
         {
@@ -73,7 +102,9 @@ namespace OeTube.Application
         public async Task<VideoIndexImagesDto> GetIndexImagesAsync(Guid id)
         {
             await CheckPolicyAsync(GetPolicy);
-            await GetAsync(id);
+            var entity=await Repository.GetAsync(id,false);
+            await _videoAccessCache.CheckAccessAsync(CurrentUser.Id, entity);
+            
             var selected = _urlService.GetIndexImageUrl(id);
             var indexImages = new List<string>();
             int index = 1;
@@ -96,59 +127,73 @@ namespace OeTube.Application
             };
         }
 
-        public async Task<PagedResultDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
+        public async Task<PaginationDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
         {
             var video = await Repository.GetAsync(id);
             return await GetListAsync<Group, GroupListItemDto>
-                (async () => await Repository.GetAccessGroupsAsync(video, input));
+                (async () => await Repository.GetChildEntitiesAsync(video, input));
         }
 
         public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
-            return await UpdateAsync<Video, Guid, VideoDto, UpdateVideoDto>(Repository, id, input);
+            var video = ObjectMapper.Map(input, await Repository.GetAsync(id));
+
+            return await UpdateAsync<Video,VideoDto>(async () =>
+            {
+                var groups = await _groupRepository.GetManyAsync(input.AccessGroups);
+                await Repository.UpdateAsync(video);
+                return await Repository.UpdateChildEntitiesAsync(video, groups,true);
+            },video);
         }
 
-        public async Task<VideoDto> UpdateAccessGroupsAsync(Guid id, UpdateAccessGroupsDto input)
-        {
-            var video = await Repository.GetAsync(id);
-            return await UpdateAsync<Video, VideoDto>
-                (async () => await Repository.UpdateAccessGroupsAsync(video, input.AccessGroups), video);
-        }
         public async Task DeleteAsync(Guid id)
         {
             await DeleteAsync(Repository, id);
+        }
+  
+
+        private async Task<IRemoteStreamContent?> GetFileOrNullAsync(Guid id,string name,Func<Task<ByteContent?>> getFileMethod)
+        {
+            var entity = await Repository.GetAsync(id, false);
+            await _videoAccessCache.CheckAccessAsync(CurrentUser.Id,entity);
+            name = $"{nameof(Video).ToLower()}_{id}_{name}";
+            return await GetFileOrNullAsync(getFileMethod, name);
         }
 
         [HttpGet("api/src/video/{id}/{width}x{height}/list.m3u8")]
         public async Task<IRemoteStreamContent?> GetHlsListAsync(Guid id, int width, int height)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_list";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new HlsListPath(id, new Resolution(width, height))),name);
+            return await GetFileOrNullAsync(id, "list", async () =>
+            {
+                return await FileContainer.GetFileOrNullAsync(new HlsListPath(id, new Resolution(width, height)));
+            });
         }
 
         [HttpGet("api/src/video/{id}/{width}x{height}/{segment}.ts")]
         public async Task<IRemoteStreamContent?> GetHlsSegmentAsync(Guid id, int width, int height, int segment)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_{segment}";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new HlsSegmentPath(id, new Resolution(width, height), segment)),name);
+            return await GetFileOrNullAsync(id, segment.ToString(), async () =>
+            {
+                return await FileContainer.GetFileOrNullAsync(new HlsSegmentPath(id, new Resolution(width, height), segment));
+            });
         }
 
         [HttpGet("api/src/video/{id}/index_image")]
         public async Task<IRemoteStreamContent?> GetIndexImageAsync(Guid id)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_index_image";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new SelectedFramePath(id)),name);
+            return await GetFileOrNullAsync(id, "index_image", async () =>
+            {
+                return await FileContainer.GetFileOrNullAsync(new SelectedFramePath(id));
+            });
         }
 
         [HttpGet("api/src/video/{id}/index_image/{index}")]
         public async Task<IRemoteStreamContent?> GetIndexImageByIndexAsync(Guid id, int index)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_index_image_{index}";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new FramePath(id, index)),name);
+            return await GetFileOrNullAsync(id, $"index_image_{index}", async () =>
+            {
+                return await FileContainer.GetFileOrNullAsync(new FramePath(id, index));
+            });
         }
 
     }

@@ -1,4 +1,7 @@
-﻿using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Repositories;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -11,25 +14,28 @@ namespace OeTube.Application.Dtos.Groups
     {
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentUser _currentUser;
-
-        public CreateUpdateGroupMapper(IGuidGenerator guidGenerator, ICurrentUser currentUser)
+        private readonly IGroupRepository _groupRepository;
+        public CreateUpdateGroupMapper(IGuidGenerator guidGenerator, ICurrentUser currentUser, IGroupRepository groupRepository)
         {
             _guidGenerator = guidGenerator;
             _currentUser = currentUser;
+            _groupRepository = groupRepository;
         }
 
         public Group Map(CreateUpdateGroupDto source)
         {
-            var group = new Group(_guidGenerator.Create(), source.Name, _currentUser.Id)
-                            .SetDescription(source.Description);
-
-            return group;
+            var id = _guidGenerator.Create();
+            var group = new Group(id, source.Name, _currentUser.Id);
+            return Map(source,group);
         }
 
         public Group Map(CreateUpdateGroupDto source, Group destination)
         {
-            return destination.SetName(source.Name)
-                               .SetDescription(source.Description);
+                    destination.SetName(source.Name)
+                               .SetDescription(source.Description)
+                               .UpdateEmailDomains(source.EmailDomains);
+            _groupRepository.UpdateChildEntitiesAsync(destination, source.Members, false);
+            return destination;
         }
     }
 
@@ -41,5 +47,8 @@ namespace OeTube.Application.Dtos.Groups
 
         [StringLength(GroupConstants.NameMaxLength)]
         public string? Description { get; set; }
+
+        public List<string> EmailDomains { get; set; } = new List<string>();
+        public List<Guid> Members { get; set; } = new List<Guid>();
     }
 }

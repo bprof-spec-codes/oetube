@@ -6,4 +6,10 @@
         DateTime? CreationTimeMin { get; set; }
         DateTime? CreationTimeMax { get; set; }
     }
+    public class PlaylistQueryArgs:QueryArgs,IPlaylistQueryArgs
+    {
+        public virtual string? Name { get; set; }
+        public virtual DateTime? CreationTimeMin { get; set; }
+        public virtual DateTime? CreationTimeMax { get; set; }
+    }
 }

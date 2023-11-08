@@ -1,11 +1,10 @@
-﻿using OeTube.Entities;
-using Volo.Abp;
+﻿using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
+    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>,IHasName
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }

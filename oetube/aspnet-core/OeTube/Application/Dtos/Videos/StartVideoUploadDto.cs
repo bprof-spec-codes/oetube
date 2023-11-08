@@ -47,5 +47,6 @@ namespace OeTube.Application.Dtos.Videos
 
         [Required]
         public IRemoteStreamContent? Content { get; set; }
+        public List<Guid> AccessGroups { get; set; } = new List<Guid>();
     }
 }

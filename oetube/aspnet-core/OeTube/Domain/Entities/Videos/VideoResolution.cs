@@ -1,15 +1,16 @@
-﻿using OeTube.Entities;
-using Volo.Abp.Domain.Entities;
+﻿using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class VideoResolution : Entity, IHasAtomicKey<Resolution>
+    public class VideoResolution : Entity, IHasAtomicKey<Resolution>,IHasForeignKey<Video,Guid>
     {
         public Guid VideoId { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
         public bool IsReady { get; private set; }
         Resolution IHasAtomicKey<Resolution>.AtomicKey => GetResolution();
+
+        Guid IHasForeignKey<Video, Guid>.ForeignKey => VideoId;
 
         private VideoResolution()
         {

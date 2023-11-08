@@ -1,0 +1,37 @@
+<form  (submit)="onSubmit($event)">
+    <dx-form 
+    [formData]="model">
+        <dxi-item dataField="name" [isRequired]="true"></dxi-item>
+        <dxi-item dataField="description" [template]="'descriptionTemplate'"></dxi-item>
+        <div *dxTemplate="let data of 'descriptionTemplate'">
+            <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+        </div>
+        <dxi-item dataField="emailDomains" [template]="'emailDomainsTemplate'"></dxi-item>
+        <div *dxTemplate="let data of 'emailDomainsTemplate'">
+                <div class="d-flex flex-column">
+                    <dx-text-box  [(value)]="newEmailDomain"></dx-text-box>
+                    <dx-button (click)="addNewEmailDomain()">Add</dx-button>
+                </div>
+                <dx-list height="200px"
+                    [dataSource]="model.emailDomains"
+                    allowItemDeleting=true
+                    itemDeleteMode="swipe">
+                </dx-list>
+        </div>
+        <dxi-item dataField="members" [template]="'membersTemplate'"></dxi-item>
+        <div *dxTemplate="let data of 'membersTemplate'">
+            <div class="d-flex flex-column">
+                <dx-text-box  [(value)]="newEmailDomain"></dx-text-box>
+                <dx-button  [disabled]="buttonDisabled" (click)="addNewEmailDomain()">Add</dx-button>
+            </div>
+            <dx-list 
+                [dataSource]="model.members"
+                allowItemDeleting=true
+                itemDeleteMode="swipe">
+            </dx-list>
+        </div>
+        <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
+    </dx-form>
+</form>
+
+<app-user-pagination-grid ></app-user-pagination-grid>

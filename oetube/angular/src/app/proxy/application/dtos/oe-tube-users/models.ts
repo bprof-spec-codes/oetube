@@ -3,6 +3,7 @@ import type { EntityDto } from '@abp/ng.core';
 export interface CreatorDto extends EntityDto<string> {
   name?: string;
   thumbnailImage?: string;
+  currentUserIsCreator: boolean;
 }
 
 export interface UpdateUserDto {
@@ -30,7 +31,7 @@ export interface UserQueryDto {
   emailDomain?: string;
   creationTimeMin?: string;
   creationTimeMax?: string;
-  skipCount?: number;
-  maxResultCount?: number;
+  itemPerPage?: number;
+  page?: number;
   sorting?: string;
 }

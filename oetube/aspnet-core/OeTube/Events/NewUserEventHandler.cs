@@ -1,5 +1,5 @@
-﻿using OeTube.Domain.Repositories;
-using OeTube.Entities;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Repositories;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities.Events;
 using Volo.Abp.EventBus;

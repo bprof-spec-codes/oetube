@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OeTube.Data.Repositories.Groups;
 using OeTube.Data.Repositories.Playlists;
-using OeTube.Data.Repositories.Repos.GroupRepos;
 using OeTube.Data.Repositories.Videos;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Infrastructure.Videos;
-using OeTube.Entities;
+using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -57,22 +57,29 @@ namespace OeTube.Data.SeedContributors
         }
 
         [UnitOfWork]
-        public void SeedEmailDomains(Group group, params string[] emailDomains)
+        public async Task SeedEmailDomainsAsync(Group group, params string[] emailDomains)
         {
             group.UpdateEmailDomains(emailDomains);
+            await _groupRepository.UpdateAsync(group);
         }
 
         [UnitOfWork]
-        public async Task SeedMembersAsync(Group group, params Guid[] members)
+        public async Task SeedMembersAsync(Group group, params Guid[] memberIds)
         {
-            await _groupRepository.UpdateMembersAsync(group, members);
+            await _groupRepository.UpdateChildEntitiesAsync(group,memberIds,true);
         }
 
         [UnitOfWork]
         public async Task<Group> SeedGroupAsync(string name, Abp.IdentityUser user)
         {
-            var group = await _groupRepository.FindAsync((g) => g.Name == name & g.CreatorId == user.Id);
-            if (group == null)
+            IGroupQueryArgs args = new GroupQueryArgs() { Name = name };
+            Group? group;
+            var result = await _groupRepository.GetListAsync(args,includeDetails:true);
+            if(result.Items.Count>0)
+            {
+                group = result.Items[0];
+            }
+            else
             {
                 group = new Group(_guidGenerator.Create(), name, user.Id);
                 await _groupRepository.InsertAsync(group);
@@ -161,9 +168,9 @@ namespace OeTube.Data.SeedContributors
             var empty = await SeedGroupAsync("Empty", user1);
 
             await SeedMembersAsync(random, user4.Id, user5.Id, user3.Id);
-            SeedEmailDomains(oe, "uni-obuda.hu", "stud.uni-obuda.hu");
-            SeedEmailDomains(oestud, "stud.uni-obuda.hu");
-            SeedEmailDomains(random, "stud.uni-obuda.hu");
+            await SeedEmailDomainsAsync(oe, "uni-obuda.hu", "stud.uni-obuda.hu");
+            await SeedEmailDomainsAsync(oestud, "stud.uni-obuda.hu");
+            await SeedEmailDomainsAsync(random, "stud.uni-obuda.hu");
         }
     }
 }

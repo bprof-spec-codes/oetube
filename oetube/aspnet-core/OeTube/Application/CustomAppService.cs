@@ -1,18 +1,15 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Domain.FilePaths;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Infrastructure;
-using OeTube.Domain.Infrastructure.Videos;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Auditing;
 using Volo.Abp.Content;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Http.Modeling;
-using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace OeTube.Application
 {
@@ -90,7 +87,7 @@ namespace OeTube.Application
             return await Task.FromResult(ObjectMapper.Map<TEntity, TOutputDto>(entity));
         }
         protected virtual async Task<TOutputDto> CreateAsync<TEntity, TKey, TOutputDto, TInputDto>
-            (ICreateRepository<TEntity,TKey> repository, TInputDto input)
+            (IInsertRepository<TEntity,TKey> repository, TInputDto input)
             where TEntity : class, IEntity<TKey>
         {
             async Task<TEntity> Create()
@@ -118,21 +115,6 @@ namespace OeTube.Application
             var output = await Task.FromResult(ObjectMapper.Map<TEntity, TOutputDto>(entity));
             return output;
         }
-        protected virtual async Task<TOutputDto> GetAsync<TEntity,TOutputDto>(Func<Task<TEntity>> getMethod,IReadRepository<OeTubeUser,Guid> userRepository)
-            where TEntity:IMayHaveCreator
-            where TOutputDto:IMayHaveCreatorDto
-        {
-            await CheckPolicyAsync(GetPolicy);
-            var entity = await getMethod();
-            var output = await Task.FromResult(ObjectMapper.Map<TEntity, TOutputDto>(entity));
-            if(entity.CreatorId is not null)
-            {
-                var creator =await userRepository.GetAsync(entity.CreatorId.Value);
-                output.Creator=await Task.FromResult(ObjectMapper.Map<OeTubeUser,CreatorDto>(creator));
-            }
-            return output;
-        }
-
 
         protected virtual async Task<TOutputDto> GetAsync<TEntity, TKey, TOutputDto>
             (IReadRepository<TEntity,TKey> repository, TKey id)
@@ -145,16 +127,7 @@ namespace OeTube.Application
             return await GetAsync<TEntity, TOutputDto>(Get);
         }
 
-        protected virtual async Task<TOutputDto> GetAsync<TEntity,TKey,TOutputDto>(IReadRepository<TEntity, TKey> repository, TKey id, IReadRepository<OeTubeUser,Guid> userRepository)
-            where TEntity :class,IEntity<TKey>, IMayHaveCreator
-            where TOutputDto : IMayHaveCreatorDto
-        {
-            async Task<TEntity> Get()
-            {
-                return await repository.GetAsync(id);
-            }
-            return await GetAsync<TEntity, TOutputDto>(Get,userRepository);
-        }
+      
         protected virtual async Task<IRemoteStreamContent> GetFileAsync(Func<Task<ByteContent>> getFileMethod,string? name=null, string? contentType=null)
         {
             await CheckPolicyAsync(GetPolicy);
@@ -169,68 +142,65 @@ namespace OeTube.Application
             return file.GetRemoteStreamContent(name,contentType);
         }
  
-        protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync<TEntity, TOutputListItemDto>
-            (Func<Task<List<TEntity>>> getListMethod)
+        protected virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync<TEntity, TOutputListItemDto>
+            (Func<Task<PaginationResult<TEntity>>> getListMethod)
 
         {
             await CheckPolicyAsync(GetListPolicy);
             var list = await getListMethod();
-            var dtos = new List<TOutputListItemDto>();
+            var dtos = new PaginationDto<TOutputListItemDto>()
+            {
+                CurrentPage = list.CurrentPage,
+                PageCount = list.PageCount,
+                TotalCount = list.TotalCount
+            };
             foreach (var entity in list)
             {
                 var dto = await Task.FromResult(ObjectMapper.Map<TEntity, TOutputListItemDto>(entity));
-                dtos.Add(dto);
+                dtos.Items.Add(dto);
             }
-            return new PagedResultDto<TOutputListItemDto>()
-            {
-                Items = dtos,
-                TotalCount = dtos.Count
-            };
+            return dtos;
         }
-       protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync<TEntity, TOutputListItemDto>
-            (Func<Task<List<TEntity>>> getListMethod, IReadRepository<OeTubeUser,Guid> userRepository)
+       protected virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync<TEntity, TOutputListItemDto>
+            (Func<Task<PaginationResult<TEntity>>> getListMethod, IReadRepository<OeTubeUser,Guid> userRepository)
             where TEntity:IMayHaveCreator
            where TOutputListItemDto:IMayHaveCreatorDto
         {
             await CheckPolicyAsync(GetListPolicy);
             
-            var list = await getListMethod();
-            var dtos = new List<TOutputListItemDto>();
+            var pagination = await getListMethod();
+            var dtos = new PaginationDto<TOutputListItemDto>();
 
-            var creators =new EntitySet<OeTubeUser,Guid>(await userRepository.GetManyAsync(list.Where(e => e.CreatorId is not null)
+            var creators =new EntitySet<OeTubeUser,Guid>(await userRepository.GetManyAsync(
+                                    pagination.Where(e => e.CreatorId is not null)
                                               .Select(e => e.CreatorId!.Value)));
            
-
-            foreach (var entity in list)
+            foreach (var entity in pagination)
             {
                 var dto = await Task.FromResult(ObjectMapper.Map<TEntity, TOutputListItemDto>(entity));
                 if(entity.CreatorId is not null)
                 {
                   dto.Creator=await Task.FromResult(ObjectMapper.Map<OeTubeUser,CreatorDto>(creators.Get(entity.CreatorId.Value)));
                 }
-                dtos.Add(dto);
+                dtos.Items.Add(dto);
             }
-            return new PagedResultDto<TOutputListItemDto>()
-            {
-                Items = dtos,
-                TotalCount = dtos.Count
-            };
+            return dtos;
         }
-        protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync
+        protected virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync
             <TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
             (IQueryRepository<TEntity,TQueryArgs> repository, TQueryArgsDto queryArgsDto)
             where TQueryArgs : IQueryArgs
             where TQueryArgsDto : TQueryArgs
             where TEntity : class, IEntity
         {
-            async Task<List<TEntity>> GetList()
+            async Task<PaginationResult<TEntity>> GetList()
             {
                 return await repository.GetListAsync(queryArgsDto);
             }
             return await GetListAsync<TEntity, TOutputListItemDto>(GetList);
         }
 
-        protected virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync
+        protected virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync
         <TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
         (IQueryRepository<TEntity, TQueryArgs> repository, TQueryArgsDto queryArgsDto,IReadRepository<OeTubeUser,Guid> userRepository)
         where TQueryArgs : IQueryArgs
@@ -238,11 +208,11 @@ namespace OeTube.Application
         where TEntity : class, IEntity,IMayHaveCreator
         where TOutputListItemDto : IMayHaveCreatorDto
         {
-            async Task<List<TEntity>> GetList()
+            async Task<PaginationResult<TEntity>> GetList()
             {
                 return await repository.GetListAsync(queryArgsDto);
             }
-            return await GetListAsync<TEntity, TOutputListItemDto>(GetList,userRepository);
+            return await GetListAsync<TEntity, TOutputListItemDto>(GetList, userRepository);
         }
     }
 }

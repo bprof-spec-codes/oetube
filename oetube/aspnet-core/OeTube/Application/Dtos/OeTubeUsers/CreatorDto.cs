@@ -1,8 +1,11 @@
 ﻿using OeTube.Application.Services.Url;
-using OeTube.Entities;
+using OeTube.Data.Repositories.Users;
+using OeTube.Domain.Entities;
+using OeTube.Domain.Repositories;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
+using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.OeTubeUsers
 {
@@ -10,26 +13,45 @@ namespace OeTube.Application.Dtos.OeTubeUsers
     {
         CreatorDto? Creator { get; set; }
     }
-    public class CreatorDtoMapper : IObjectMapper<OeTubeUser, CreatorDto>,ITransientDependency
+    public class CreatorDtoMapper : IObjectMapper<Guid?, CreatorDto?>,ITransientDependency
     {
         private readonly IImageUrlService _urlService;
-
-        public CreatorDtoMapper(UserUrlService urlService)
+        private readonly IUserRepository _userRepository;
+        private readonly ICurrentUser _currentUser;
+        public CreatorDtoMapper(UserUrlService urlService, IUserRepository userRepository, ICurrentUser currentUser)
         {
             _urlService = urlService;
+            _userRepository = userRepository;
+            _currentUser = currentUser;
         }
 
-        public CreatorDto Map(OeTubeUser source)
+        public CreatorDto? Map(Guid? source)
         {
-            return Map(source, new CreatorDto());
+            if(source is null)
+            {
+                return null;
+            }
+            else
+            {
+                return Map(source, new CreatorDto());
+            }
         }
 
-        public CreatorDto Map(OeTubeUser source, CreatorDto destination)
+        public CreatorDto? Map(Guid? source, CreatorDto? destination)
         {
-            destination.Id = source.Id;
-            destination.Name = source.Name;
-            destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(source.Id);
-            return destination;
+            if(source is null||destination is null)
+            {
+                return null;
+            }
+            else
+            {
+                var user = _userRepository.GetAsync(source.Value, false).Result;
+                destination.Id = source.Value;
+                destination.Name = user.Name;
+                destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(user.Id);
+                destination.CurrentUserIsCreator = _currentUser.Id is not null && _currentUser.Id == source;
+                return destination;
+            }
         }
     }
     public class CreatorDto:EntityDto<Guid>
@@ -37,5 +59,6 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         
         public string Name { get; set; } = string.Empty;
         public string ThumbnailImage { get; set; } = string.Empty;
+        public bool CurrentUserIsCreator { get; set; }
     }
 }

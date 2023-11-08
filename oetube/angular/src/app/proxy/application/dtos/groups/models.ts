@@ -4,6 +4,8 @@ import type { CreatorDto } from '../oe-tube-users/models';
 export interface CreateUpdateGroupDto {
   name: string;
   description?: string;
+  emailDomains: string[];
+  members: string[];
 }
 
 export interface GroupDto extends EntityDto<string> {
@@ -14,6 +16,8 @@ export interface GroupDto extends EntityDto<string> {
   members: string[];
   image?: string;
   creator: CreatorDto;
+  currentUserIsMember: boolean;
+  totalMembersCount: number;
 }
 
 export interface GroupListItemDto extends EntityDto<string> {
@@ -21,21 +25,15 @@ export interface GroupListItemDto extends EntityDto<string> {
   creationTime?: string;
   thumbnailImage?: string;
   creator: CreatorDto;
+  currentUserIsMember: boolean;
+  totalMembersCount: number;
 }
 
 export interface GroupQueryDto {
   name?: string;
   creationTimeMin?: string;
   creationTimeMax?: string;
-  skipCount?: number;
-  maxResultCount?: number;
+  itemPerPage?: number;
+  page?: number;
   sorting?: string;
-}
-
-export interface ModifyEmailDomainsDto {
-  emailDomains: string[];
-}
-
-export interface ModifyMembersDto {
-  members: string[];
 }

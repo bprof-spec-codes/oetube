@@ -1,6 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
@@ -30,7 +28,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({name:searchPhrase})
+      .getList({name:searchPhrase,itemPerPage:100})
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;

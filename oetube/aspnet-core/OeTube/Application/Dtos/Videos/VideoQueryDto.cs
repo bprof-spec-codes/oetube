@@ -2,6 +2,7 @@
 
 namespace OeTube.Application.Dtos.Videos
 {
+
     public class VideoQueryDto : IVideoQueryArgs
     {
         public string? Name { get; set; }
@@ -9,8 +10,8 @@ namespace OeTube.Application.Dtos.Videos
         public DateTime? CreationTimeMax { get; set; }
         public TimeSpan? DurationMin { get; set; }
         public TimeSpan? DurationMax { get; set; }
-        public int? SkipCount { get; set; }
-        public int? MaxResultCount { get; set; }
+        public int? ItemPerPage { get; set; }
+        public int? Page { get; set; }
         public string? Sorting { get; set; }
     }
 }

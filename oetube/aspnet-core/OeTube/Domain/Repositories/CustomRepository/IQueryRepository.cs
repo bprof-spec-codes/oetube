@@ -8,6 +8,6 @@ namespace OeTube.Domain.Repositories.CustomRepository
         where TEntity : class, IEntity
         where TQueryArgs : IQueryArgs
     {
-        Task<List<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
+        Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
     }
 }

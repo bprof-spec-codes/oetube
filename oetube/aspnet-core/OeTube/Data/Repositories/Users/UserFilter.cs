@@ -1,5 +1,5 @@
-﻿using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Entities;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Repositories.QueryArgs;
 using System.Linq.Expressions;
 using Volo.Abp.DependencyInjection;
 

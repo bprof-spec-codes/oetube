@@ -1,5 +1,5 @@
 ﻿using OeTube.Application.Services.Url;
-using OeTube.Entities;
+using OeTube.Domain.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;

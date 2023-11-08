@@ -1,28 +1,17 @@
-﻿using OeTube.Domain.Entities.Groups;
-using OeTube.Domain.Entities.Videos;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Entities;
 
 namespace OeTube.Domain.Repositories
 {
-    public interface IQueryGroupRepository : IQueryRepository<Group, IGroupQueryArgs>
+    public interface IGroupRepository :
+        ICustomRepository<Group, Guid, IGroupQueryArgs>,
+        IMayHaveCreatorRepository<Group, Guid, OeTubeUser>,
+        IParentReadRepository<Group,OeTubeUser,IUserQueryArgs>,
+        IParentUpdateRepositoryByKey<Group, Guid>
     {
-        Task<List<Video>> GetAvaliableVideosAsync(Group group, IVideoQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
-
-        Task<List<OeTubeUser>> GetGroupDomainMembersAsync(Group group, IUserQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
-
-        Task<List<OeTubeUser>> GetGroupMembersAsync(Group group, IUserQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
-
-        Task<List<OeTubeUser>> GetGroupMembersWithoutDomainMembersAsync(Group group, IUserQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
-    }
-
-    public interface IUpdateGroupRepository : IUpdateRepository<Group, Guid>
-    {
-        Task<Group> UpdateMembersAsync(Group group, IEnumerable<Guid> userIds, bool autoSave = false, CancellationToken cancellationToken = default);
-    }
-
-    public interface IGroupRepository : ICustomRepository<Group, Guid, IGroupQueryArgs>, IQueryGroupRepository, IUpdateGroupRepository
-    {
+        Task<int> GetMembersCountAsync(Group group, CancellationToken cancellationToken = default);
+        Task<bool> IsMemberAsync(Guid? userId, Group group);
     }
 }

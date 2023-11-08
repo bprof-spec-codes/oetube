@@ -1,4 +1,7 @@
-﻿using OeTube.Domain.Infrastructure.FileContainers;
+﻿using OeTube.Application.Dtos;
+using OeTube.Domain.Entities;
+using OeTube.Domain.Infrastructure.FileContainers;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Application.Dtos;
@@ -9,7 +12,7 @@ namespace OeTube.Application
 {
     public abstract class ReadOnlyCustomAppService
         <TRepository, TEntity, TKey, TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
-       : CustomAppService, IReadOnlyAppService<TOutputDto, TOutputListItemDto, TKey, TQueryArgsDto>
+       : CustomAppService
        where TRepository :
         IReadRepository<TEntity, TKey>, IQueryRepository<TEntity, TQueryArgs>, IUpdateRepository<TEntity, TKey>
        where TEntity : class, IEntity<TKey>
@@ -27,8 +30,8 @@ namespace OeTube.Application
         {
             return await GetAsync<TEntity, TKey, TOutputDto>(Repository, id);
         }
-
-        public virtual async Task<PagedResultDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
+     
+        public virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
         {
             return await GetListAsync<TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Repository, input);
         }

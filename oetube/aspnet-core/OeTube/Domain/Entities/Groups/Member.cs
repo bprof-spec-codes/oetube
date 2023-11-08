@@ -1,16 +1,19 @@
-﻿using OeTube.Entities;
-using Volo.Abp.Auditing;
+﻿using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class Member : Entity, IHasCreationTime, IHasAtomicKey<Guid>
+    public class Member : Entity, IHasCreationTime, IHasAtomicKey<Guid>,IHasForeignKey<Group,Guid>,IHasForeignKey<OeTubeUser,Guid>
     {
         public Guid GroupId { get; private set; }
         public Guid UserId { get; private set; }
         public DateTime CreationTime { get; private set; }
 
         Guid IHasAtomicKey<Guid>.AtomicKey => UserId;
+
+        Guid IHasForeignKey<Group, Guid>.ForeignKey => GroupId;
+
+        Guid IHasForeignKey<OeTubeUser, Guid>.ForeignKey => UserId;
 
         private Member()
         { }

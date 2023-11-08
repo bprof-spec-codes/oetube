@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Dtos.Videos;
+using OeTube.Application.Services.Caches.VideoAccess;
+using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.ImageFiles;
@@ -12,11 +15,9 @@ using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
-using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace OeTube.Application
 {
@@ -27,13 +28,17 @@ namespace OeTube.Application
     {
         private readonly IImageUploadHandler _imageUploadHandler;
         private readonly IDefaultImageUploadHandler _defaultImageUploadHandler;
+        private readonly IVideoAccessCacheService _videoAccessCache;
+
         public OeTubeUserAppService(IUserRepository repository,
                                     IFileContainerFactory fileContainerFactory,
                                     IImageUploadHandler imageUploadHandler,
-                                    IDefaultImageUploadHandler defaultImageUploadHandler) : base(repository, fileContainerFactory)
+                                    IDefaultImageUploadHandler defaultImageUploadHandler,
+                                    IVideoAccessCacheService videoAccessCache) : base(repository, fileContainerFactory)
         {
             _imageUploadHandler = imageUploadHandler;
             _defaultImageUploadHandler = defaultImageUploadHandler;
+            _videoAccessCache = videoAccessCache;
         }
 
         public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto input)
@@ -63,29 +68,28 @@ namespace OeTube.Application
         }
 
 
-        public async Task<PagedResultDto<GroupListItemDto>> GetJoinedGroupsAsync(Guid id, GroupQueryDto input)
+        public async Task<PaginationDto<GroupListItemDto>> GetJoinedGroupsAsync(Guid id, GroupQueryDto input)
         {
             var user = await Repository.GetAsync(id);
-            return await GetListAsync<Group, GroupListItemDto>(async () => await Repository.GetJoinedGroupsAsync(user, input));
+            return await GetListAsync<Group, GroupListItemDto>(async () => await Repository.GetJoinedGroupsAsync(id, input));
         }
 
-        public async Task<PagedResultDto<GroupListItemDto>> GetCreatedGroupsAsync(Guid id, GroupQueryDto input)
+        public async Task<PaginationDto<GroupListItemDto>> GetGroupsAsync(Guid id, GroupQueryDto input)
         {
             var user = await Repository.GetAsync(id);
-            return await GetListAsync<Group, GroupListItemDto>(async () => await Repository.GetCreatedGroupsAsync(user, input));
+            return await GetListAsync<Group, GroupListItemDto>(async () => await Repository.GetCreatedEntitiesAsync(id, input));
         }
 
-        public async Task<PagedResultDto<VideoListItemDto>> GetCreatedVideosAsync(Guid id, VideoQueryDto input)
+        public async Task<PaginationDto<VideoListItemDto>> GetVideosAsync(Guid id, VideoQueryDto input)
         {
-            var user = await Repository.GetAsync(id);
-            return await GetListAsync<Video, VideoListItemDto>(async () => await Repository.GetCreatedVideosAsync(user, input));
+            return await GetListAsync<Video, VideoListItemDto>(async () =>
+            {
+                var videos = await Repository.GetAvaliableCreatedEntititesAsync(id,CurrentUser.Id, input, false);
+                await _videoAccessCache.SetManyCacheAsync(CurrentUser.Id, videos.Items);
+                return videos;
+            });
         }
-
-        public async Task<PagedResultDto<VideoListItemDto>> GetAvaliableVideosAsync(Guid id, VideoQueryDto input)
-        {
-            var user = await Repository.GetAsync(id);
-            return await GetListAsync<Video, VideoListItemDto>(async () => await Repository.GetAvaliableVideosAsync(user, input));
-        }
+       
 
         [HttpGet("api/src/ou-tube-user/{id}/image")]
         public async Task<IRemoteStreamContent?> GetImageAsync(Guid id)

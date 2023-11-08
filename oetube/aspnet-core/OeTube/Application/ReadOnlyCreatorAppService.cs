@@ -1,4 +1,5 @@
-﻿using OeTube.Application.Dtos.OeTubeUsers;
+﻿using OeTube.Application.Dtos;
+using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
@@ -12,8 +13,7 @@ namespace OeTube.Application
 {
     public abstract class ReadOnlyCreatorAppService
       <TRepository, TEntity, TKey, TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
-       : ReadOnlyCustomAppService<TRepository, TEntity, TKey, TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>,
-       IReadOnlyAppService<TOutputDto, TOutputListItemDto, TKey, TQueryArgsDto>
+       : ReadOnlyCustomAppService<TRepository, TEntity, TKey, TOutputDto, TOutputListItemDto, TQueryArgs, TQueryArgsDto>
        where TRepository :
         IReadRepository<TEntity, TKey>, IQueryRepository<TEntity, TQueryArgs>, IUpdateRepository<TEntity, TKey>
        where TEntity : class, IEntity<TKey>, IMayHaveCreator
@@ -22,7 +22,7 @@ namespace OeTube.Application
        where TOutputDto : IMayHaveCreatorDto
        where TOutputListItemDto : IMayHaveCreatorDto
     {
-        protected IUserRepository UserRepository { get; }
+        protected virtual IUserRepository UserRepository { get; }
         protected ReadOnlyCreatorAppService(TRepository repository, IFileContainerFactory fileContainerFactory,IUserRepository userRepository) : base(repository, fileContainerFactory)
         {
             UserRepository = userRepository;
@@ -31,11 +31,11 @@ namespace OeTube.Application
 
         public override Task<TOutputDto> GetAsync(TKey id)
         {
-            return GetAsync<TEntity,TKey,TOutputDto>(Repository, id, UserRepository);
+            return GetAsync<TEntity,TKey,TOutputDto>(Repository, id);
         }
-        public override Task<PagedResultDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
+        public override Task<PaginationDto<TOutputListItemDto>> GetListAsync(TQueryArgsDto input)
         {
-            return GetListAsync<TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Repository, input, UserRepository);
+            return GetListAsync<TEntity, TOutputListItemDto, TQueryArgs, TQueryArgsDto>(Repository, input);
         }
     }
 }
