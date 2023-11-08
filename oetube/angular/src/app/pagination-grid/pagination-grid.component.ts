@@ -1,9 +1,13 @@
 import { Rest } from '@abp/ng.core';
 import { HttpParameterCodec } from '@angular/common/http';
-import { Component, Input,Output,EventEmitter } from '@angular/core';
+import { Component,OnInit, ViewChild,ElementRef } from '@angular/core';
 import { PaginationDto } from '@proxy/application/dtos';
-import { LoadOptions } from 'devextreme/data';
-import DataSource from 'devextreme/data/data_source';
+import DevExpress from 'devextreme';
+import { DxDataGridComponent } from 'devextreme-angular';
+import { DxoFormSimpleItem } from 'devextreme-angular/ui/nested/base/form-simple-item';
+import { LoadOptions, Store } from 'devextreme/data';
+import DataSource  from 'devextreme/data/data_source';
+import { ColumnHeaderFilterSearchConfig} from 'devextreme/ui/data_grid';
 import {lastValueFrom, Observable } from 'rxjs';
 
 
@@ -13,21 +17,43 @@ import {lastValueFrom, Observable } from 'rxjs';
   styleUrls: ['./pagination-grid.component.scss']
 })
 
-export class PaginationGridComponent<TInput extends QueryArgs,TOutput>{
-  customDataSource: DataSource
+export class PaginationGridComponent<TInput extends QueryArgs,TOutput> implements OnInit{
+
+
+  @ViewChild("dataGrid") dataGrid:ElementRef<DxDataGridComponent>
+  dataSource: DataSource
   totalCount:number
+  columns:Array<DataGridColumn>
+  listInput:TInput
+  
 
-  @Input() allowedPageSizes:[]
-  @Input() getListInput:TInput
-  @Input() getListProvider:GetListProvider<TInput,TOutput>
-  @Output() beforeLoad:EventEmitter<BeforeLoadArgs<TInput>>=new EventEmitter<BeforeLoadArgs<TInput>>(true)
 
-  constructor(){
-    this.customDataSource=new DataSource<TOutput,string>(
+   getList(input:TInput,config?:Partial<Partial<{
+    apiName: string;
+    skipHandleError: boolean;
+    skipAddingHeader: boolean;
+    observe: Rest.Observe;
+    httpParamEncoder?: HttpParameterCodec;
+    }>>):Observable<PaginationDto<TOutput>>{
+      return undefined
+    }
+
+  beforeLoad(options:LoadOptions,input:TInput){
+
+  }
+  initInput():TInput{
+    return {itemPerPage:10,page:0} as TInput
+  }
+  initColumns():Array<DataGridColumn>{
+    return []
+  }
+
+  initDataSource(){
+    this.dataSource=new DataSource(
       {
         load:async (options)=>{
-          this.beforeLoad.emit({input:this.getListInput,options:options})
-          return lastValueFrom(this.getListProvider.getList(this.getListInput))
+          this.beforeLoad(options,this.listInput)
+          return lastValueFrom(this.getList(this.listInput))
               .then((response)=>{
                 return {
                   data: response.items,
@@ -43,16 +69,18 @@ export class PaginationGridComponent<TInput extends QueryArgs,TOutput>{
       })
   }
 
+  ngOnInit(): void {
+    this.listInput=this.initInput()
+    this.columns=this.initColumns()
+    this.initDataSource()
+  }
 
   onPagingChanged(e:PagingChangedEventArgs){
-    this.getListInput.itemPerPage=e.pageSize
-    this.getListInput.page=e.pageIndex
+    this.listInput.itemPerPage=e.pageSize
+    this.listInput.page=e.pageIndex
   }
 }
-export interface BeforeLoadArgs<TInput>{
-  options:LoadOptions
-  input:TInput
-}
+
 export interface PagingChangedEventArgs{
   enabled?: boolean;
   pageIndex?: number;
@@ -63,12 +91,84 @@ export interface QueryArgs{
   page?: number;
   sorting?:string
 }
-export interface GetListProvider<TInput,TOutput>{
-  getList(input:TInput,config?:Partial<Partial<{
-    apiName: string;
-    skipHandleError: boolean;
-    skipAddingHeader: boolean;
-    observe: Rest.Observe;
-    httpParamEncoder?: HttpParameterCodec;
-}>>):Observable<PaginationDto<TOutput>>
+
+export interface DataGridColumn {
+  alignment?: string | undefined
+  allowEditing?: boolean;
+  allowExporting?: boolean;
+  allowFiltering?: boolean;
+  allowFixing?: boolean;
+  allowGrouping?: boolean;
+  allowHeaderFiltering?: boolean;
+  allowHiding?: boolean;
+  allowReordering?: boolean;
+  allowResizing?: boolean;
+  allowSearch?: boolean;
+  allowSorting?: boolean;
+  autoExpandGroup?: boolean;
+  buttons?: Array<string>;
+  calculateCellValue?: Function;
+  calculateDisplayValue?: Function | string;
+  calculateFilterExpression?: Function;
+  calculateGroupValue?: Function | string;
+  calculateSortValue?: Function | string;
+  caption?: string | undefined;
+  cellTemplate?: any;
+  columns?: Array<string>;
+  cssClass?: string | undefined;
+  customizeText?: Function;
+  dataField?: string | undefined;
+  dataType?: string | undefined;
+  editCellTemplate?: any;
+  editorOptions?: any;
+  encodeHtml?: boolean;
+  falseText?: string;
+  filterOperations?: Array<string>;
+  filterType?: string;
+  filterValue?: any | undefined;
+  filterValues?: Array<any>;
+  fixed?: boolean;
+  fixedPosition?: string | undefined;
+  format?: string;
+  formItem?: DxoFormSimpleItem;
+  groupCellTemplate?: any;
+  groupIndex?: number | undefined;
+  headerCellTemplate?: any;
+  headerFilter?: {
+      allowSearch?: boolean;
+      allowSelectAll?: boolean;
+      dataSource?:  Store | Function | null | undefined | Array<any>;
+      groupInterval?: number | string | undefined;
+      height?: number | undefined;
+      search?: ColumnHeaderFilterSearchConfig;
+      searchMode?: string;
+      width?: number | undefined;
+  };
+  hidingPriority?: number | undefined;
+  isBand?: boolean | undefined;
+  lookup?: {
+      allowClearing?: boolean;
+      calculateCellValue?: Function;
+      dataSource?: Store | Function | null | undefined | Array<any>;
+      displayExpr?: Function | string | undefined;
+      valueExpr?: string | undefined;
+  };
+  minWidth?: number | undefined;
+  name?: string | undefined;
+  ownerBand?: number | undefined;
+  renderAsync?: boolean;
+  selectedFilterOperation?: string | undefined;
+  setCellValue?: Function;
+  showEditorAlways?: boolean;
+  showInColumnChooser?: boolean;
+  showWhenGrouped?: boolean;
+  sortIndex?: number | undefined;
+  sortingMethod?: Function | undefined;
+  sortOrder?: string | undefined;
+  trueText?: string;
+  type?: string;
+  validationRules?: Array<DevExpress.common.RequiredRule | DevExpress.common.NumericRule | DevExpress.common.RangeRule | DevExpress.common.StringLengthRule | DevExpress.common.CustomRule | DevExpress.common.CompareRule | DevExpress.common.PatternRule | DevExpress.common.EmailRule | DevExpress.common.AsyncRule>;
+  visible?: boolean;
+  visibleIndex?: number | undefined;
+  width?: number | string | undefined;
 }

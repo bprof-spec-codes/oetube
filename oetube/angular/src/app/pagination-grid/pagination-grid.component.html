@@ -1,12 +1,12 @@
-
-<dx-data-grid 
+<dx-data-grid #dataGrid
     (pagingChange)="onPagingChanged($event)" 
-    [dataSource]="customDataSource"
+    [dataSource]="dataSource"
+    [columns]="columns"
     [remoteOperations]="{paging:true, sorting: true, filtering: true}">
     <dxo-paging></dxo-paging>
     <dxo-pager 
     visible="true"
-    [allowedPageSizes]="allowedPageSizes"
+    [allowedPageSizes]="[2,20,50]"
     displayMode="full"
     showInfo="true"
     showNavigationButtons="true"
@@ -15,3 +15,4 @@
     </dxo-pager>
     <dxo-search-panel  [visible]="true"></dxo-search-panel>
 </dx-data-grid>
+
