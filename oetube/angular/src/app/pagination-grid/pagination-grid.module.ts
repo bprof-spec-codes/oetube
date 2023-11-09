@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import {DxButtonGroupModule, DxDataGridModule, DxValidatorModule } from 'devextreme-angular';
 import { DxoDataSourceModule, DxoPagingModule } from 'devextreme-angular/ui/nested';
 import { UserPaginationGridComponent } from './user-pagination-grid/user-pagination-grid.component';
-import { PaginationGridComponent } from './pagination-grid.component';
 
 
 @NgModule({
-  declarations: [UserPaginationGridComponent,PaginationGridComponent],
+  declarations: [UserPaginationGridComponent],
   imports: [
     CommonModule,
     DxButtonGroupModule,
@@ -16,7 +15,7 @@ import { PaginationGridComponent } from './pagination-grid.component';
     DxoDataSourceModule,
     DxValidatorModule
   ],
-  exports:[UserPaginationGridComponent,PaginationGridComponent]
+  exports:[UserPaginationGridComponent]
 })
 export class PaginationGridModule{ 
 }

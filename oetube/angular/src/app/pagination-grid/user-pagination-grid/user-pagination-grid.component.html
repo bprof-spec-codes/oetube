@@ -1,0 +1,39 @@
+<dx-data-grid #dataGrid
+    [dataSource]="dataSource"
+    [remoteOperations]="true"
+    cacheEnabled="true"
+    class="data-grid"
+    keyExpr="id"
+    showBorders="true"
+    >
+    <dxo-paging></dxo-paging>
+    <dxo-pager 
+    visible="true"
+    [allowedPageSizes]="[2,20,50]"
+    displayMode="full"
+    showInfo="true"
+    showNavigationButtons="true"
+    showPageSizeSelector="true"
+    
+    
+    >
+    </dxo-pager>
+    <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxi-column dataField="thumbnailImageSource"
+                caption=""
+                cellTemplate="imageTemplate"
+                [allowSorting]="false"
+                headerCellTemplate=""
+                filterOperations="contains"
+                [allowFiltering]="false"
+                >
+    </dxi-column>
+    <div
+    *dxTemplate="let data of 'imageTemplate'"
+    >
+    <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
+    </div>
+    <dxi-column dataField="name"  [filterOperations]="['contains']"/>
+    <dxi-column dataField="emailDomain" [filterOperations]="['contains']"></dxi-column>
+</dx-data-grid>
