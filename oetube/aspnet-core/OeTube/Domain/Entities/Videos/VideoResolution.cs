@@ -1,5 +1,5 @@
 ﻿using Volo.Abp.Domain.Entities;
-
+using Volo.Abp;
 namespace OeTube.Domain.Entities.Videos
 {
     public class VideoResolution : Entity, IHasAtomicKey<Resolution>,IHasForeignKey<Video,Guid>
@@ -19,14 +19,8 @@ namespace OeTube.Domain.Entities.Videos
         public VideoResolution(Guid videoId, Resolution resolution)
         {
             VideoId = videoId;
-            if (resolution.Width <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Width, null);
-            }
-            if (resolution.Height <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Height, null);
-            }
+            Check.Range(resolution.Width, nameof(resolution), 1);
+            Check.Range(resolution.Height, nameof(resolution), 1);
             Width = resolution.Width;
             Height = resolution.Height;
         }
