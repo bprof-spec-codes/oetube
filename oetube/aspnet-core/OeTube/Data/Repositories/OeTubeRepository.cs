@@ -221,6 +221,10 @@ namespace OeTube.Data.Repositories
                                                                                         CancellationToken cancellationToken)
          where TListEntity : class, IEntity
         {
+            if (!await queryable.AnyAsync(cancellationToken))
+            {
+                return new PaginationResult<TListEntity>();
+            }
             try
             {
                 queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(args?.Sorting is not null, args!.Sorting!);
