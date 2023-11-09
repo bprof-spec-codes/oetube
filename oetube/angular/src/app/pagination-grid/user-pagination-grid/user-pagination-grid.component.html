@@ -1,39 +1,22 @@
-<dx-data-grid #dataGrid
-    [dataSource]="dataSource"
-    [remoteOperations]="true"
-    cacheEnabled="true"
-    class="data-grid"
-    keyExpr="id"
-    showBorders="true"
-    >
+<dx-data-grid #dataGrid [dataSource]="dataSource" [(selectedRowKeys)]="selectedItems" [remoteOperations]="true" cacheEnabled="true" class="data-grid"
+     showBorders="true" [height]="600" [allowColumnResizing]="true">
     <dxo-paging></dxo-paging>
-    <dxo-pager 
-    visible="true"
-    [allowedPageSizes]="[2,20,50]"
-    displayMode="full"
-    showInfo="true"
-    showNavigationButtons="true"
-    showPageSizeSelector="true"
-    
-    
-    >
+    <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
+        showNavigationButtons="true" showPageSizeSelector="true">
     </dxo-pager>
     <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
-    <dxi-column dataField="thumbnailImageSource"
-                caption=""
-                cellTemplate="imageTemplate"
-                [allowSorting]="false"
-                headerCellTemplate=""
-                filterOperations="contains"
-                [allowFiltering]="false"
-                >
+
+    <dxi-column [visible]="showThumbnailImage" dataField="thumbnailImageSource" caption="" [width]="100" cellTemplate="imageTemplate"
+        [allowSorting]="false" headerCellTemplate="" [allowFiltering]="false"
+        [allowResizing]="false">
     </dxi-column>
-    <div
-    *dxTemplate="let data of 'imageTemplate'"
-    >
-    <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
+    <div *dxTemplate="let data of 'imageTemplate'">
+        <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
     </div>
-    <dxi-column dataField="name"  [filterOperations]="['contains']"/>
-    <dxi-column dataField="emailDomain" [filterOperations]="['contains']"></dxi-column>
+    <dxi-column [visible]="showId" dataField="id" caption="ID" [allowSorting]="false" [allowFiltering]="false">
+    </dxi-column>
+    <dxi-column [visible]="showName" dataField="name" selectedFilterOperation="contains" [filterOperations]="[]" />
+    <dxi-column [visible]="showEmailDomain" dataField="emailDomain" selectedFilterOperation="contains" [filterOperations]="[]"></dxi-column>
+    <dxi-column [visible]="showCreationTime" dataType="date" dataField="creationTime" selectedFilterOperation="between" [filterOperations]="[]" format="yyyy.MM.dd" caption="Registration Date"></dxi-column>
 </dx-data-grid>

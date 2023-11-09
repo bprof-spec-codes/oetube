@@ -24,11 +24,8 @@ export class GroupCreateComponent implements OnInit {
   }
 
   newEmailDomain:string="test"
+  selectedUsers:Array<UserListItemDto>
 
-  userQuery:UserQueryDto={
-    itemPerPage:10,
-    page:0,
-  }
   constructor(public groupService:GroupService,public userService:OeTubeUserService) {
   }
 
