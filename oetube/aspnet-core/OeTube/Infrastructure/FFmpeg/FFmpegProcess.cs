@@ -1,5 +1,6 @@
 ﻿using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
+using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FFMpeg
@@ -13,7 +14,14 @@ namespace OeTube.Infrastructure.FFMpeg
 
         protected override ProcessResult HandleProcessOutput(Process process, ProcessSettings arguments, string standardOutput, string standardError)
         {
-            return new ProcessResult(arguments, process.StartTime, process.ExitTime);
+            try
+            {
+                return new ProcessResult(arguments, process.StartTime, process.ExitTime);
+            }
+            catch (Exception)
+            {
+                throw new UserFriendlyException("Error! Something went wrong with the output.");
+            }
         }
     }
 }

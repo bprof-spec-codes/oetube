@@ -3,6 +3,7 @@ using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
+using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FFMpeg
@@ -111,7 +112,8 @@ namespace OeTube.Infrastructure.FFMpeg
             }
             catch
             {
-                throw new ProcessException($"The output of ffprobe cannot be parsed.", null, standardOutput, standardError);
+                //ProcessException($"The output of ffprobe cannot be parsed.", null, standardOutput, standardError);
+                throw new UserFriendlyException("Error! Something went wrong with the output."); 
             }
         }
     }

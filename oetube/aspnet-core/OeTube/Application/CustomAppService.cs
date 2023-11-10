@@ -5,6 +5,8 @@ using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
+using OeTube.Entities;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Auditing;
@@ -62,7 +64,7 @@ namespace OeTube.Application
             if ((entity is IMayHaveCreator mayHave && mayHave.CreatorId is not null && mayHave.CreatorId != CurrentUser.Id)
                 || entity is IMustHaveCreator mustHave && mustHave.CreatorId != CurrentUser.Id)
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Something went wrong with 'Creator checking'");
             }
         }
         protected virtual void CheckCreator(Guid id)
@@ -74,7 +76,7 @@ namespace OeTube.Application
 
             if(id!=CurrentUser.Id)
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Something went wrong with 'Creator checking'");
             }
 
         }

@@ -55,11 +55,11 @@ namespace OeTube.Domain.Entities.Videos
         {
             if (IsUploadCompleted)
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Error! Upload is already done.");
             }
             if (!IsAllResolutionReady())
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Error! Not all resoution is ready.");
             }
             IsUploadCompleted = true;
             return this;

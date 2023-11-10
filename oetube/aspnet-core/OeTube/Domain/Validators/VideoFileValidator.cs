@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 using OeTube.Configs;
 using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
+using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Domain.Validators
@@ -58,7 +60,7 @@ namespace OeTube.Domain.Validators
         {
             if (size > _config.MaxSizeInBytes)
             {
-                throw new ArgumentOutOfRangeException(nameof(size), size, _config.MaxSizeInBytes.ToString());
+                throw new UserFriendlyException("Error! The video size is too big: " + size + ". Maximum is " + _config.MaxSizeInBytes.ToString());
             }
         }
 
@@ -70,7 +72,7 @@ namespace OeTube.Domain.Validators
         {
             if (!_config.SupportedFormats.Contains(format))
             {
-                throw new ArgumentException(null, nameof(format));
+                throw new UserFriendlyException("Error! The video format is invalid.");
             }
         }
 
@@ -78,7 +80,7 @@ namespace OeTube.Domain.Validators
         {
             if (format != _config.OutputFormat)
             {
-                throw new ArgumentException(null, nameof(format));
+                throw new UserFriendlyException("Error! Output format is not valid.");
             }
         }
 
@@ -86,7 +88,7 @@ namespace OeTube.Domain.Validators
         {
             if (videoStreams.Count == 0)
             {
-                throw new ArgumentException(null, nameof(videoStreams));
+                throw new UserFriendlyException("Error! VideoStreams are empty.");
             }
         }
 
@@ -94,7 +96,7 @@ namespace OeTube.Domain.Validators
         {
             if (_config.SupportedCodecs.Count > 0 && !_config.SupportedCodecs.Contains(codec))
             {
-                throw new ArgumentException(null, nameof(codec));
+                throw new UserFriendlyException("Error! Codec is not valid.");
             }
         }
 
@@ -103,7 +105,7 @@ namespace OeTube.Domain.Validators
             var epsilon = 0.05;
             if (Math.Abs(video.Duration.Seconds - duration.Seconds) > epsilon)
             {
-                throw new ArgumentException(null, nameof(duration));
+                throw new UserFriendlyException("Error! The video duration is not valid.");
             }
         }
 
@@ -111,7 +113,7 @@ namespace OeTube.Domain.Validators
         {
             if (!video.GetResolutionsBy(false).Contains(resolution))
             {
-                throw new ArgumentException(null, nameof(resolution));
+                throw new UserFriendlyException("Error! Resolution is not valid.");
             }
         }
 
@@ -119,7 +121,7 @@ namespace OeTube.Domain.Validators
         {
             if (sourceInfo.AudioStreams.Count != audioStreams.Count)
             {
-                throw new ArgumentException(null, nameof(audioStreams));
+                throw new UserFriendlyException("Error! AudioStreams count are not matching.");
             }
             for (int i = 0; i < audioStreams.Count; i++)
             {
@@ -135,7 +137,7 @@ namespace OeTube.Domain.Validators
                sourceAudioStream.Codec != resizedAudioStream.Codec &&
                Math.Abs(sourceAudioStream.Bitrate - resizedAudioStream.Bitrate) > bitRateEpsilon)
             {
-                throw new ArgumentException(null, nameof(resizedAudioStream));
+                throw new UserFriendlyException("Error! Audio is not valid.");
             }
         }
     }

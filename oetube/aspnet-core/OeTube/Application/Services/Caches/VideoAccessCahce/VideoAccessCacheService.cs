@@ -8,6 +8,7 @@ using Volo.Abp.VirtualFileSystem;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Volo.Abp.Users;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp;
 
 namespace OeTube.Application.Services.Caches.VideoAccess
 {
@@ -66,7 +67,7 @@ namespace OeTube.Application.Services.Caches.VideoAccess
             }
             if (!cacheItem.HasAccess)
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Error! Cannot access cache.");
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Domain.Entities;
+﻿using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
@@ -40,7 +41,7 @@ namespace OeTube.Domain.Entities.Videos
         {
             if (IsReady)
             {
-                throw new InvalidOperationException();
+                throw new UserFriendlyException("Error! Resolution is already done.");
             }
             IsReady = true;
         }

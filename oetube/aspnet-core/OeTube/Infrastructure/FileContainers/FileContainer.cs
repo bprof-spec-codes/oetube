@@ -8,6 +8,7 @@ using OeTube.Domain.Infrastructure.FileHandlers;
 using System.Runtime.CompilerServices;
 using System.IO;
 using OeTube.Domain.Infrastructure;
+using Volo.Abp;
 
 namespace OeTube.Infrastructure.FileContainers
 {
@@ -55,7 +56,7 @@ namespace OeTube.Infrastructure.FileContainers
         public async Task<ByteContent> GetFileAsync(IFilePath path, CancellationToken cancellationToken = default)
         {
             var result = await GetFileOrNullAsync(path, cancellationToken);
-            if (result is null) throw new ArgumentException(path.GetPath(), nameof(path));
+            if (result is null) throw new UserFriendlyException("Error! Cannot find the file or path.");
             return result;
         }
         public IEnumerable<string> GetFiles(object key)
@@ -108,7 +109,7 @@ namespace OeTube.Infrastructure.FileContainers
             var result=await GetFileOrNullAsync(path,cancellationToken);
             if(result is null)
             {
-               var defaultFile=await GetDefaultFileOrNullAsync<TDefaultFilePath>(cancellationToken) ?? throw new ArgumentException(TDefaultFilePath.GetDefaultPath(), nameof(path));
+               var defaultFile=await GetDefaultFileOrNullAsync<TDefaultFilePath>(cancellationToken) ?? throw new UserFriendlyException("Error! Default file is missing: " + TDefaultFilePath.GetDefaultPath());
                 return defaultFile;
             }
             return result;
