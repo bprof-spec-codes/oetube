@@ -4,11 +4,11 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Domain.Infrastructure.Videos
 {
-    public class VideoFileConfig : IVideoFileConfig,ISingletonDependency
+    public class VideoFileConfig : IVideoFileConfig, ISingletonDependency
     {
         public VideoFileConfig()
         {
-            MaxSizeInBytes= 1024L * 1024 * 1024;
+            MaxSizeInBytes = 1024L * 1024 * 1024;
             OutputFormat = "mp4";
             SupportedFormats = new string[] { "mp4" };
             SupportedCodecs = Array.Empty<string>();

@@ -8,10 +8,11 @@ namespace OeTube.Domain.Repositories
     public interface IGroupRepository :
         ICustomRepository<Group, Guid, IGroupQueryArgs>,
         IMayHaveCreatorRepository<Group, Guid, OeTubeUser>,
-        IChildQueryRepository<Group,Guid,OeTubeUser,IUserQueryArgs>,
+        IChildQueryRepository<Group, Guid, OeTubeUser, IUserQueryArgs>,
         IParentUpdateRepositoryByKey<Group, Guid>
     {
         Task<int> GetMembersCountAsync(Group group, CancellationToken cancellationToken = default);
+
         Task<bool> IsMemberAsync(Guid? userId, Group group);
     }
 }

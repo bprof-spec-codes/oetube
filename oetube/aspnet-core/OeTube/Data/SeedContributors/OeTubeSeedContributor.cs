@@ -31,6 +31,7 @@ namespace OeTube.Data.SeedContributors
         private readonly VideoRepository _videoRepository;
         private readonly PlaylistRepository _playlistRepository;
         private readonly IDefaultImageUploadHandler _defaultImageUploadHandler;
+
         public OeTubeSeedContributor(IGuidGenerator guidGenerator,
                                        IdentityUserManager userManager,
                                        IdentityRoleManager roleManager,
@@ -66,7 +67,7 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task SeedMembersAsync(Group group, params Guid[] memberIds)
         {
-            await _groupRepository.UpdateChildrenAsync(group,memberIds,true);
+            await _groupRepository.UpdateChildrenAsync(group, memberIds, true);
         }
 
         [UnitOfWork]
@@ -74,8 +75,8 @@ namespace OeTube.Data.SeedContributors
         {
             IGroupQueryArgs args = new GroupQueryArgs() { Name = name };
             Group? group;
-            var result = await _groupRepository.GetListAsync(args,includeDetails:true);
-            if(result.Items.Count>0)
+            var result = await _groupRepository.GetListAsync(args, includeDetails: true);
+            if (result.Items.Count > 0)
             {
                 group = result.Items[0];
             }
@@ -128,13 +129,11 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task SetDefaultImageAsync<TRelatedType>(string filename)
         {
-            var path = Path.Combine(nameof(Data), nameof(SeedContributors), "Files",filename);
+            var path = Path.Combine(nameof(Data), nameof(SeedContributors), "Files", filename);
             using var stream = File.OpenRead(path);
             var content = await ByteContent.FromStreamAsync(Path.GetExtension(path), stream);
             await _defaultImageUploadHandler.HandleFileAsync<TRelatedType>(content);
-
         }
-
 
         [UnitOfWork]
         public async Task SeedAsync(DataSeedContext context)

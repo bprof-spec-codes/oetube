@@ -1,15 +1,12 @@
 ﻿using OeTube.Application.Caches;
-using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Repositories;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Groups
@@ -66,6 +63,7 @@ namespace OeTube.Application.Dtos.Groups
 
         [StringLength(GroupConstants.DescriptionMaxLength)]
         public string? Description { get; set; }
+
         public List<string> EmailDomains { get; set; } = new List<string>();
         public List<Guid> Members { get; set; } = new List<Guid>();
         public IRemoteStreamContent? Image { get; set; }

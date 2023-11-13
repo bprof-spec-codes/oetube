@@ -7,20 +7,20 @@ using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Identity;
 
 namespace OeTube.Data.Repositories.Groups
 {
-    public class GroupRepository : 
-        OeTubeRepository<Group, Guid, GroupIncluder, GroupFilter, IGroupQueryArgs>, 
+    public class GroupRepository :
+        OeTubeRepository<Group, Guid, GroupIncluder, GroupFilter, IGroupQueryArgs>,
         IGroupRepository,
         ITransientDependency
     {
         public GroupRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
+
         public async Task<bool> IsMemberAsync(Guid? userId, Group group)
         {
             if (userId is null) return false;
@@ -28,11 +28,13 @@ namespace OeTube.Data.Repositories.Groups
                                               .OrderBy(u => u.Id)
                                               .FirstOrDefault(u => u.Id == userId) != null;
         }
-        public async Task<int> GetMembersCountAsync(Group group,CancellationToken cancellationToken=default)
+
+        public async Task<int> GetMembersCountAsync(Group group, CancellationToken cancellationToken = default)
         {
-            return  await (await GetDbContextAsync()).GetMembers(group)
+            return await (await GetDbContextAsync()).GetMembers(group)
                                                      .CountAsync(cancellationToken);
         }
+
         public async Task<OeTubeUser?> GetCreatorAsync(Group entity, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             return await GetCreatorAsync<Group, OeTubeUser, UserIncluder>(entity, includeDetails, cancellationToken);
@@ -40,8 +42,8 @@ namespace OeTube.Data.Repositories.Groups
 
         public async Task<Group> UpdateChildrenAsync(Group entity, IEnumerable<Guid> childIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
-            var users =await GetQueryableAsync<IdentityUser>();
-            var membersList = await users.Where(u=>childIds.Contains(u.Id)).Select(u=>u.Id).ToListAsync(cancellationToken);
+            var users = await GetQueryableAsync<IdentityUser>();
+            var membersList = await users.Where(u => childIds.Contains(u.Id)).Select(u => u.Id).ToListAsync(cancellationToken);
             if (entity.CreatorId != null)
             {
                 membersList.Remove(entity.CreatorId.Value);
@@ -49,7 +51,7 @@ namespace OeTube.Data.Repositories.Groups
 
             var membersSet = await GetDbSetAsync<Member>();
             membersSet.RemoveRange(entity.Members);
-            await membersSet.AddRangeAsync(membersList.Select(id => new Member(entity.Id,id)), cancellationToken);
+            await membersSet.AddRangeAsync(membersList.Select(id => new Member(entity.Id, id)), cancellationToken);
             if (autoSave)
             {
                 await SaveChangesAsync(cancellationToken);

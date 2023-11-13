@@ -13,6 +13,7 @@ namespace OeTube.Application.Caches
         TimeSpan? RelativeExpiration { get; set; }
 
         Task<bool> GetOrAddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
         Task SetManyAsync(IEnumerable<TEntity> entities, bool value, CancellationToken cancellationToken = default);
     }
 
@@ -29,9 +30,11 @@ namespace OeTube.Application.Caches
             CurrentUser = currentUser;
             Cache = cache;
         }
+
         protected TRepository Repository { get; }
         protected ICurrentUser CurrentUser { get; }
         protected IDistributedCache<CacheItem<bool>, CacheKey> Cache { get; }
+
         protected virtual Func<DistributedCacheEntryOptions> CreateOptionsFactory()
         {
             return () => new DistributedCacheEntryOptions()
@@ -39,6 +42,7 @@ namespace OeTube.Application.Caches
                 AbsoluteExpirationRelativeToNow = RelativeExpiration
             };
         }
+
         protected virtual CacheKey CreateKey(TEntity entity)
         {
             return new CacheKey()
@@ -46,10 +50,12 @@ namespace OeTube.Application.Caches
                 Key = $"{typeof(TEntity).Name}_{entity.Id}_{CurrentUser.Id}_ACCESS"
             };
         }
+
         protected virtual Func<Task<CacheItem<bool>>> CreateItemFactory(TEntity entity)
         {
             return async () => new CacheItem<bool>(await Repository.HasAccessAsync(CurrentUser.Id, entity));
         }
+
         public async Task SetManyAsync(IEnumerable<TEntity> entities, bool value, CancellationToken cancellationToken = default)
         {
             var pairs = entities.ToDictionary(CreateKey, e => new CacheItem<bool>(value));
@@ -69,7 +75,5 @@ namespace OeTube.Application.Caches
                 throw new InvalidCastException();
             }
         }
-
     }
 }
-

@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using OeTube.Application.AuthorizationCheckers;
-using OeTube.Domain.Repositories.CustomRepository;
-using OeTube.Infrastructure.FileContainers;
+﻿using OeTube.Domain.Repositories.CustomRepository;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
 
 namespace OeTube.Application.Methods.DeleteMethods
 {
@@ -16,8 +12,9 @@ namespace OeTube.Application.Methods.DeleteMethods
     public class DeleteMethod<TEntity, TKey> : GetBaseMethod<TEntity, TKey>, IDeleteMethod<TKey> where TEntity : class, IEntity<TKey>
     {
         protected override IDeleteRepository<TEntity, TKey> Repository { get; }
+
         public DeleteMethod(IAbpLazyServiceProvider serviceProvider,
-                            IDeleteRepository<TEntity, TKey> repository) : base(serviceProvider,repository)
+                            IDeleteRepository<TEntity, TKey> repository) : base(serviceProvider, repository)
         {
             Repository = repository;
         }

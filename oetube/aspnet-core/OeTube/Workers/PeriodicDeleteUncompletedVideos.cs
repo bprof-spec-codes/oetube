@@ -22,7 +22,7 @@ namespace OeTube.Workers
             var repository = workerContext
                 .ServiceProvider
                 .GetRequiredService<IVideoRepository>();
-            
+
             PaginationResult<Video> videos;
             var args = new QueryArgs()
             {
@@ -33,7 +33,6 @@ namespace OeTube.Workers
                 videos = await repository.GetUncompletedVideosAsync(period, args);
                 await repository.DeleteManyAsync(videos.Items, true);
             } while (videos.Items.Count != 0);
-
 
             Logger.LogInformation("Completed: " + GetType().Name);
         }

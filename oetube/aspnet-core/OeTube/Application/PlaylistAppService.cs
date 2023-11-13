@@ -17,7 +17,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
-    public class PlaylistAppService:IApplicationService,ITransientDependency
+    public class PlaylistAppService : IApplicationService, ITransientDependency
     {
         private readonly PlaylistMethodFactory _factory;
         private readonly Type _creatorAuth = typeof(CreatorChecker);
@@ -34,28 +34,33 @@ namespace OeTube.Application
                                  .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetAsync(id);
         }
+
         public async Task<PaginationDto<PlaylistItemDto>> GetListAsync(PlaylistQueryDto input)
         {
             return await _factory.CreateGetListMethod<PlaylistItemDto>()
                                 .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetListAsync(input);
         }
+
         public async Task<PlaylistDto> CreateAsync(CreateUpdatePlaylistDto input)
         {
             return await _factory.CreateCreateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .CreateAsync(input);
         }
+
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
                           .SetAuthorizationAndPolicy(_creatorAuth)
                           .DeleteAsync(id);
         }
+
         public async Task UploadDefaultImageAsync(IRemoteStreamContent input)
         {
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()
                           .UploadFile(input);
         }
+
         public async Task<PaginationDto<VideoListItemDto>> GetVideosAsync(Guid id, VideoQueryDto input)
         {
             var videos = await _factory.CreateGetChildrenListMethod<Video, IVideoQueryArgs, VideoListItemDto>()
@@ -74,6 +79,7 @@ namespace OeTube.Application
                                  .SetFileName("image")
                                  .GetFileAsync(id, new SourceImagePath(id));
         }
+
         [HttpGet("api/src/playlist/{id}/thumbnail-image")]
         public async Task<IRemoteStreamContent> GetThumbnailImageAsync(Guid id)
         {
@@ -81,10 +87,9 @@ namespace OeTube.Application
                                  .SetFileName("thumbnail_image")
                                  .GetFileAsync(id, new ThumbnailImagePath(id));
         }
-
-
     }
-    public class PlaylistMethodFactory : ApplicationMethodFactory<IPlaylistRepository, Playlist, Guid, IPlaylistQueryArgs>,ITransientDependency
+
+    public class PlaylistMethodFactory : ApplicationMethodFactory<IPlaylistRepository, Playlist, Guid, IPlaylistQueryArgs>, ITransientDependency
     {
         public PlaylistMethodFactory(IPlaylistRepository repository, IAbpLazyServiceProvider serviceProvider, IFileContainerFactory fileContainerFactory) : base(repository, serviceProvider, fileContainerFactory)
         {

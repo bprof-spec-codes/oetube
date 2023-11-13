@@ -16,12 +16,13 @@ namespace OeTube.Data.QueryExtensions
                           .OrderBy(p => p.Id)
                           .FirstOrDefault(p => p.Id == playlist.Id) is not null;
         }
+
         public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context, Guid? requesterId, Playlist playlist)
         {
             return context.GetAvaliableVideos(requesterId, GetVideos(context, playlist));
         }
 
-        public static IQueryable<Video> GetVideos(this OeTubeDbContext context,Playlist playlist)
+        public static IQueryable<Video> GetVideos(this OeTubeDbContext context, Playlist playlist)
         {
             var result = from videoItem in context.Set<VideoItem>()
                          where videoItem.PlaylistId == playlist.Id
@@ -40,7 +41,6 @@ namespace OeTube.Data.QueryExtensions
                          join video in context.GetAvaliableVideos(requesterId)
                          on videoItem.VideoId equals video.Id
                          select videoItem;
-
 
             var result = (from playlist in playlists
                           join videoItem in videos

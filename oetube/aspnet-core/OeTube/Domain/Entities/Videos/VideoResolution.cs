@@ -1,5 +1,6 @@
-﻿using Volo.Abp.Domain.Entities;
-using Volo.Abp;
+﻿using Volo.Abp;
+using Volo.Abp.Domain.Entities;
+
 namespace OeTube.Domain.Entities.Videos
 {
     public class VideoResolution : Entity, IHasAtomicKey<Resolution>

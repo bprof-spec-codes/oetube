@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using OeTube.Application.Methods.GetMethods;
-using OeTube.Application.AuthorizationCheckers;
-using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Repositories.CustomRepository;
+﻿using OeTube.Domain.Repositories.CustomRepository;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
 
 namespace OeTube.Application.Methods.CreateMethods
 {
@@ -14,10 +8,12 @@ namespace OeTube.Application.Methods.CreateMethods
     {
         Task<TOutputDto> CreateAsync(TInputDto input);
     }
+
     public class CreateMethod<TEntity, TKey, TInputDto, TOutputDto>
             : ApplicationMethod, ICreateMethod<TInputDto, TOutputDto> where TEntity : class, IEntity
     {
         protected virtual IInsertRepository<TEntity> Repository { get; }
+
         public CreateMethod(IAbpLazyServiceProvider serviceProvider,
                             IInsertRepository<TEntity> repository) : base(serviceProvider)
         {
@@ -33,5 +29,4 @@ namespace OeTube.Application.Methods.CreateMethods
             return output;
         }
     }
-
 }

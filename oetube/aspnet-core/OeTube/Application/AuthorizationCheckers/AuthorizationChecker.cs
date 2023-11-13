@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Volo.Abp.Users;
 
 namespace OeTube.Application.AuthorizationCheckers
 {
-
     public interface IAuthorizationChecker
     {
         string? PolicyName { get; set; }
         public ICurrentUser CurrentUser { get; }
+
         Task CheckPolicyAsync();
+
         Task CheckRightsAsync(object? requestedObject);
     }
-    public interface IAuthorizationManyChecker<T>:IAuthorizationChecker
+
+    public interface IAuthorizationManyChecker<T> : IAuthorizationChecker
     {
         Task CheckRightsManyAsync(IEnumerable<T> requestedObjects);
     }
@@ -28,6 +29,7 @@ namespace OeTube.Application.AuthorizationCheckers
             AuthorizationService = authorizationService;
             CurrentUser = currentUser;
         }
+
         public async Task CheckPolicyAsync()
         {
             if (!string.IsNullOrWhiteSpace(PolicyName))
@@ -35,6 +37,7 @@ namespace OeTube.Application.AuthorizationCheckers
                 await AuthorizationService.CheckAsync(PolicyName);
             }
         }
+
         public abstract Task CheckRightsAsync(object? requestedObject);
     }
 }

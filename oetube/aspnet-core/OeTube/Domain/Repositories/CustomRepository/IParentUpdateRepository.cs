@@ -12,14 +12,12 @@ namespace OeTube.Domain.Repositories.CustomRepository
                                                            CancellationToken cancellationToken = default);
     }
 
-    public interface IParentUpdateRepositoryByKey<TParentEntity,TChildKey>
+    public interface IParentUpdateRepositoryByKey<TParentEntity, TChildKey>
         where TParentEntity : class, IEntity
     {
         public Task<TParentEntity> UpdateChildrenAsync(TParentEntity entity,
                                                 IEnumerable<TChildKey> childIds,
                                                 bool autoSave = false,
                                                 CancellationToken cancellationToken = default);
-
     }
-
 }

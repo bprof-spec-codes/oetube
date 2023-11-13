@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using OeTube.Application.AuthorizationCheckers;
-using OeTube.Domain.Repositories.CustomRepository;
-using Polly;
+﻿using OeTube.Domain.Repositories.CustomRepository;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
 
 namespace OeTube.Application.Methods
 {
@@ -19,11 +15,9 @@ namespace OeTube.Application.Methods
 
         protected virtual IReadRepository<TEntity, TKey> Repository { get; }
 
-
         protected virtual async Task<TEntity> GetByIdAsync(TKey id, bool includeDetails = true)
         {
             return await Repository.GetAsync(id, includeDetails);
         }
-
     }
 }

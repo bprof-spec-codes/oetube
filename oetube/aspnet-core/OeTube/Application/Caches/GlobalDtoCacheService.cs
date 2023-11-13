@@ -1,7 +1,6 @@
-﻿using Volo.Abp.Caching;
-using System.Linq.Expressions;
-using Volo.Abp.Domain.Entities;
+﻿using System.Linq.Expressions;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Application.Caches
 {
@@ -12,13 +11,13 @@ namespace OeTube.Application.Caches
         {
         }
 
-        protected override Func<Task<CacheItem<TValue>>> CreateItemFactory<TDto,TValue>(TKey key,TEntity? entity, Expression<PropertySelector<TDto,TValue>> propertySelector)
+        protected override Func<Task<CacheItem<TValue>>> CreateItemFactory<TDto, TValue>(TKey key, TEntity? entity, Expression<PropertySelector<TDto, TValue>> propertySelector)
         {
             var config = Configurations[CreateConfigKey(propertySelector)];
             return async () => new CacheItem<TValue>((TValue?)await config.FactoryMethod(key, entity, null));
         }
 
-        protected override CacheKey CreateKey<TDto,TValue>(TKey key,TEntity? entity, Expression<PropertySelector<TDto,TValue>> propertySelector)
+        protected override CacheKey CreateKey<TDto, TValue>(TKey key, TEntity? entity, Expression<PropertySelector<TDto, TValue>> propertySelector)
         {
             return new CacheKey()
             {
@@ -26,5 +25,4 @@ namespace OeTube.Application.Caches
             };
         }
     }
-
 }

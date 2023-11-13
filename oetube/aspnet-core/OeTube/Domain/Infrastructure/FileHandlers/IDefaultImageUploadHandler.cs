@@ -2,6 +2,5 @@
 {
     public interface IDefaultImageUploadHandler : IFileHandler<ByteContent>
     {
-
     }
 }

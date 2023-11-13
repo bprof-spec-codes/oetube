@@ -1,6 +1,6 @@
 ﻿namespace OeTube.Domain.FilePaths.ImageFiles
 {
-    public class SourceImagePath : ImageFilePath,IDefaultFilePath
+    public class SourceImagePath : ImageFilePath, IDefaultFilePath
     {
         public SourceImagePath(Guid id) : base(id)
         {

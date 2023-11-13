@@ -3,7 +3,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Repositories.CustomRepository
 {
-    public interface IChildQueryRepository<TEntity,TKey,TChildEntity,TChildQueryArgs>:IReadRepository<TEntity,TKey>
+    public interface IChildQueryRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> : IReadRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
         where TChildEntity : class, IEntity
         where TChildQueryArgs : IQueryArgs
@@ -13,6 +13,7 @@ namespace OeTube.Domain.Repositories.CustomRepository
                                                           bool includeDetails = false,
                                                           CancellationToken cancellationToken = default);
     }
+
     public interface IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs>
         : IChildQueryRepository<TEntity, TKey, TChildEntity, TChildQueryArgs>
         where TEntity : class, IEntity<TKey>

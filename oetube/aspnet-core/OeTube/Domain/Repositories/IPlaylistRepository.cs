@@ -15,6 +15,7 @@ namespace OeTube.Domain.Repositories
         IQueryAvaliableRepository<Playlist, IPlaylistQueryArgs>
     {
         Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId, Playlist playlist);
+
         Task<TimeSpan> GetTotalDurationAsync(Playlist playlist);
     }
 }

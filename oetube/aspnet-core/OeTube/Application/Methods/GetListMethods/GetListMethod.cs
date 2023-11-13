@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
-using OeTube.Domain.Repositories;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
-using OeTube.Application.AuthorizationCheckers;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OeTube.Application.Methods.GetListMethods
 {
-
     public class GetListMethod<TEntity, TQueryArgs, TOutputListItemDto> : ApplicationMethod
             where TEntity : class, IEntity
             where TQueryArgs : IQueryArgs
@@ -22,9 +18,10 @@ namespace OeTube.Application.Methods.GetListMethods
         }
 
         protected virtual IQueryRepository<TEntity, TQueryArgs> Repository { get; }
+
         protected virtual async Task<PaginationResult<TEntity>> GetListByQueryAsync(TQueryArgs queryArgs)
         {
-            if(Repository is IQueryAvaliableRepository<TEntity,TQueryArgs> queryAvaliable)
+            if (Repository is IQueryAvaliableRepository<TEntity, TQueryArgs> queryAvaliable)
             {
                 return await queryAvaliable.GetAvaliableAsync(Authorization?.CurrentUser.Id, queryArgs);
             }
@@ -38,16 +35,16 @@ namespace OeTube.Application.Methods.GetListMethods
         {
             await CheckPolicyAsync();
             PaginationResult<TEntity> pagination = await GetListByQueryAsync(input);
-            if(Authorization is IAuthorizationManyChecker<TEntity> manyChecker)
+            if (Authorization is IAuthorizationManyChecker<TEntity> manyChecker)
             {
                 await manyChecker.CheckRightsManyAsync(pagination);
             }
             var dtos = new PaginationDto<TOutputListItemDto>()
             {
                 Items = new List<TOutputListItemDto>(),
-                CurrentPage=pagination.CurrentPage,
-                PageCount=pagination.PageCount,
-                TotalCount=pagination.TotalCount
+                CurrentPage = pagination.CurrentPage,
+                PageCount = pagination.PageCount,
+                TotalCount = pagination.TotalCount
             };
             foreach (var entity in pagination)
             {

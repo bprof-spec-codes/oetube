@@ -1,5 +1,4 @@
-﻿using OeTube.Domain.Entities.Videos;
-using Volo.Abp;
+﻿using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Playlists
@@ -11,8 +10,6 @@ namespace OeTube.Domain.Entities.Playlists
         public int Order { get; private set; }
 
         int IHasAtomicKey<int>.AtomicKey => Order;
-
-
 
         private VideoItem()
         { }

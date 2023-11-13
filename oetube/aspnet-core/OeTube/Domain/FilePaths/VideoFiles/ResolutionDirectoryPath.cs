@@ -13,6 +13,7 @@ namespace OeTube.Domain.FilePaths.VideoFiles
         }
 
         public Resolution Resolution { get; }
+
         protected ResolutionDirectoryPath(Guid key, Resolution resolution) : base(key)
         {
             Resolution = resolution;

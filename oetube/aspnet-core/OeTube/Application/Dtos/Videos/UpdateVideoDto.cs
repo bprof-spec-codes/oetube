@@ -3,7 +3,6 @@ using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Repositories;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Videos
 {
@@ -33,13 +32,12 @@ namespace OeTube.Application.Dtos.Videos
 
             var groups = await _groupRepository.GetManyAsync(source.AccessGroups);
             await _videoRepository.UpdateChildrenAsync(destination, groups);
-            
-            if(source.IndexImage is not null)
+
+            if (source.IndexImage is not null)
             {
                 await _frameHandler.HandleFileAsync<Video>
                     (new SelectVideoFrameHandlerArgs(destination.Id, source.IndexImage.Value));
             }
-
 
             return destination;
         }
@@ -56,7 +54,7 @@ namespace OeTube.Application.Dtos.Videos
         public AccessType Access { get; set; } = AccessType.Public;
         public List<Guid> AccessGroups { get; set; } = new List<Guid>();
 
-        [Range(1,int.MaxValue)]
+        [Range(1, int.MaxValue)]
         public int? IndexImage { get; set; }
     }
 }

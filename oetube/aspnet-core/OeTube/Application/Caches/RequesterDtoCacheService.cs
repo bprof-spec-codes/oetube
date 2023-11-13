@@ -1,9 +1,7 @@
-﻿using Volo.Abp.Caching;
-using Volo.Abp.Users;
-using System.Linq.Expressions;
-using Volo.Abp.Domain.Entities;
-using Volo.Abp.Domain.Entities.Caching;
+﻿using System.Linq.Expressions;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Domain.Entities;
+using Volo.Abp.Users;
 
 namespace OeTube.Application.Caches
 {
@@ -22,7 +20,8 @@ namespace OeTube.Application.Caches
             var config = Configurations[CreateConfigKey(propertySelector)];
             return async () => new CacheItem<TValue>((TValue)await config.FactoryMethod(key, entity, CurrentUser.Id));
         }
-        protected override CacheKey CreateKey<TDto,TValue>(TKey key,TEntity? entity, Expression<PropertySelector<TDto,TValue>> propertySelector)
+
+        protected override CacheKey CreateKey<TDto, TValue>(TKey key, TEntity? entity, Expression<PropertySelector<TDto, TValue>> propertySelector)
         {
             return new CacheKey()
             {
@@ -31,4 +30,3 @@ namespace OeTube.Application.Caches
         }
     }
 }
-

@@ -1,10 +1,8 @@
 ﻿using OeTube.Domain.Repositories.QueryArgs;
-using Volo.Abp.DependencyInjection;
-using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Groups
 {
-    public class GroupQueryDto :QueryDto, IGroupQueryArgs
+    public class GroupQueryDto : QueryDto, IGroupQueryArgs
     {
         public string? Name { get; set; }
         public DateTime? CreationTimeMin { get; set; }

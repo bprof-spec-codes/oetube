@@ -27,12 +27,13 @@ namespace OeTube.Application.Dtos.Playlists
             destination.Description = source.Description;
             destination.CreationTime = source.CreationTime;
             destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(source.Id);
-            destination.Creator =await _creatorMapper.MapAsync(source.CreatorId);
+            destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             destination.TotalDuration = await _cacheService.GetOrAddTotalDurationAsync(source);
             return destination;
         }
     }
-    public class PlaylistItemDto:EntityDto<Guid>
+
+    public class PlaylistItemDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }

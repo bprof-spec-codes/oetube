@@ -4,7 +4,7 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.AuthorizationCheckers
 {
-    public class DefaultChecker : AuthorizationChecker,ITransientDependency
+    public class DefaultChecker : AuthorizationChecker, ITransientDependency
     {
         public DefaultChecker(IAuthorizationService authorizationService, ICurrentUser currentUser) : base(authorizationService, currentUser)
         {

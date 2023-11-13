@@ -7,7 +7,6 @@ namespace OeTube.Data.Repositories
      where T : class, IEntity
     {
         IQueryable<T> Include(IQueryable<T> queryable);
-
     }
 
     public abstract class Includer<T> : IIncluder<T>
@@ -24,5 +23,4 @@ namespace OeTube.Data.Repositories
             return queryable;
         }
     }
-
 }

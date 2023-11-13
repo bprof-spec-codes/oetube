@@ -5,7 +5,7 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.AuthorizationCheckers
 {
-    public class CreatorChecker : AuthorizationChecker,ITransientDependency
+    public class CreatorChecker : AuthorizationChecker, ITransientDependency
     {
         public CreatorChecker(IAuthorizationService authorizationService, ICurrentUser currentUser) : base(authorizationService, currentUser)
         {
@@ -13,19 +13,18 @@ namespace OeTube.Application.AuthorizationCheckers
 
         public override Task CheckRightsAsync(object? requestedObject)
         {
-            if(requestedObject is IMayHaveCreator mayHave&& 
-               mayHave.CreatorId is not null&&
+            if (requestedObject is IMayHaveCreator mayHave &&
+               mayHave.CreatorId is not null &&
                mayHave.CreatorId != CurrentUser.Id)
             {
                 throw new InvalidOperationException();
             }
-            if(requestedObject is IMustHaveCreator mustHave&&
+            if (requestedObject is IMustHaveCreator mustHave &&
                 mustHave.CreatorId != CurrentUser.Id)
             {
                 throw new InvalidOperationException();
             }
             return Task.CompletedTask;
         }
-
     }
 }

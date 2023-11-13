@@ -1,7 +1,5 @@
-﻿using OeTube.Configs;
-using OeTube.Domain.Configs;
+﻿using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
-using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Domain.Infrastructure.FileContainers;
@@ -40,6 +38,7 @@ namespace OeTube.Infrastructure.FileHandlers
         }
 
         public abstract Task<Video> HandleFileAsync<TRelatedType>(TArgs args, CancellationToken cancellationToken = default);
+
         protected async Task ProcessUploadIfIsItReadyAsync(Video video, VideoInfo videoInfo)
         {
             if (video.IsAllResolutionReady())

@@ -2,14 +2,15 @@
 {
     public interface IVideoQueryArgs : IQueryArgs
     {
-         string? Name { get; set; }
-         DateTime? CreationTimeMin { get; set; }
-         DateTime? CreationTimeMax { get; set; }
-         TimeSpan? DurationMin { get; set; }
-         TimeSpan? DurationMax { get; set; }
-         Guid? CreatorId { get; set; }
+        string? Name { get; set; }
+        DateTime? CreationTimeMin { get; set; }
+        DateTime? CreationTimeMax { get; set; }
+        TimeSpan? DurationMin { get; set; }
+        TimeSpan? DurationMax { get; set; }
+        Guid? CreatorId { get; set; }
     }
-    public class VideoQueryArgs:QueryArgs,IVideoQueryArgs
+
+    public class VideoQueryArgs : QueryArgs, IVideoQueryArgs
     {
         public virtual string? Name { get; set; }
         public virtual DateTime? CreationTimeMin { get; set; }

@@ -13,6 +13,5 @@ namespace OeTube.Data.QueryExtensions
                          select entity;
             return result;
         }
-
     }
 }

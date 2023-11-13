@@ -14,7 +14,5 @@ namespace OeTube.Domain.Infrastructure.FileHandlers
 
     public interface IStartVideoUploadHandler : IFileHandler<StartVideoUploadHandlerArgs, Video>
     {
-
-
     }
 }

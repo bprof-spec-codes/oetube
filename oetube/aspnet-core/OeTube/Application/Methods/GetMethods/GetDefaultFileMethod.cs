@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using OeTube.Domain.FilePaths;
-using OeTube.Domain.Infrastructure.FileContainers;
+﻿using OeTube.Domain.FilePaths;
 using OeTube.Domain.Infrastructure;
+using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Repositories.CustomRepository;
 using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
-using OeTube.Application.AuthorizationCheckers;
 
 namespace OeTube.Application.Methods.GetMethods
 {
-
     public class GetDefaultFileMethod<TEntity, TKey, TInputFilePath> :
             GetFileMethod<TEntity, TKey, TInputFilePath>
             where TEntity : class, IEntity<TKey>
@@ -30,24 +26,29 @@ namespace OeTube.Application.Methods.GetMethods
         {
             return $"{nameof(TEntity).ToLower()}_{DefaultFileName}";
         }
-        public GetDefaultFileMethod<TEntity,TKey,TInputFilePath> SetDefaultFileName(string? fileName)
+
+        public GetDefaultFileMethod<TEntity, TKey, TInputFilePath> SetDefaultFileName(string? fileName)
         {
             DefaultFileName = fileName;
             return this;
         }
-        public override GetDefaultFileMethod<TEntity,TKey,TInputFilePath> SetFileName(string? filename)
+
+        public override GetDefaultFileMethod<TEntity, TKey, TInputFilePath> SetFileName(string? filename)
         {
             base.SetFileName(filename);
             return this;
         }
+
         protected override async Task<ByteContent> GetFileMethodAsync(TInputFilePath input)
         {
             return await FileContainer.GetFileOrDefaultAsync(input);
         }
+
         protected virtual async Task<ByteContent> GetDefaultFileMethodAsync()
         {
             return await FileContainer.GetDefaultFileAsync<TInputFilePath>();
         }
+
         public async Task<IRemoteStreamContent> GetDefaultFileAsync()
         {
             await CheckPolicyAsync();

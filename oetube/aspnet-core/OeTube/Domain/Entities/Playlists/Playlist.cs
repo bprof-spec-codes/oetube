@@ -20,7 +20,6 @@ namespace OeTube.Domain.Entities.Playlists
 
         Guid IHasAtomicKey<Guid>.AtomicKey => Id;
 
-
         protected Playlist()
         {
             items = new EntitySet<VideoItem, int>();

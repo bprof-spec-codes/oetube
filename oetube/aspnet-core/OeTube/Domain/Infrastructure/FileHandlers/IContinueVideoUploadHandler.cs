@@ -6,12 +6,14 @@ namespace OeTube.Domain.Infrastructure.FileHandlers
     {
         public Video Video { get; }
         public ByteContent Content { get; }
-        public ContinueVideoUploadHandlerArgs(Video video,ByteContent content)
+
+        public ContinueVideoUploadHandlerArgs(Video video, ByteContent content)
         {
             Video = video;
             Content = content;
         }
     }
+
     public interface IContinueVideoUploadHandler : IFileHandler<ContinueVideoUploadHandlerArgs, Video>
     { }
 }

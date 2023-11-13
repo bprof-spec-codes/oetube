@@ -7,8 +7,6 @@ using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace OeTube.Data.Repositories.Playlists
@@ -21,16 +19,18 @@ namespace OeTube.Data.Repositories.Playlists
         public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
+
         private TimeSpan GetTotalDuration(IQueryable<Video> videos)
         {
             var totalSeconds = videos.Sum(v => v.Duration.TotalSeconds);
             return TimeSpan.FromSeconds(totalSeconds);
         }
-        public async Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId,Playlist playlist)
+
+        public async Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId, Playlist playlist)
         {
             return GetTotalDuration((await GetDbContextAsync()).GetAvaliableVideos(requesterId, playlist));
-                      
         }
+
         public async Task<TimeSpan> GetTotalDurationAsync(Playlist playlist)
         {
             return GetTotalDuration((await GetDbContextAsync()).GetVideos(playlist));
@@ -43,11 +43,11 @@ namespace OeTube.Data.Repositories.Playlists
                 (queryable, args, includeDetails, cancellationToken);
         }
 
-        public async Task<PaginationResult<Video>> GetAvaliableChildrenAsync(Guid? requesterId,Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async Task<PaginationResult<Video>> GetAvaliableChildrenAsync(Guid? requesterId, Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var queryable = (await GetDbContextAsync()).GetAvaliableVideos(requesterId, entity);
-            return await CreateListAsync<Video,VideoIncluder,VideoFilter,IVideoQueryArgs>
-                (queryable, args,includeDetails, cancellationToken);
+            return await CreateListAsync<Video, VideoIncluder, VideoFilter, IVideoQueryArgs>
+                (queryable, args, includeDetails, cancellationToken);
         }
 
         public async Task<PaginationResult<Video>> GetChildrenAsync(Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)

@@ -3,9 +3,6 @@ using OeTube.Application.Url;
 using OeTube.Domain.Entities.Videos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Entities;
-using Volo.Abp.ObjectMapping;
-using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Videos
 {
@@ -13,11 +10,13 @@ namespace OeTube.Application.Dtos.Videos
     {
         private readonly VideoUrlService _videoUrlService;
         private readonly CreatorDtoMapper _creatorMapper;
+
         public VideoMapper(VideoUrlService videoUrlService, CreatorDtoMapper creatorMapper)
         {
             _videoUrlService = videoUrlService;
             _creatorMapper = creatorMapper;
         }
+
         public override async Task<VideoDto> MapAsync(Video source, VideoDto destination)
         {
             destination.Id = source.Id;
@@ -39,16 +38,18 @@ namespace OeTube.Application.Dtos.Videos
             return destination;
         }
     }
+
     public class HlsResolutionDto
     {
         public int Width { get; set; }
         public int Height { get; set; }
         public string HlsList { get; set; } = string.Empty;
     }
-    public class VideoDto:EntityDto<Guid>,IMayHaveCreatorDto
+
+    public class VideoDto : EntityDto<Guid>, IMayHaveCreatorDto
     {
         public List<HlsResolutionDto> HlsResolutions { get; set; } = new();
-        public string? IndexImage { get; set; } 
+        public string? IndexImage { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public DateTime CreationTime { get; set; }

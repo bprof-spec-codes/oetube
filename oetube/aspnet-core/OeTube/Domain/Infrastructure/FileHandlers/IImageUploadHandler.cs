@@ -1,8 +1,4 @@
-﻿using OeTube.Domain.Configs;
-using OeTube.Domain.FilePaths;
-using OeTube.Domain.Infrastructure.FileHandlers;
-
-namespace OeTube.Domain.Infrastructure.FileHandlers
+﻿namespace OeTube.Domain.Infrastructure.FileHandlers
 {
     public class ImageUploadHandlerArgs
     {
@@ -16,8 +12,7 @@ namespace OeTube.Domain.Infrastructure.FileHandlers
         public ByteContent Content { get; }
     }
 
-    public interface IImageUploadHandler: IFileHandler<ImageUploadHandlerArgs>
+    public interface IImageUploadHandler : IFileHandler<ImageUploadHandlerArgs>
     {
-
     }
 }

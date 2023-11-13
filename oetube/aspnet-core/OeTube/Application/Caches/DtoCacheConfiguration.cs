@@ -2,19 +2,18 @@
 
 namespace OeTube.Application.Caches
 {
-    public class DtoCacheConfiguration<TEntity,TKey>
+    public class DtoCacheConfiguration<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
 
     {
-        public DtoCacheConfiguration(CacheValueFactory<TEntity,TKey> factoryMethod,
+        public DtoCacheConfiguration(CacheValueFactory<TEntity, TKey> factoryMethod,
                                  TimeSpan? relativeExpiration)
         {
             RelativeExpiration = relativeExpiration;
             FactoryMethod = factoryMethod;
         }
+
         public TimeSpan? RelativeExpiration { get; }
-        public CacheValueFactory<TEntity,TKey> FactoryMethod { get; }
-
+        public CacheValueFactory<TEntity, TKey> FactoryMethod { get; }
     }
-
 }

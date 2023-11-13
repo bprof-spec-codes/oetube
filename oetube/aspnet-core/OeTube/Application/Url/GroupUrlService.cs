@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Volo.Abp.DependencyInjection;
+﻿using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application.Url
 {
@@ -19,6 +18,4 @@ namespace OeTube.Application.Url
             return GetUrl<GroupAppService>(nameof(GroupAppService.GetThumbnailImageAsync), new RouteTemplateParameter(id));
         }
     }
-
-
 }

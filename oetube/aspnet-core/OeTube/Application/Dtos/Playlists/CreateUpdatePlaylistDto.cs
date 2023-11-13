@@ -1,15 +1,13 @@
-﻿using OeTube.Application.Dtos.Groups;
-using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Application.Caches;
 using OeTube.Domain.Entities.Playlists;
-using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Infrastructure;
+using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Repositories;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Users;
-using OeTube.Application.Caches;
 
 namespace OeTube.Application.Dtos.Playlists
 {
@@ -21,6 +19,7 @@ namespace OeTube.Application.Dtos.Playlists
         private readonly IImageUploadHandler _imageUploadHandler;
         private readonly IVideoRepository _videoRepository;
         private readonly PlaylistCacheService _cacheService;
+
         public CreateUpdatePlaylistMapper(IGuidGenerator guidGenerator,
                                           ICurrentUser currentUser,
                                           IPlaylistRepository playlistRepository,
@@ -61,11 +60,13 @@ namespace OeTube.Application.Dtos.Playlists
             return destination;
         }
     }
+
     public class CreateUpdatePlaylistDto
     {
         [Required]
         [StringLength(PlaylistConstants.NameMaxLength, MinimumLength = PlaylistConstants.NameMinLength)]
         public string Name { get; set; } = string.Empty;
+
         [StringLength(PlaylistConstants.DescriptionMaxLength)]
         public string? Description { get; set; }
 

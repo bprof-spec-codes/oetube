@@ -5,7 +5,7 @@ namespace OeTube.Data.QueryExtensions
 {
     public static class VideoQueryExtension
     {
-        public static IQueryable<Group> GetAccessGroups(this OeTubeDbContext context,Video video)
+        public static IQueryable<Group> GetAccessGroups(this OeTubeDbContext context, Video video)
         {
             return from accessGroup in context.Set<AccessGroup>()
                    where accessGroup.VideoId == video.Id
@@ -13,6 +13,7 @@ namespace OeTube.Data.QueryExtensions
                    on accessGroup.GroupId equals @group.Id
                    select @group;
         }
+
         public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context, Guid? requesterId, IQueryable<Video>? videoQueryable = null)
         {
             videoQueryable ??= context.Set<Video>();
@@ -48,6 +49,7 @@ namespace OeTube.Data.QueryExtensions
 
             return groupAccess.Concat(trivialAccess).Distinct();
         }
+
         public static bool HasAccess(this OeTubeDbContext context, Guid? requesterId, Video video)
         {
             if (requesterId is null)
@@ -83,6 +85,7 @@ namespace OeTube.Data.QueryExtensions
                 return result != default;
             }
         }
+
         public static IQueryable<Video> GetUncompletedVideos(this OeTubeDbContext context, TimeSpan old = default)
         {
             var date = DateTime.Now - old;

@@ -7,7 +7,8 @@
         DateTime? CreationTimeMax { get; set; }
         Guid? CreatorId { get; set; }
     }
-    public class PlaylistQueryArgs:QueryArgs,IPlaylistQueryArgs
+
+    public class PlaylistQueryArgs : QueryArgs, IPlaylistQueryArgs
     {
         public virtual string? Name { get; set; }
         public virtual DateTime? CreationTimeMin { get; set; }

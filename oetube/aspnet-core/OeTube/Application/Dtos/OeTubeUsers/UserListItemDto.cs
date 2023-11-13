@@ -26,7 +26,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
             destination.CreationTime = source.CreationTime;
-            destination.ThumbnailImageSource = _urlService.GetThumbnailImageUrl( source.Id);
+            destination.ThumbnailImageSource = _urlService.GetThumbnailImageUrl(source.Id);
 
             return destination;
         }

@@ -1,5 +1,4 @@
-﻿using Nito.AsyncEx;
-using OeTube.Data.QueryExtensions;
+﻿using OeTube.Data.QueryExtensions;
 using OeTube.Data.Repositories.Groups;
 using OeTube.Data.Repositories.Users;
 using OeTube.Domain.Entities;
@@ -8,15 +7,12 @@ using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace OeTube.Data.Repositories.Videos
 {
-
     public class VideoRepository : OeTubeRepository
-        <Video, Guid, VideoIncluder, VideoFilter, IVideoQueryArgs>, IVideoRepository,ITransientDependency
+        <Video, Guid, VideoIncluder, VideoFilter, IVideoQueryArgs>, IVideoRepository, ITransientDependency
     {
         public VideoRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
@@ -26,6 +22,7 @@ namespace OeTube.Data.Repositories.Videos
         {
             return await GetCreatorAsync<Video, OeTubeUser, UserIncluder>(video, includeDetails, cancellationToken);
         }
+
         public async Task<PaginationResult<Video>> GetAvaliableAsync(Guid? requesterId, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var queryable = (await GetDbContextAsync()).GetAvaliableVideos(requesterId);
@@ -33,11 +30,12 @@ namespace OeTube.Data.Repositories.Videos
                 (queryable, args, includeDetails, cancellationToken);
         }
 
-        public async Task<PaginationResult<Video>> GetUncompletedVideosAsync(TimeSpan old = default,IQueryArgs? args=null,bool includeDetails=false, CancellationToken cancellationToken=default)
+        public async Task<PaginationResult<Video>> GetUncompletedVideosAsync(TimeSpan old = default, IQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var result = (await GetDbContextAsync()).GetUncompletedVideos(old);
             return await CreateListAsync<Video, VideoIncluder>(result, args, includeDetails, cancellationToken);
         }
+
         public async Task<Video> UpdateChildrenAsync(Video entity, IEnumerable<Group> childEntities, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var accessGroupSet = await GetDbSetAsync<AccessGroup>();
@@ -50,12 +48,12 @@ namespace OeTube.Data.Repositories.Videos
             }
             return entity;
         }
-     
+
         public async Task<PaginationResult<Group>> GetChildrenAsync(Video entity, IGroupQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var queryable = (await GetDbContextAsync()).GetAccessGroups(entity);
             return await CreateListAsync<Group, GroupIncluder, GroupFilter, IGroupQueryArgs>
-                (queryable,args,includeDetails,cancellationToken);
+                (queryable, args, includeDetails, cancellationToken);
         }
 
         public async Task<bool> HasAccessAsync(Guid? requesterId, Video entity)

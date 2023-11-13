@@ -6,12 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Content;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class StartVideoUploadMapper : AsyncObjectMapper<StartVideoUploadDto, Video>,ITransientDependency
+    public class StartVideoUploadMapper : AsyncObjectMapper<StartVideoUploadDto, Video>, ITransientDependency
     {
         private readonly ICurrentUser _currentUser;
         private readonly IGuidGenerator _guidGenerator;
@@ -44,7 +43,7 @@ namespace OeTube.Application.Dtos.Videos
                 Name = source.Name
             };
             var video = await _videoUploadHandler.HandleFileAsync<Video>(args);
-            var groups =await _groupRepository.GetManyAsync(source.AccessGroups);
+            var groups = await _groupRepository.GetManyAsync(source.AccessGroups);
             await _videoRepository.UpdateChildrenAsync(video, groups);
             return video;
         }
@@ -54,6 +53,7 @@ namespace OeTube.Application.Dtos.Videos
             throw new NotImplementedException();
         }
     }
+
     public class StartVideoUploadDto
     {
         [StringLength(VideoConstants.NameMaxLength, MinimumLength = VideoConstants.NameMinLength)]
@@ -66,6 +66,7 @@ namespace OeTube.Application.Dtos.Videos
 
         [Required]
         public IRemoteStreamContent? Content { get; set; }
+
         public List<Guid> AccessGroups { get; set; } = new List<Guid>();
     }
 }

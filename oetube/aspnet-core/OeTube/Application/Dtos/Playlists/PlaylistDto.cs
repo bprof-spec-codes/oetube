@@ -1,7 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using OeTube.Application.Caches;
+﻿using OeTube.Application.Caches;
 using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Dtos.Videos;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Repositories;
@@ -14,7 +12,8 @@ namespace OeTube.Application.Dtos.Playlists
     {
         private readonly CreatorDtoMapper _creatorMapper;
         private readonly PlaylistUrlService _urlService;
-        private readonly PlaylistCacheService  _playlistCache;
+        private readonly PlaylistCacheService _playlistCache;
+
         public PlaylistMapper(CreatorDtoMapper creatorMapper, PlaylistCacheService playlistCache, IPlaylistRepository repository, PlaylistUrlService urlService)
         {
             _creatorMapper = creatorMapper;
@@ -36,25 +35,28 @@ namespace OeTube.Application.Dtos.Playlists
             return destination;
         }
     }
+
     public static class PlaylistDtoCacheExtension
     {
         public static PlaylistCacheService ConfigureTotalDuration(this PlaylistCacheService cacheService, IPlaylistRepository repository)
         {
-            cacheService.RequesterDtoCache.ConfigureProperty<PlaylistDto,TimeSpan>
+            cacheService.RequesterDtoCache.ConfigureProperty<PlaylistDto, TimeSpan>
                 (p => p.TotalDuration, async (key, entity, userId) => await repository.GetAvaliableTotalDurationAsync(userId, entity!), TimeSpan.FromMinutes(5));
             return cacheService;
         }
-        public static async Task<TimeSpan> GetOrAddTotalDurationAsync(this PlaylistCacheService cacheService,Playlist entity)
+
+        public static async Task<TimeSpan> GetOrAddTotalDurationAsync(this PlaylistCacheService cacheService, Playlist entity)
         {
             return await cacheService.RequesterDtoCache.GetOrAddAsync<PlaylistDto, TimeSpan>(entity, p => p.TotalDuration);
         }
-        public static async Task DeleteTotalDurationAsync(this PlaylistCacheService cacheService,Playlist entity)
-        {
-             await cacheService.RequesterDtoCache.DeleteAsync<PlaylistDto,TimeSpan>(entity, p => p.TotalDuration);
-        }
 
+        public static async Task DeleteTotalDurationAsync(this PlaylistCacheService cacheService, Playlist entity)
+        {
+            await cacheService.RequesterDtoCache.DeleteAsync<PlaylistDto, TimeSpan>(entity, p => p.TotalDuration);
+        }
     }
-    public class PlaylistDto:EntityDto<Guid>,IMayHaveCreatorDto
+
+    public class PlaylistDto : EntityDto<Guid>, IMayHaveCreatorDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }

@@ -2,7 +2,6 @@
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Infrastructure.FileContainers;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.ObjectMapping;
 
@@ -47,9 +46,9 @@ namespace OeTube.Application.Dtos.Videos
             return destination;
             throw new NotImplementedException();
         }
-   
     }
-    public class VideoIndexImagesDto:EntityDto<Guid>
+
+    public class VideoIndexImagesDto : EntityDto<Guid>
     {
         public List<string> IndexImages { get; set; } = new List<string>();
         public string Selected = string.Empty;

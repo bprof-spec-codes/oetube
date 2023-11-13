@@ -3,7 +3,6 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities
 {
-
     public interface IReadOnlyEntitySet<TEntity, TKey> : IReadOnlyCollection<TEntity>
         where TEntity : IEntity, IHasAtomicKey<TKey>
         where TKey : notnull

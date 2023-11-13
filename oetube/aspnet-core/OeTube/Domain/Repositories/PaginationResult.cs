@@ -2,7 +2,7 @@
 
 namespace OeTube.Domain.Repositories
 {
-    public class PaginationResult<T>:IEnumerable<T>
+    public class PaginationResult<T> : IEnumerable<T>
     {
         public List<T> Items { get; set; } = new List<T>();
         public int CurrentPage { get; set; }

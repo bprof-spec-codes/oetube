@@ -27,5 +27,4 @@ namespace OeTube.Data.Repositories
             return queryable.Where(GetFilter(args));
         }
     }
-   
 }

@@ -1,5 +1,4 @@
 ﻿using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Infrastructure.FileContainers;
 
 namespace OeTube.Domain.Infrastructure.FFmpeg
 {
@@ -15,7 +14,7 @@ namespace OeTube.Domain.Infrastructure.FFmpeg
         public int Index { get; set; }
     }
 
-    public interface ISelectVideoFrameHandler:IFileHandler<SelectVideoFrameHandlerArgs>
+    public interface ISelectVideoFrameHandler : IFileHandler<SelectVideoFrameHandlerArgs>
     {
     }
 }

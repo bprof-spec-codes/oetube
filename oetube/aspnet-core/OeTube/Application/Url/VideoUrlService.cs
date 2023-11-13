@@ -2,8 +2,6 @@
 
 namespace OeTube.Application.Url
 {
-
-
     public class VideoUrlService : UrlService, ITransientDependency
     {
         public VideoUrlService(IHttpContextAccessor contextAccessor) : base(contextAccessor)
@@ -31,6 +29,7 @@ namespace OeTube.Application.Url
         {
             return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageAsync), new RouteTemplateParameter(id));
         }
+
         public string GetIndexImageByIndexUrl(Guid id, int index)
         {
             return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageByIndexAsync), new(id), new(index));

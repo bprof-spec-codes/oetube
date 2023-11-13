@@ -18,6 +18,4 @@ namespace OeTube.Application.Url
             return GetUrl<PlaylistAppService>(nameof(PlaylistAppService.GetThumbnailImageAsync), new RouteTemplateParameter(id));
         }
     }
-
-
 }

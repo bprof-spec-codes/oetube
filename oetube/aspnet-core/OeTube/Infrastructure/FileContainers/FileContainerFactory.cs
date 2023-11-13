@@ -1,12 +1,11 @@
-﻿using Volo.Abp.BlobStoring.FileSystem;
+﻿using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.BlobStoring;
-using OeTube.Domain.Infrastructure.FileContainers;
+using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FileContainers
 {
-
-    public class FileContainerFactory : IFileContainerFactory,ITransientDependency
+    public class FileContainerFactory : IFileContainerFactory, ITransientDependency
     {
         private readonly IBlobContainerFactory containerFactory;
         private readonly IBlobFilePathCalculator calculator;
@@ -25,8 +24,6 @@ namespace OeTube.Infrastructure.FileContainers
         public IFileContainer Create<TRelatedType>()
         {
             return new FileContainer(typeof(TRelatedType), containerFactory, calculator, provider);
-
         }
-
     }
 }

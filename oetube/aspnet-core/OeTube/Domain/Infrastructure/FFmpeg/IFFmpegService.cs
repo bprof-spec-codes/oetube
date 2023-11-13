@@ -1,6 +1,4 @@
-﻿using OeTube.Domain.Infrastructure.Videos;
-
-namespace OeTube.Domain.Infrastructure.FFmpeg
+﻿namespace OeTube.Domain.Infrastructure.FFmpeg
 {
     public interface IFFMpegService
     {

@@ -1,6 +1,5 @@
 ﻿using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
-using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Data.QueryExtensions
 {
@@ -17,7 +16,7 @@ namespace OeTube.Data.QueryExtensions
             return result;
         }
 
-        public static IQueryable<OeTubeUser> GetMembers(this OeTubeDbContext context,Group group)
+        public static IQueryable<OeTubeUser> GetMembers(this OeTubeDbContext context, Group group)
         {
             var explicitMembers = from member in context.Set<Member>()
                                   where member.GroupId == @group.Id
@@ -44,6 +43,5 @@ namespace OeTube.Data.QueryExtensions
 
             return context.Set<Member>().Concat(domainMembers).Distinct();
         }
-
     }
 }

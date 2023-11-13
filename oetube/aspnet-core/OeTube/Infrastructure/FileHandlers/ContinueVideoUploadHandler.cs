@@ -1,11 +1,9 @@
-﻿using OeTube.Configs;
-using OeTube.Domain.Configs;
+﻿using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Validators;
 using Volo.Abp.BackgroundJobs;
@@ -13,7 +11,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FileHandlers
 {
-    public class ContinueVideoUploadHandler : VideoUploadHandler<ContinueVideoUploadHandlerArgs>, IContinueVideoUploadHandler,ITransientDependency
+    public class ContinueVideoUploadHandler : VideoUploadHandler<ContinueVideoUploadHandlerArgs>, IContinueVideoUploadHandler, ITransientDependency
     {
         public ContinueVideoUploadHandler(IFileContainerFactory fileContainerFactory,
                                      IBackgroundJobManager backgroundJobManager,
@@ -21,7 +19,7 @@ namespace OeTube.Infrastructure.FileHandlers
                                      IFFProbeService ffprobeService,
                                      IVideoFileValidator videoFileValidator,
                                      IVideoRepository repository,
-                                     IVideoFileConfig config) : base(fileContainerFactory,backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
+                                     IVideoFileConfig config) : base(fileContainerFactory, backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
         {
         }
 

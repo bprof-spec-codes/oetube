@@ -1,8 +1,6 @@
-﻿using OeTube.Configs;
-using OeTube.Domain.Configs;
+﻿using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg;
-using OeTube.Domain.Infrastructure.Videos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
 
@@ -30,16 +28,17 @@ namespace OeTube.Application.Dtos.Videos
             destination.OutputFormat = _config.OutputFormat;
             destination.RemainingTasks = source.GetResolutionsBy(false)
                                                 .Select(_uploadTaskFactory.Create)
-                                                .Select(t=>new UploadTaskDto()
+                                                .Select(t => new UploadTaskDto()
                                                 {
-                                                    Width=t.Resolution.Width,
-                                                    Height=t.Resolution.Height,
-                                                    Arguments=t.Arguments
+                                                    Width = t.Resolution.Width,
+                                                    Height = t.Resolution.Height,
+                                                    Arguments = t.Arguments
                                                 })
                                                 .ToList();
             return destination;
         }
     }
+
     public class UploadTaskDto
     {
         public int Width { get; set; }

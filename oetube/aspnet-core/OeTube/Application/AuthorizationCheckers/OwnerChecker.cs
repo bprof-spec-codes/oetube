@@ -13,7 +13,7 @@ namespace OeTube.Application.AuthorizationCheckers
 
         public override Task CheckRightsAsync(object? requestedObject)
         {
-            if(requestedObject is OeTubeUser user&&user.Id!=CurrentUser.Id)
+            if (requestedObject is OeTubeUser user && user.Id != CurrentUser.Id)
             {
                 throw new InvalidOperationException();
             }

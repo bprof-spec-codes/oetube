@@ -1,12 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using OeTube.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
-using System.Linq.Expressions;
-using Volo.Abp.AspNetCore.Mvc.UI.Bundling.TagHelpers;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
@@ -16,7 +11,6 @@ using Volo.Abp.OpenIddict;
 
 namespace OeTube.Data.Repositories
 {
-
     public abstract class OeTubeRepository<TEntity, TKey, TIncluder, TFilter, TQueryArgs> : EfCoreRepository<OeTubeDbContext, TEntity, TKey>, ICustomRepository<TEntity, TKey, TQueryArgs>
        where TEntity : class, IEntity<TKey>
        where TQueryArgs : IQueryArgs
@@ -27,10 +21,9 @@ namespace OeTube.Data.Repositories
         {
         }
 
-   
         public override async Task<IQueryable<TEntity>> WithDetailsAsync()
         {
-            return Include<TEntity, TIncluder>(await GetQueryableAsync<TEntity>(),true);
+            return Include<TEntity, TIncluder>(await GetQueryableAsync<TEntity>(), true);
         }
 
         public async Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
@@ -43,17 +36,19 @@ namespace OeTube.Data.Repositories
         {
             return await GetManyAsync<TEntity, TKey, TIncluder>(ids, includeDetails, cancellationToken);
         }
+
         protected async Task<IQueryable<T>> GetQueryableAsync<T>()
             where T : class, IEntity
         {
             return (await GetDbContextAsync()).Set<T>();
         }
+
         protected async Task<DbSet<TSetEntity>> GetDbSetAsync<TSetEntity>()
         where TSetEntity : class, IEntity
         {
             return (await GetDbContextAsync()).Set<TSetEntity>();
         }
-    
+
         protected async Task<TCreator?> GetCreatorAsync<TCreatedEntity, TCreator, TCreatorIncluder>(TCreatedEntity entity, bool includeDetails = true, CancellationToken cancellationToken = default)
         where TCreatedEntity : class, IEntity, IMayHaveCreator
         where TCreator : class, IEntity<Guid>
@@ -71,6 +66,7 @@ namespace OeTube.Data.Repositories
             var entity = await queryable.FirstOrDefaultAsync(e => e.Id!.Equals(id), cancellationToken);
             return entity ?? throw new EntityNotFoundException(typeof(TGetEntity), id);
         }
+
         protected IQueryable<TIncludedEntity> Include<TIncludedEntity, TEntityIncluder>(IQueryable<TIncludedEntity> queryable, bool includeDetails)
           where TIncludedEntity : class, IEntity
           where TEntityIncluder : IIncluder<TIncludedEntity>
@@ -82,6 +78,7 @@ namespace OeTube.Data.Repositories
             }
             return queryable;
         }
+
         protected async Task<PaginationResult<TListEntity>> CreateListAsync<TListEntity>(IQueryable<TListEntity> queryable,
                                                                                         IQueryArgs? args,
                                                                                         CancellationToken cancellationToken)
@@ -110,7 +107,6 @@ namespace OeTube.Data.Repositories
             queryable = queryable.Skip(page * itemPerPage);
             queryable = queryable.Take(itemPerPage);
 
-
             var items = await queryable.ToListAsync(cancellationToken);
             return new PaginationResult<TListEntity>()
             {
@@ -131,6 +127,7 @@ namespace OeTube.Data.Repositories
             queryable = Include<TListEntity, TEntityIncluder>(queryable, includeDetails);
             return await CreateListAsync(queryable, args, cancellationToken);
         }
+
         protected async Task<PaginationResult<TListEntity>> CreateListAsync<TListEntity, TEntityIncluder, TEntityFilter, TEntityQueryArgs>
             (IQueryable<TListEntity> queryable, TEntityQueryArgs? args, bool includeDetails = false, CancellationToken cancellationToken = default)
             where TListEntity : class, IEntity
@@ -145,6 +142,7 @@ namespace OeTube.Data.Repositories
             }
             return await CreateListAsync<TListEntity, TEntityIncluder>(queryable, args, includeDetails, cancellationToken);
         }
+
         protected async Task<List<TManyEntity>> GetManyAsync<TManyEntity, TEntityKey, TEntityIncluder>
         (IEnumerable<TEntityKey> ids, bool includeDetails, CancellationToken cancellationToken)
            where TManyEntity : class, IEntity<TEntityKey>
@@ -159,6 +157,5 @@ namespace OeTube.Data.Repositories
 
             return await queryable.ToListAsync(cancellationToken);
         }
-
     }
 }

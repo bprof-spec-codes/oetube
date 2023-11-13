@@ -10,7 +10,7 @@ namespace OeTube.Data.Repositories.Videos
         protected override Expression<Func<Video, bool>> GetFilter(IVideoQueryArgs args)
         {
             return video =>
-                (args.CreatorId==null||video.CreatorId==args.CreatorId)&&
+                (args.CreatorId == null || video.CreatorId == args.CreatorId) &&
                 (string.IsNullOrEmpty(args.Name) || video.Name.Contains(args.Name)) &&
                 (args.CreationTimeMin == null || args.CreationTimeMin <= video.CreationTime) &&
                 (args.CreationTimeMax == null || args.CreationTimeMax >= video.CreationTime) &&

@@ -4,7 +4,6 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application.Url
 {
-
     public class UrlService : ITransientDependency
     {
         private readonly IHttpContextAccessor contextAccessor;

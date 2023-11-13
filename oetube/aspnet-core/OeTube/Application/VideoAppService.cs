@@ -16,8 +16,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
-
-    public class VideoAppService : IApplicationService,ITransientDependency
+    public class VideoAppService : IApplicationService, ITransientDependency
     {
         private readonly VideoMethodFactory _factory;
         private readonly Type _creatorAuth = typeof(CreatorChecker);
@@ -33,41 +32,48 @@ namespace OeTube.Application
             return await _factory.CreateCreateMethod<StartVideoUploadDto, VideoUploadStateDto>()
                                  .CreateAsync(input);
         }
+
         public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, ContinueVideoUploadDto input)
         {
             return await _factory.CreateUpdateMethod<ContinueVideoUploadDto, VideoUploadStateDto>()
                                  .SetAuthorizationAndPolicy(_creatorAuth)
                                  .UpdateAsync(id, input);
         }
+
         public async Task<VideoDto> GetAsync(Guid id)
         {
             return await _factory.CreateGetMethod<VideoDto>()
                                  .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetAsync(id);
         }
+
         public async Task<PaginationDto<VideoListItemDto>> GetListAsync(VideoQueryDto input)
         {
             return await _factory.CreateGetListMethod<VideoListItemDto>()
                                  .GetListAsync(input);
         }
+
         public async Task<PaginationDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
         {
             return await _factory.CreateGetChildrenListMethod<Group, IGroupQueryArgs, GroupListItemDto>()
                                  .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetChildrenListAsync(id, input);
         }
+
         public async Task<VideoIndexImagesDto> GetIndexImagesAsync(Guid id)
         {
             return await _factory.CreateGetMethod<VideoIndexImagesDto>()
                                  .SetAuthorizationAndPolicy(_creatorAuth)
                                  .GetAsync(id);
         }
-        public async Task<VideoDto> UpdateAsync(Guid id,UpdateVideoDto input)
+
+        public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
             return await _factory.CreateUpdateMethod<UpdateVideoDto, VideoDto>()
                                  .SetAuthorizationAndPolicy(_creatorAuth)
                                  .UpdateAsync(id, input);
         }
+
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
@@ -111,6 +117,7 @@ namespace OeTube.Application
                                   .GetFileAsync(id, new FramePath(id, index));
         }
     }
+
     public class VideoMethodFactory : ApplicationMethodFactory<IVideoRepository, Video, Guid, IVideoQueryArgs>, ITransientDependency
     {
         public VideoMethodFactory(IVideoRepository repository, IAbpLazyServiceProvider serviceProvider, IFileContainerFactory fileContainerFactory) : base(repository, serviceProvider, fileContainerFactory)

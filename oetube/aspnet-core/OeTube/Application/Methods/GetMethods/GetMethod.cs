@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using OeTube.Application.AuthorizationCheckers;
-using OeTube.Domain.Repositories.CustomRepository;
+﻿using OeTube.Domain.Repositories.CustomRepository;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
 
 namespace OeTube.Application.Methods.GetMethods
 {
@@ -15,7 +12,7 @@ namespace OeTube.Application.Methods.GetMethods
     public class GetMethod<TEntity, TKey, TOutputDto> :
             GetBaseMethod<TEntity, TKey>, IGetMethod<TKey, TOutputDto> where TEntity : class, IEntity<TKey>
     {
-        public GetMethod(IAbpLazyServiceProvider serviceProvider, IReadRepository<TEntity, TKey> repository) : base(serviceProvider,repository)
+        public GetMethod(IAbpLazyServiceProvider serviceProvider, IReadRepository<TEntity, TKey> repository) : base(serviceProvider, repository)
         {
         }
 
