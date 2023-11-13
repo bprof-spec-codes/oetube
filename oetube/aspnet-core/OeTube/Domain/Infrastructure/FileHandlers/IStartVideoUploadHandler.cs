@@ -9,9 +9,10 @@ namespace OeTube.Domain.Infrastructure.FileHandlers
         public string? Description { get; set; }
         public AccessType Access { get; set; }
         public Guid? CreatorId { get; set; }
+        public ByteContent? Content { get; set; }
     }
 
-    public interface IStartVideoUploadHandler : IContentFileHandler<StartVideoUploadHandlerArgs, Video>
+    public interface IStartVideoUploadHandler : IFileHandler<StartVideoUploadHandlerArgs, Video>
     {
 
 
