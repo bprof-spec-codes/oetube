@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
+import { ItemPerPage } from '@proxy/domain/repositories/query-args';
 
 @Component({
   selector: 'app-video-grid',
@@ -28,7 +29,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({name:searchPhrase,itemPerPage:100})
+      .getList({name:searchPhrase,itemPerPage:ItemPerPage.P50,page:0})
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;
