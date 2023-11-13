@@ -2,19 +2,10 @@
 using System.Reflection;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Application.Services.Url
+namespace OeTube.Application.Url
 {
 
-    public interface IUrlService
-    {
-        string BaseUrl { get; }
-
-        string GetUrl(string template, params RouteTemplateParameter[] parameters);
-
-        string? GetUrl<T>(string methodName, params RouteTemplateParameter[] parameters);
-    }
-
-    public class UrlService : ITransientDependency, IUrlService
+    public class UrlService : ITransientDependency
     {
         private readonly IHttpContextAccessor contextAccessor;
 

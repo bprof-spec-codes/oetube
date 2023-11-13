@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace OeTube.Application.Services.Url
+namespace OeTube.Application.Url
 {
     public struct RouteTemplateParameter
     {

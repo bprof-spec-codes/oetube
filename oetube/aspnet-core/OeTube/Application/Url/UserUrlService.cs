@@ -1,8 +1,8 @@
 ﻿using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Application.Services.Url
+namespace OeTube.Application.Url
 {
-    public class UserUrlService : UrlService, IImageUrlService,ITransientDependency
+    public class UserUrlService : UrlService, ITransientDependency
     {
         public UserUrlService(IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
@@ -19,5 +19,5 @@ namespace OeTube.Application.Services.Url
         }
     }
 
- 
+
 }

@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Application.Services.Url
+namespace OeTube.Application.Url
 {
-    public class GroupUrlService :UrlService, IImageUrlService,ITransientDependency
+    public class GroupUrlService : UrlService, ITransientDependency
     {
         public GroupUrlService(IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
@@ -20,5 +20,5 @@ namespace OeTube.Application.Services.Url
         }
     }
 
- 
+
 }

@@ -1,18 +1,10 @@
 ﻿using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Application.Services.Url
+namespace OeTube.Application.Url
 {
 
 
-    public interface IVideoUrlService:IUrlService
-    {
-        string GetHlsListUrl(Guid id, int width, int height);
-        string GetHlsSegmentUrl(Guid id, int width, int height, int segment);
-        string GetIndexImageByIndexUrl(Guid id, int index);
-        string GetIndexImageUrl(Guid id);
-
-    }
-    public class VideoUrlService : UrlService, IVideoUrlService, ITransientDependency
+    public class VideoUrlService : UrlService, ITransientDependency
     {
         public VideoUrlService(IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
@@ -41,7 +33,7 @@ namespace OeTube.Application.Services.Url
         }
         public string GetIndexImageByIndexUrl(Guid id, int index)
         {
-            return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageByIndexAsync), new(id),new(index));
+            return GetUrl<VideoAppService>(nameof(VideoAppService.GetIndexImageByIndexAsync), new(id), new(index));
         }
     }
 }
