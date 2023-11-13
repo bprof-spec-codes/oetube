@@ -9,12 +9,7 @@ namespace OeTube.Domain.Repositories
 {
     public interface IUserRepository :
         ICustomRepository<OeTubeUser, Guid, IUserQueryArgs>,
-        ICreatorRepository<OeTubeUser, Group, IGroupQueryArgs>,
-        ICreatorRepository<OeTubeUser, Video, IVideoQueryArgs>,
-        ICreatorRepository<OeTubeUser, Playlist, IPlaylistQueryArgs>,
-        IHasAccessiblityCreatorRepository<Video, IVideoQueryArgs>,
-        IHasAccessiblityCreatorRepository<Playlist, IPlaylistQueryArgs>
+        IChildQueryRepository<OeTubeUser, Guid, Group, IGroupQueryArgs>
     {
-        Task<PaginationResult<Group>> GetJoinedGroupsAsync(Guid userId, IGroupQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default);
     }
 }

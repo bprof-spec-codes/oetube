@@ -9,10 +9,12 @@ namespace OeTube.Domain.Repositories
     public interface IPlaylistRepository :
         ICustomRepository<Playlist, Guid, IPlaylistQueryArgs>,
         IMayHaveCreatorRepository<Playlist, Guid, OeTubeUser>,
-        IParentUpdateRepository<Playlist,Video>,
-        IParentReadRepository<Playlist,Video,IVideoQueryArgs>,
-        IHasAccessibilityRepository<Playlist, Guid, IPlaylistQueryArgs>
+        IParentUpdateRepository<Playlist, Video>,
+        IChildQueryAvaliableRepository<Playlist, Guid, Video, IVideoQueryArgs>,
+        IHasAccessRepository<Playlist, Guid>,
+        IQueryAvaliableRepository<Playlist, IPlaylistQueryArgs>
     {
-
+        Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId, Playlist playlist);
+        Task<TimeSpan> GetTotalDurationAsync(Playlist playlist);
     }
 }

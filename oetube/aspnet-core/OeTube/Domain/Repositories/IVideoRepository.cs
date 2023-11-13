@@ -9,9 +9,11 @@ namespace OeTube.Domain.Repositories
     public interface IVideoRepository :
         ICustomRepository<Video, Guid, IVideoQueryArgs>,
         IMayHaveCreatorRepository<Video, Guid, OeTubeUser>,
-        IParentUpdateRepository<Video,Group>,IParentReadRepository<Video,Group,IGroupQueryArgs>,
-        IHasAccessibilityRepository<Video, Guid, IVideoQueryArgs>
+        IParentUpdateRepository<Video,Group>,
+        IChildQueryRepository<Video,Guid,Group,IGroupQueryArgs>,
+        IQueryAvaliableRepository<Video,  IVideoQueryArgs>,
+        IHasAccessRepository<Video,Guid>
     {
-        Task<PaginationResult<Video>> GetUncompletedVideosAsync(TimeSpan? old = null, IQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default);
+        Task<PaginationResult<Video>> GetUncompletedVideosAsync(TimeSpan old = default, IQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default);
     }
 }
