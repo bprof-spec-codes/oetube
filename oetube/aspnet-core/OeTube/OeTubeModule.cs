@@ -60,6 +60,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Volo.Abp.Imaging;
 using SixLabors.ImageSharp.Formats.Webp;
 using Volo.Abp.Caching;
+using Volo.Abp.Content;
 
 namespace OeTube;
 
@@ -288,7 +289,12 @@ namespace OeTube;
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(typeof(StartVideoUploadDto));
+            var remoteStreamDtos = Assembly.GetExecutingAssembly().GetTypes()
+                                    .Where(t => t.Name.EndsWith("Dto") && t.GetProperties().Any(p => p.PropertyType == typeof(IRemoteStreamContent)));
+            foreach (var item in remoteStreamDtos)
+            {
+                options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(item);
+            }
             options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly, opts =>
             {
 
