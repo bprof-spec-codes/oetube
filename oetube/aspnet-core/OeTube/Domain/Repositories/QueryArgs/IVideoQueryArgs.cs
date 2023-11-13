@@ -7,6 +7,7 @@
          DateTime? CreationTimeMax { get; set; }
          TimeSpan? DurationMin { get; set; }
          TimeSpan? DurationMax { get; set; }
+         Guid? CreatorId { get; set; }
     }
     public class VideoQueryArgs:QueryArgs,IVideoQueryArgs
     {
@@ -15,5 +16,6 @@
         public virtual DateTime? CreationTimeMax { get; set; }
         public virtual TimeSpan? DurationMin { get; set; }
         public virtual TimeSpan? DurationMax { get; set; }
+        public Guid? CreatorId { get; set; }
     }
 }

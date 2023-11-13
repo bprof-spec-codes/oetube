@@ -11,6 +11,7 @@ namespace OeTube.Data.Repositories.Playlists
         protected override Expression<Func<Playlist, bool>> GetFilter(IPlaylistQueryArgs args)
         {
             return playlist =>
+                (args.CreatorId==null||args.CreatorId==playlist.CreatorId)&&
                 (string.IsNullOrWhiteSpace(args.Name) || playlist.Name.ToLower().Contains(args.Name.ToLower())) &&
                 (args.CreationTimeMin == null || args.CreationTimeMin <= playlist.CreationTime) &&
                 (args.CreationTimeMax == null || args.CreationTimeMax >= playlist.CreationTime);
