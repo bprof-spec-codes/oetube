@@ -7,15 +7,16 @@
             <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
         </div>
         <dxi-item>
-            <dx-file-uploader #fileUploader uploadMode="useForm" multiple="false" ></dx-file-uploader>
+            <dx-file-uploader  #fileUploader uploadMode="useForm" [allowedFileExtensions]="['mp4']" [accept]="'video/mp4'" multiple="false" ></dx-file-uploader>
         </dxi-item>
         <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
     </dx-form>
 </form>
-
+<app-group-pagination-grid   [height]="700"></app-group-pagination-grid>
 <div class="mt-3">
     <dx-progress-bar [value]="progress" max="1"></dx-progress-bar>
     <p>
        <em> {{ log?.message }} </em>
     </p>
 </div>
+

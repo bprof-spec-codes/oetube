@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms'
 import { DxFileUploaderComponent } from 'devextreme-angular';
 import { AccessType } from '@proxy/domain/entities/videos';
+import { GroupService } from '@proxy/application';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -29,7 +30,7 @@ export class UploadComponent implements OnInit {
     useSubmitBehavior:true
   }
 
-  constructor(private videoService: VideoService, private ffService: FFService) {}
+  constructor(private videoService: VideoService, private ffService: FFService, groupService:GroupService) {}
   subscription: any;
   ngOnInit(): void {
     
@@ -71,8 +72,8 @@ export class UploadComponent implements OnInit {
         nextTask.arguments
       );
       const resized = new FormData();
-      resized.append('input', resizedFile, resizedFile.name);
-      state = await firstValueFrom(this.videoService.continueUpload(state.id, resized));
+      resized.append('content', resizedFile, resizedFile.name);
+      state = await firstValueFrom(this.videoService.continueUpload(state.id, {content:resized}));
     }
   event.preventDefault();
 
