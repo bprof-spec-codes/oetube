@@ -2,13 +2,14 @@
 using OeTube.Application;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using Volo.Abp.Application.Services;
 
 namespace OeTube.Swagger
 {
     public class OetubeFirstComparer : IComparer<KeyValuePair<string,OpenApiPathItem>>
     {
         private static readonly HashSet<string> AppServices = Assembly.GetExecutingAssembly().GetTypes()
-                                                         .Where(t =>!t.IsAbstract && t.GetInheritanceChain().Contains(typeof(CustomAppService)))
+                                                         .Where(t =>t.GetInterface(typeof(IApplicationService).Name) is not null)
                                                          .Select(t => t.Name.Replace("AppService", "")).ToHashSet();
 
         private bool IsAppService(KeyValuePair<string,OpenApiPathItem> path)
