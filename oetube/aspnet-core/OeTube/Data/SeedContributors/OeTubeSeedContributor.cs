@@ -66,7 +66,7 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task SeedMembersAsync(Group group, params Guid[] memberIds)
         {
-            await _groupRepository.UpdateChildEntitiesAsync(group,memberIds,true);
+            await _groupRepository.UpdateChildrenAsync(group,memberIds,true);
         }
 
         [UnitOfWork]
