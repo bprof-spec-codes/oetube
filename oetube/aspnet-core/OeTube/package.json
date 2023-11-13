@@ -4,5 +4,8 @@
   "private": true,
   "dependencies": {
     "@abp/aspnetcore.mvc.ui.theme.leptonxlite": "~2.3.2"
+  },
+  "devDependencies": {
+    "devextreme-themebuilder": "22.1.11"
   }
 }

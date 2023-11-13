@@ -6,6 +6,9 @@ import { UploadComponent } from './upload.component';
 import { FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule, DxFormModule } from 'devextreme-angular';
 import { PaginationGridModule } from '../pagination-grid/pagination-grid.module';
+import { DxRadioGroupModule } from "devextreme-angular";
+
+
 
 @NgModule({
   declarations: [
@@ -13,6 +16,7 @@ import { PaginationGridModule } from '../pagination-grid/pagination-grid.module'
   ],
   imports: [
     CommonModule,
+    DxRadioGroupModule,
     UploadRoutingModule,
     FormsModule,
     DxFormModule,

@@ -66,6 +66,7 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
+    "devextreme-themebuilder": "22.1.11",
     "eslint": "^8.23.0",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",
