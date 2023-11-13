@@ -1,30 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { SETTING_MANAGEMENT_VISIBLE_PROVIDERS } from '@abp/ng.setting-management/config';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupService,OeTubeUserService } from '@proxy/application';
-import { PaginationDto } from '@proxy/application/dtos';
 import { CreateUpdateGroupDto, GroupQueryDto } from '@proxy/application/dtos/groups';
-import { UserListItemDto, UserQueryDto } from '@proxy/application/dtos/oe-tube-users';
-import { VideoQueryDto } from '@proxy/application/dtos/videos';
+import { ValueChangedEvent } from 'devextreme/ui/calendar';
 
 @Component({
   selector: 'app-group-create',
   templateUrl: './group-create.component.html',
   styleUrls: ['./group-create.component.scss']
 })
-export class GroupCreateComponent implements OnInit {
+export class GroupCreateComponent implements OnInit, OnDestroy {
   submitButtonOptions={
     text:"Submit",
     useSubmitBehavior:true
   }
-  
+
+  imageFile:File
+  selectedItems:{id:string}[]=[]
+
   model:CreateUpdateGroupDto={
     name:"",
     description:"",
-    emailDomains:["string"],
-    members:[],
+    emailDomains:[],
+    members:new Array<string>(),
+    image:null
   }
-
-  newEmailDomain:string="test"
-  selectedUsers:Array<UserListItemDto>
+  
 
   constructor(public groupService:GroupService,public userService:OeTubeUserService) {
   }
@@ -33,14 +34,26 @@ export class GroupCreateComponent implements OnInit {
   ngOnInit(): void {
     ;
   }
-
-  buttonDisabled(){
-    return this.newEmailDomain==""||this.model.emailDomains.includes(this.newEmailDomain)
+  ngOnDestroy(): void {
+    ;
   }
-  addNewEmailDomain(){
-    this.model.emailDomains.push(this.newEmailDomain)
+  onImageChanged(event:File){
+    this.imageFile=event
+    console.log( this.imageFile)
+
   }
 
   async onSubmit(event:Event){
+    if(this.imageFile!=undefined){
+      this.model.image=new FormData()
+      this.model.image.append('image', this.imageFile, this.imageFile.name);
+    }
+    this.model.members=[]
+    this.selectedItems.forEach(i=>this.model.members.push(i.id))
+    
+    this.groupService.create(this.model).subscribe()
+  }
+  test(){
+  
   }
 }

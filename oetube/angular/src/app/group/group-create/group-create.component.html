@@ -1,19 +1,52 @@
 <form (submit)="onSubmit($event)">
-    <dx-form [formData]="model">
-            <dxi-item dataField="name" [isRequired]="true"></dxi-item>
-            <dxi-item dataField="description" editorType="dxTextArea"></dxi-item>
-    </dx-form>
-    <div class="d-flex flex-row">
-        <div class="w-25">
-            <app-user-pagination-grid [selectedItems]="selectedUsers" [showId]="false" [showCreationTime]="false">
-            </app-user-pagination-grid>
+    <div class="dx-fieldset">
+        <div class="dx-fieldset-header">
+            Group Details
         </div>
-        <div class="w-25">
-            <dx-text-box [(value)]="newEmailDomain"></dx-text-box>
-            <dx-button (click)="addNewEmailDomain()">Add</dx-button>
-            <dx-list  height="200px" [dataSource]="model.emailDomains" allowItemDeleting=true itemDeleteMode="swipe">
-            </dx-list>
+        <div class="dx-field">
+            <div class="dx-field-label" >Name</div>
+            <div class="dx-field-value">
+                <dx-text-box [(value)]="model.name" maxLength="100">
+                    <dx-validator>
+                        <dxi-validation-rule type="required"/>
+                        <dxi-validation-rule type="stringLength" [min]="3"/>
+                    </dx-validator>
+                </dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Description</div>
+            <div class="dx-field-value">
+                <dx-text-area [(value)]="model.description" maxLength="1000" height="300">
+                    <dx-validator>
+                        <dxi-validation-rule type="stringLength" [max]="1000"/>
+                    </dx-validator>
+                </dx-text-area>
+            </div>
+        </div>
+        <app-image-uploader (imageFileChanged)="onImageChanged($event)"></app-image-uploader>
+    </div>
+    <div class="dx-fieldset">
+        <div class="dx-fieldset-header">
+            Members
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Email Domains</div>
+            <div class="dx-field-value">
+                <dx-tag-box  [(value)]="model.emailDomains" acceptCustomValue="true" >
+                </dx-tag-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Specific Users</div>
+            <div class="dx-field-value">
+                <app-user-pagination-grid 
+                                       
+                                          [height]="700"
+                                          [selectedItems]="selectedItems"/>
+            </div>
         </div>
     </div>
-    <dx-button onClick="onSubmit($event)"></dx-button>
+    <dx-button text="Create" [useSubmitBehavior]="true"></dx-button>
 </form>     
+
