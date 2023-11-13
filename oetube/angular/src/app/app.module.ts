@@ -15,8 +15,6 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { environment } from '../environments/environment';
 import { registerLocale } from '@abp/ng.core/locale';
-import { GroupComponent } from './group/group.component';
-import { GroupCreateComponent } from './group/group-create/group-create.component';
 
 @NgModule({
   imports: [
