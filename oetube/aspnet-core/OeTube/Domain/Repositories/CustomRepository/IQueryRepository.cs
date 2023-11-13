@@ -10,4 +10,13 @@ namespace OeTube.Domain.Repositories.CustomRepository
     {
         Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
     }
+    public interface IQueryAvaliableRepository<TEntity, TQueryArgs> : IQueryRepository<TEntity, TQueryArgs>
+    where TEntity : class, IEntity
+    where TQueryArgs : IQueryArgs
+    {
+        Task<PaginationResult<TEntity>> GetAvaliableAsync(Guid? requesterId,
+                                              TQueryArgs? args = default,
+                                              bool includeDetails = false,
+                                              CancellationToken cancellationToken = default);
+    }
 }

@@ -6,7 +6,7 @@ namespace OeTube.Domain.Repositories.CustomRepository
         where TParentEntity : class, IEntity
         where TChildEntity : class, IEntity
     {
-        public Task<TParentEntity> UpdateChildEntitiesAsync(TParentEntity entity,
+        public Task<TParentEntity> UpdateChildrenAsync(TParentEntity entity,
                                                            IEnumerable<TChildEntity> childEntities,
                                                            bool autoSave = false,
                                                            CancellationToken cancellationToken = default);
@@ -15,7 +15,7 @@ namespace OeTube.Domain.Repositories.CustomRepository
     public interface IParentUpdateRepositoryByKey<TParentEntity,TChildKey>
         where TParentEntity : class, IEntity
     {
-        public Task<TParentEntity> UpdateChildEntitiesAsync(TParentEntity entity,
+        public Task<TParentEntity> UpdateChildrenAsync(TParentEntity entity,
                                                 IEnumerable<TChildKey> childIds,
                                                 bool autoSave = false,
                                                 CancellationToken cancellationToken = default);

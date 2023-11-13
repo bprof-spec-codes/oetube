@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 namespace OeTube.Domain.Repositories.CustomRepository
 {
     public interface ICustomRepository<TEntity, TKey, TQueryArgs> :
-        IInsertRepository<TEntity, TKey>,
+        IInsertRepository<TEntity>,
         IUpdateRepository<TEntity, TKey>,
         IReadRepository<TEntity, TKey>,
         IQueryRepository<TEntity, TQueryArgs>,
