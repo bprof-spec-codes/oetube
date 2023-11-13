@@ -26,7 +26,7 @@ namespace OeTube.Workers
             PaginationResult<Video> videos;
             var args = new QueryArgs()
             {
-                ItemPerPage = 100
+                ItemPerPage = ItemPerPage.P100
             };
             do
             {
