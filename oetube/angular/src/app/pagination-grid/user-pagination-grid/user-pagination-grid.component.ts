@@ -4,7 +4,7 @@ import { UserListItemDto, UserQueryDto } from '@proxy/application/dtos/oe-tube-u
 import { LoadOptions } from 'devextreme/data';
 import DataSource from 'devextreme/data/data_source';
 import { PaginationGridComponent } from '../pagination-grid.component';
-import { DxDataGridComponent } from 'devextreme-angular';
+
 
 
 
@@ -23,8 +23,9 @@ export class UserPaginationGridComponent extends
 @Input() showCreationTime:boolean=true
 @Input() showEmailDomain:boolean=true
 
-  dataSource: DataSource
 
+  dataSource: DataSource
+  
 
   constructor(userService: OeTubeUserService) {
     super()
@@ -32,9 +33,9 @@ export class UserPaginationGridComponent extends
   }
 
   handleFilter(options: LoadOptions): void {
-    this.listArgs.name = this.findFilterValue(options.filter, "contains", "name")
-    this.listArgs.emailDomain = this.findFilterValue(options.filter, "contains", "emailDomain")
-    this.listArgs.creationTimeMin = this.findFilterValue(options.filter, ">=", "creationTime")
-    this.listArgs.creationTimeMax = this.findFilterValue(options.filter, "<", "creationTime")
+    this.queryArgs.name = this.findFilterValue(options.filter, "contains", "name")
+    this.queryArgs.emailDomain = this.findFilterValue(options.filter, "contains", "emailDomain")
+    this.queryArgs.creationTimeMin = this.findFilterValue(options.filter, ">=", "creationTime")
+    this.queryArgs.creationTimeMax = this.findFilterValue(options.filter, "<", "creationTime")
   }
 }

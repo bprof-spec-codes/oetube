@@ -1,5 +1,5 @@
-<dx-data-grid #dataGrid [dataSource]="dataSource" [(selectedRowKeys)]="selectedItems" [remoteOperations]="true" cacheEnabled="true" class="data-grid"
-     showBorders="true" [height]="600" [allowColumnResizing]="true">
+<dx-data-grid #dataGrid [dataSource]="dataSource" [selectedRowKeys]="selectedItems"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
+     showBorders="true" [height]="height" [width]="width" [allowColumnResizing]="true">
     <dxo-paging></dxo-paging>
     <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
         showNavigationButtons="true" showPageSizeSelector="true">
