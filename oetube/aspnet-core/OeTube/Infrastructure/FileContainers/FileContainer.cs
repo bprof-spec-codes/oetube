@@ -102,14 +102,13 @@ namespace OeTube.Infrastructure.FileContainers
             await _container.SaveAsync(path.GetPath(content.Format), content.Bytes, false, cancellationToken);
         }
 
-        public async Task<ByteContent> GetFileOrDefault<TDefaultFilePath>(TDefaultFilePath path,CancellationToken cancellationToken=default)
+        public async Task<ByteContent> GetFileOrDefaultAsync<TDefaultFilePath>(TDefaultFilePath path,CancellationToken cancellationToken=default)
             where TDefaultFilePath:IDefaultFilePath
         {
             var result=await GetFileOrNullAsync(path,cancellationToken);
             if(result is null)
             {
-               var defaultFile=await GetDefaultFileOrNullAsync<TDefaultFilePath>(cancellationToken) ?? throw new ArgumentException(TDefaultFilePath.GetDefaultPath(), nameof(path));
-                return defaultFile;
+                return await GetDefaultFileAsync<TDefaultFilePath>(cancellationToken);
             }
             return result;
         }
@@ -120,6 +119,11 @@ namespace OeTube.Infrastructure.FileContainers
             if (result is null) return null;
             var stream = await _container.GetAsync(result, cancellationToken);
             return await ByteContent.FromStreamAsync(Path.GetExtension(result), stream, cancellationToken);
+        }
+        public async Task<ByteContent> GetDefaultFileAsync<TDefaultFilePath>(CancellationToken cancellationToken = default)
+            where TDefaultFilePath:IDefaultFilePath
+        {
+            return await GetDefaultFileOrNullAsync<TDefaultFilePath>(cancellationToken) ?? throw new ArgumentException(TDefaultFilePath.GetDefaultPath(), nameof(TDefaultFilePath));
         }
         public async Task SaveDefaultFileAsync<TDefaultFilePath>(ByteContent content,CancellationToken cancellationToken = default)
         where TDefaultFilePath:IDefaultFilePath
