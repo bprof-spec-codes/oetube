@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-@use 'devextreme/scss/bundles/dx.material.blue.light.scss';
+//@use 'devextreme/scss/bundles/dx.material.blue.light.scss';
+@import 'oetube-custom-scheme.css';
+
+nav{
+  color: white !important;
+}
 
 @keyframes donut-spin {
   0% {
@@ -28,4 +33,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.component-title{
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+.nav-link, .navbar-brand{
+  color: white !important;
+}
+
+#main-navbar{
+  background-color: #1D294D !important;
 }
