@@ -1,20 +1,16 @@
 <div class="container">
-  <div class="video-app">
-    <div class="video-player">
-      <app-video-wrapper [video]="video"></app-video-wrapper>
-      <app-control-bar></app-control-bar>
-    </div>
-  </div>
-  <div *ngIf="video !== undefined">
-    <h4>Name: {{ video.name }}</h4>
-    <h5>Description: {{ video.description }}</h5>
-    <h6>Id: {{ video.id }}</h6>
-    <h6>Duration: {{ video.duration }}</h6>
-    <h6>CreationTime: {{ video.creationTime | date : 'short' }}</h6>
-    <div>
-      <h5>Resolutions</h5>
-      <div *ngFor="let item of video.hlsResolutions">
-        <strong>{{ item.width }}x{{ item.height }}:</strong> {{ item.hlsList }}
+  <div class="row w-100 h-100">
+    <div class="col-9 col-video">
+      <div class="video-app">
+        <div class="video-player">
+          <app-video-wrapper [video]="video"></app-video-wrapper>
+          <app-control-bar></app-control-bar>
+        </div>
+      </div>
+      <div *ngIf="video !== undefined">
+        <h4 class="pt-3 pb-1">{{ video.name }}</h4>
+        <h6>{{ video.creatorId ?? 'Unknown' }}</h6>
+        <p class="pt-1">{{ video.description }}</p>
       </div>
     </div>
     <div class="col-3 col-videos">
@@ -24,25 +20,3 @@
 
   <div></div>
 </div>
-
-<!--
-<div class="video-app">
-        <div class="video-player">
-          <app-video-wrapper [video]="video"></app-video-wrapper>
-          <app-control-bar></app-control-bar>
-        </div>
-      </div>
-      <div *ngIf="video !== undefined">
-        <h4>Name: {{ video.name }}</h4>
-        <h5>Description: {{ video.description }}</h5>
-        <h6>Id: {{ video.id }}</h6>
-        <h6>Duration: {{ video.duration }}</h6>
-        <h6>CreationTime: {{ video.creationTime | date : 'short' }}</h6>
-        <div>
-          <h5>Resolutions</h5>
-          <div *ngFor="let item of video.resolutionsSrc">
-            <strong>{{ item.resolution.width }}x{{ item.resolution.height }}:</strong> {{ item.src }}
-          </div>
-        </div>
-      </div>
--->
