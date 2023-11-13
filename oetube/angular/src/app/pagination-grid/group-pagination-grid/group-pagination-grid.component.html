@@ -1,0 +1,36 @@
+<dx-data-grid #dataGrid [dataSource]="dataSource" [selectedRowKeys]="selectedItems"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
+     showBorders="true" [height]="height" [width]="width" [allowColumnResizing]="true">
+    <dxo-paging></dxo-paging>
+    <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
+        showNavigationButtons="true" showPageSizeSelector="true">
+    </dxo-pager>
+    <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+    <dxi-column [visible]="showThumbnailImage" dataField="thumbnailImage" caption="" [width]="100" cellTemplate="imageTemplate"
+        [allowSorting]="false" headerCellTemplate="" [allowFiltering]="false"
+        [allowResizing]="false">
+    </dxi-column>
+    <div *dxTemplate="let data of 'imageTemplate'">
+        <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
+    </div>
+
+    <dxi-column [visible]="showId" dataField="id" caption="ID" [allowSorting]="false" [allowFiltering]="false">
+    </dxi-column>
+
+    <dxi-column [visible]="showName" dataField="name" selectedFilterOperation="contains" [filterOperations]="[]" />
+    
+    <dxi-column [visible]="showTotalMembersCount" dataField="totalMembersCount" caption="Members" [allowFiltering]="false" [allowSorting]="false"  ></dxi-column>
+    
+    <dxi-column [visible]="showCreationTime" dataType="date" dataField="creationTime" selectedFilterOperation="between" [filterOperations]="[]" format="yyyy.MM.dd" caption="Creation Time"></dxi-column>
+    
+    <dxi-column [visible]="showCreator" dataField="creator" caption="Creator" cellTemplate="creatorTemplate" selectedFilterOperation="equals" [filterOperations]="[]"  [allowSorting]="false">
+    </dxi-column>
+    <div *dxTemplate="let data of 'creatorTemplate'" class="d-flex flex-column">
+        <div *ngIf="data.value">
+            <p>{{data.value.name}}</p>
+            <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value.thumbnailImage">
+        </div>
+    </div>
+    <dxi-column [visible]="showIsMember" dataField="currentUserIsMember" caption="Joined" [allowFiltering]="false" [allowSorting]="false"  ></dxi-column>
+</dx-data-grid>
