@@ -17,6 +17,14 @@ export class UploadComponent implements OnInit {
   progress: number;
   log:any
 
+  visibilityOptions = [
+    { text : "Public", value : "Public" },
+    { text : "Private", value : "Private"},
+    { text : "OE", value : "OE"},
+    { text : "Custom Group", value : "Custom Group"}]
+
+  selectedVisibility = this.visibilityOptions[0]
+
   startVideoUpload:StartVideoUploadDto={
     name:"",
     description:"",
@@ -25,7 +33,12 @@ export class UploadComponent implements OnInit {
   }
   submitButtonOptions={
     text:"Submit",
-    useSubmitBehavior:true
+    useSubmitBehavior:true,
+    type:"default"
+  }
+
+  selectFileUploadButtonOptions={
+    type:"default"
   }
 
   constructor(private videoService: VideoService, private ffService: FFService) {}

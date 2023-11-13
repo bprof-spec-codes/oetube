@@ -5,6 +5,8 @@ import { UploadRoutingModule } from './upload-routing.module';
 import { UploadComponent } from './upload.component';
 import { FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule, DxFormModule } from 'devextreme-angular';
+import { DxRadioGroupModule } from "devextreme-angular";
+
 
 @NgModule({
   declarations: [
@@ -12,6 +14,7 @@ import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,
   ],
   imports: [
     CommonModule,
+    DxRadioGroupModule,
     UploadRoutingModule,
     FormsModule,
     ReactiveFormsModule,
