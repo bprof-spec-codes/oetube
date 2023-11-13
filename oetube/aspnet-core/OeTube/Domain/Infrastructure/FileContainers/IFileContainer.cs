@@ -15,7 +15,8 @@ namespace OeTube.Domain.Infrastructure.FileContainers
         string? FindFile(IFilePath path);
         Task<ByteContent?> GetDefaultFileOrNullAsync<TDefaultFilePath>(CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
         IEnumerable<string> GetFiles(object key);
-        Task<ByteContent> GetFileOrDefault<TDefaultFilePath>(TDefaultFilePath path, CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
+        Task<ByteContent> GetFileOrDefaultAsync<TDefaultFilePath>(TDefaultFilePath path, CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
+        Task<ByteContent> GetDefaultFileAsync<TDefaultFilePath>(CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
     }
 
     public interface IFileContainer :IReadOnlyFileContainer
