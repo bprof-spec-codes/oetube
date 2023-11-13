@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OeTube.Data.QueryExtensions;
 using OeTube.Data.Repositories.Users;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
@@ -20,38 +21,24 @@ namespace OeTube.Data.Repositories.Groups
         public GroupRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
-        protected async Task<IQueryable<OeTubeUser>> GetGroupMembersAsync(Group group)
-        {
-            var explicitMembers = from member in await GetQueryableAsync<Member>()
-                                  where member.GroupId == @group.Id
-                                  join user in await GetQueryableAsync<OeTubeUser>()
-                                  on member.UserId equals user.Id
-                                  select user;
-
-            var domainMembers = from emailDomain in await GetQueryableAsync<EmailDomain>()
-                                where emailDomain.GroupId == @group.Id
-                                join user in await GetQueryableAsync<OeTubeUser>()
-                                on emailDomain.Domain equals user.EmailDomain
-                                where user.Id != @group.CreatorId
-                                select user;
-
-            return explicitMembers.Concat(domainMembers).Distinct();
-        }
         public async Task<bool> IsMemberAsync(Guid? userId, Group group)
         {
             if (userId is null) return false;
-            return (await GetGroupMembersAsync(group)).OrderBy(u => u.Id).FirstOrDefault(u => u.Id == userId) != null;
+            return (await GetDbContextAsync()).GetMembers(group)
+                                              .OrderBy(u => u.Id)
+                                              .FirstOrDefault(u => u.Id == userId) != null;
         }
         public async Task<int> GetMembersCountAsync(Group group,CancellationToken cancellationToken=default)
         {
-            return  await (await GetGroupMembersAsync(group)).CountAsync(cancellationToken);
+            return  await (await GetDbContextAsync()).GetMembers(group)
+                                                     .CountAsync(cancellationToken);
         }
         public async Task<OeTubeUser?> GetCreatorAsync(Group entity, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             return await GetCreatorAsync<Group, OeTubeUser, UserIncluder>(entity, includeDetails, cancellationToken);
         }
 
-        public async Task<Group> UpdateChildEntitiesAsync(Group entity, IEnumerable<Guid> childIds, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task<Group> UpdateChildrenAsync(Group entity, IEnumerable<Guid> childIds, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var users =await GetQueryableAsync<IdentityUser>();
             var membersList = await users.Where(u=>childIds.Contains(u.Id)).Select(u=>u.Id).ToListAsync(cancellationToken);
@@ -70,10 +57,11 @@ namespace OeTube.Data.Repositories.Groups
             return entity;
         }
 
-        public async Task<PaginationResult<OeTubeUser>> GetChildEntitiesAsync(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async Task<PaginationResult<OeTubeUser>> GetChildrenAsync(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
+            var queryable = (await GetDbContextAsync()).GetMembers(entity);
             return await CreateListAsync<OeTubeUser, UserIncluder, UserFilter, IUserQueryArgs>(
-                await GetGroupMembersAsync(entity), args, includeDetails, cancellationToken);
+                queryable, args, includeDetails, cancellationToken);
         }
     }
 }

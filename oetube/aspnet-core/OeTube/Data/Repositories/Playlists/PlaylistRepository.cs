@@ -1,4 +1,5 @@
-﻿using OeTube.Data.Repositories.Users;
+﻿using OeTube.Data.QueryExtensions;
+using OeTube.Data.Repositories.Users;
 using OeTube.Data.Repositories.Videos;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Playlists;
@@ -20,17 +21,40 @@ namespace OeTube.Data.Repositories.Playlists
         public PlaylistRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
+        private TimeSpan GetTotalDuration(IQueryable<Video> videos)
+        {
+            var totalSeconds = videos.Sum(v => v.Duration.TotalSeconds);
+            return TimeSpan.FromSeconds(totalSeconds);
+        }
+        public async Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId,Playlist playlist)
+        {
+            return GetTotalDuration((await GetDbContextAsync()).GetAvaliableVideos(requesterId, playlist));
+                      
+        }
+        public async Task<TimeSpan> GetTotalDurationAsync(Playlist playlist)
+        {
+            return GetTotalDuration((await GetDbContextAsync()).GetVideos(playlist));
+        }
 
         public async Task<PaginationResult<Playlist>> GetAvaliableAsync(Guid? requesterId, IPlaylistQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
+            var queryable = (await GetDbContextAsync()).GetAvaliablePlaylists(requesterId);
             return await CreateListAsync<Playlist, PlaylistIncluder, PlaylistFilter, IPlaylistQueryArgs>
-                (await GetAvaliablePlaylistsAsync(requesterId), args, includeDetails, cancellationToken);
+                (queryable, args, includeDetails, cancellationToken);
         }
 
-        public async Task<PaginationResult<Video>> GetChildEntitiesAsync(Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async Task<PaginationResult<Video>> GetAvaliableChildrenAsync(Guid? requesterId,Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
+            var queryable = (await GetDbContextAsync()).GetAvaliableVideos(requesterId, entity);
+            return await CreateListAsync<Video,VideoIncluder,VideoFilter,IVideoQueryArgs>
+                (queryable, args,includeDetails, cancellationToken);
+        }
+
+        public async Task<PaginationResult<Video>> GetChildrenAsync(Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = (await GetDbContextAsync()).GetVideos(entity);
             return await CreateListAsync<Video, VideoIncluder, VideoFilter, IVideoQueryArgs>
-                (await GetChildEntitiesAsync<Playlist, Guid, VideoItem, Video, Guid>(entity), args, includeDetails, cancellationToken);
+                (queryable, args, includeDetails, cancellationToken);
         }
 
         public async Task<OeTubeUser?> GetCreatorAsync(Playlist entity, bool includeDetails = false, CancellationToken cancellationToken = default)
@@ -40,10 +64,10 @@ namespace OeTube.Data.Repositories.Playlists
 
         public async Task<bool> HasAccessAsync(Guid? requesterId, Playlist entity)
         {
-            return await HasPlaylistAccessAsync(requesterId, entity);
+            return (await GetDbContextAsync()).HasAccess(requesterId, entity);
         }
 
-        public async Task<Playlist> UpdateChildEntitiesAsync(Playlist entity, IEnumerable<Video> childEntities, bool autoSave = false, CancellationToken cancellationToken = default)
+        public async Task<Playlist> UpdateChildrenAsync(Playlist entity, IEnumerable<Video> childEntities, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var videoItemsSet = await GetDbSetAsync<VideoItem>();
             childEntities = childEntities.Where(e => e.CreatorId == entity.CreatorId);
