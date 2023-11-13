@@ -11,7 +11,7 @@
                 
             </ng-container>
             <ng-template #elseTemplate>
-                <p class="center">No image uploaded</p>
+                <p class="center">No image selected</p>
             </ng-template>
         </div>
         <dx-file-uploader accept="image/*" [(value)]="files" (onValueChanged)="onValueChanged($event)"  #fileUploader uploadMode="useForm" multiple="false" ></dx-file-uploader>
