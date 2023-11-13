@@ -7,7 +7,7 @@ using Volo.Abp.Identity;
 
 namespace OeTube.Domain.Entities
 {
-    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime, IHasAtomicKey<Guid>, IHasName
+    public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? AboutMe { get; private set; }

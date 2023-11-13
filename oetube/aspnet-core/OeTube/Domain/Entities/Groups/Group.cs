@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>,IHasName
+    public class Group : AggregateRoot<Guid>, IHasCreationTime, IMayHaveCreator, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }

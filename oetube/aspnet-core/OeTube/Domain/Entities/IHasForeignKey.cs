@@ -2,13 +2,10 @@
 
 namespace OeTube.Domain.Entities
 {
-    public interface IHasForeignKey<TReferencedEntity,TKey>
-        where TReferencedEntity:IEntity<TKey>
+    public interface IChildEntityReference<TParentKey,TReferencedKey>
     {
-        public TKey ForeignKey { get; }
+        public TParentKey ParentKey { get; }
+        public TReferencedKey ReferencedKey { get; }
     }
-    public interface IHasName
-    {
-        public string Name { get; }
-    }
+ 
 }

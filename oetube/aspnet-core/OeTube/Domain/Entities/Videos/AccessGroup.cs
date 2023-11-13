@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class AccessGroup : Entity, IHasCreationTime, IHasAtomicKey<Guid>,IHasForeignKey<Group,Guid>,IHasForeignKey<Video,Guid>
+    public class AccessGroup : Entity, IHasCreationTime,IHasAtomicKey<Guid>, IChildEntityReference<Guid,Guid>
     {
         public Guid VideoId { get; private set; }
         public Guid GroupId { get; private set; }
@@ -12,9 +12,9 @@ namespace OeTube.Domain.Entities.Videos
 
         Guid IHasAtomicKey<Guid>.AtomicKey => GroupId;
 
-        Guid IHasForeignKey<Group, Guid>.ForeignKey => GroupId;
+        Guid IChildEntityReference<Guid, Guid>.ParentKey => VideoId;
 
-        Guid IHasForeignKey<Video, Guid>.ForeignKey => VideoId;
+        Guid IChildEntityReference<Guid, Guid>.ReferencedKey => GroupId;
 
         private AccessGroup()
         { }

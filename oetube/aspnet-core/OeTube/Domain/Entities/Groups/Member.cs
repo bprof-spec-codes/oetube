@@ -3,7 +3,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Groups
 {
-    public class Member : Entity, IHasCreationTime, IHasAtomicKey<Guid>,IHasForeignKey<Group,Guid>,IHasForeignKey<OeTubeUser,Guid>
+    public class Member : Entity, IHasCreationTime,IHasAtomicKey<Guid>, IChildEntityReference<Guid,Guid>
     {
         public Guid GroupId { get; private set; }
         public Guid UserId { get; private set; }
@@ -11,9 +11,9 @@ namespace OeTube.Domain.Entities.Groups
 
         Guid IHasAtomicKey<Guid>.AtomicKey => UserId;
 
-        Guid IHasForeignKey<Group, Guid>.ForeignKey => GroupId;
+        Guid IChildEntityReference<Guid, Guid>.ParentKey => GroupId;
 
-        Guid IHasForeignKey<OeTubeUser, Guid>.ForeignKey => UserId;
+        Guid IChildEntityReference<Guid, Guid>.ReferencedKey => UserId;
 
         private Member()
         { }

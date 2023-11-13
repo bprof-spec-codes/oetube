@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Playlists
 {
-    public class VideoItem : Entity, IHasAtomicKey<int>,IHasForeignKey<Playlist,Guid>,IHasForeignKey<Video,Guid>
+    public class VideoItem : Entity, IHasAtomicKey<int>
     {
         public Guid PlaylistId { get; private set; }
         public Guid VideoId { get; private set; }
@@ -12,9 +12,7 @@ namespace OeTube.Domain.Entities.Playlists
 
         int IHasAtomicKey<int>.AtomicKey => Order;
 
-        Guid IHasForeignKey<Playlist, Guid>.ForeignKey => PlaylistId;
 
-        Guid IHasForeignKey<Video, Guid>.ForeignKey => VideoId;
 
         private VideoItem()
         { }

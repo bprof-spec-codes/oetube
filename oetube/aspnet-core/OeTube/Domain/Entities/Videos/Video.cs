@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class Video : AggregateRoot<Guid>, IMayHaveCreator, IHasCreationTime, IHasAtomicKey<Guid>, IHasName
+    public class Video : AggregateRoot<Guid>, IMayHaveCreator, IHasCreationTime, IHasAtomicKey<Guid>
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }
