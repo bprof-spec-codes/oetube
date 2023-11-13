@@ -1,4 +1,4 @@
-﻿using OeTube.Application.Services.Url;
+﻿using OeTube.Application.Url;
 using OeTube.Domain.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
@@ -8,7 +8,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
 {
     public class UserListItemMapper : IObjectMapper<OeTubeUser, UserListItemDto>, ITransientDependency
     {
-        private readonly IImageUrlService _urlService;
+        private readonly UserUrlService _urlService;
 
         public UserListItemMapper(UserUrlService urlService)
         {

@@ -1,5 +1,5 @@
 ﻿using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Services.Url;
+using OeTube.Application.Url;
 using OeTube.Domain.Entities.Videos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
@@ -9,22 +9,16 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class VideoMapper : IObjectMapper<Video, VideoDto>, ITransientDependency
+    public class VideoMapper : AsyncNewDestinationObjectMapper<Video, VideoDto>, ITransientDependency
     {
-        private readonly IVideoUrlService _videoUrlService;
-        private readonly IObjectMapper<Guid?, CreatorDto?> _creatorMapper;
-        public VideoMapper(IVideoUrlService videoUrlService, IObjectMapper<Guid?, CreatorDto?> creatorMapper)
+        private readonly VideoUrlService _videoUrlService;
+        private readonly CreatorDtoMapper _creatorMapper;
+        public VideoMapper(VideoUrlService videoUrlService, CreatorDtoMapper creatorMapper)
         {
             _videoUrlService = videoUrlService;
             _creatorMapper = creatorMapper;
         }
-
-        public VideoDto Map(Video source)
-        {
-            return Map(source, new VideoDto());
-        }
-
-        public VideoDto Map(Video source, VideoDto destination)
+        public override async Task<VideoDto> MapAsync(Video source, VideoDto destination)
         {
             destination.Id = source.Id;
             destination.AccessGroups = source.AccessGroups.Select(ag => ag.GroupId).ToList();
@@ -37,15 +31,20 @@ namespace OeTube.Application.Dtos.Videos
             destination.PlaylistId = null;
             destination.HlsResolutions = source.GetResolutionsBy(true).Select(r => new HlsResolutionDto()
             {
-                Width=r.Width,
-                Height=r.Height,
+                Width = r.Width,
+                Height = r.Height,
                 HlsList = _videoUrlService.GetHlsListUrl(source.Id, r.Width, r.Height)
             }).ToList();
-            destination.Creator = _creatorMapper.Map(source.CreatorId);
+            destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             return destination;
         }
     }
- 
+    public class HlsResolutionDto
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public string HlsList { get; set; } = string.Empty;
+    }
     public class VideoDto:EntityDto<Guid>,IMayHaveCreatorDto
     {
         public List<HlsResolutionDto> HlsResolutions { get; set; } = new();

@@ -1,4 +1,5 @@
-﻿using OeTube.Application.Services.Url;
+﻿using OeTube.Application.Caches;
+using OeTube.Application.Url;
 using OeTube.Data.Repositories.Users;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Repositories;
@@ -13,47 +14,56 @@ namespace OeTube.Application.Dtos.OeTubeUsers
     {
         CreatorDto? Creator { get; set; }
     }
-    public class CreatorDtoMapper : IObjectMapper<Guid?, CreatorDto?>,ITransientDependency
+    public class CreatorDtoMapper : AsyncNewDestinationObjectMapper<Guid?, CreatorDto?>,ITransientDependency
     {
-        private readonly IImageUrlService _urlService;
-        private readonly IUserRepository _userRepository;
+        private readonly UserUrlService _urlService;
         private readonly ICurrentUser _currentUser;
-        public CreatorDtoMapper(UserUrlService urlService, IUserRepository userRepository, ICurrentUser currentUser)
+        private readonly UserCacheService _cacheService;
+
+        public CreatorDtoMapper(UserUrlService urlService, IUserRepository userRepository, ICurrentUser currentUser,UserCacheService cacheService)
         {
             _urlService = urlService;
-            _userRepository = userRepository;
             _currentUser = currentUser;
+            _cacheService = cacheService.ConfigureCreatorName(userRepository);
         }
 
-        public CreatorDto? Map(Guid? source)
+        public override async Task<CreatorDto?> MapAsync(Guid? source, CreatorDto? destination)
         {
-            if(source is null)
+            if (source is null || destination is null)
             {
                 return null;
             }
             else
             {
-                return Map(source, new CreatorDto());
-            }
-        }
-
-        public CreatorDto? Map(Guid? source, CreatorDto? destination)
-        {
-            if(source is null||destination is null)
-            {
-                return null;
-            }
-            else
-            {
-                var user = _userRepository.GetAsync(source.Value, false).Result;
                 destination.Id = source.Value;
-                destination.Name = user.Name;
-                destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(user.Id);
+                destination.Name =await _cacheService.GetOrAddCreatorNameAsync(source.Value);
+                destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(source.Value);
                 destination.CurrentUserIsCreator = _currentUser.Id is not null && _currentUser.Id == source;
                 return destination;
             }
         }
     }
+    public static class CreatorCacheExtension
+    {
+        public static UserCacheService ConfigureCreatorName(this UserCacheService cacheService,IUserRepository repository)
+        {
+            cacheService.GlobalDtoCache.ConfigureProperty<CreatorDto,string>(c => c.Name, async (key, user, currentUserId) =>
+            {
+                user = await repository.GetAsync(key);
+                return user.Name;
+            },TimeSpan.FromMinutes(10));
+            return cacheService;
+        }
+        public static async Task<string> GetOrAddCreatorNameAsync(this UserCacheService cacheService,Guid id)
+        {
+            return (await cacheService.GlobalDtoCache.GetOrAddAsync<CreatorDto, string>(id, null, c => c.Name))!;
+        }
+        public static async Task DeleteCreatorNameAsync(this UserCacheService cacheService, OeTubeUser user)
+        {
+            await cacheService.GlobalDtoCache.DeleteAsync<CreatorDto,string>(user, c => c.Name);
+        }
+    }
+
     public class CreatorDto:EntityDto<Guid>
     {
         

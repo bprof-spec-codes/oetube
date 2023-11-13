@@ -40,6 +40,13 @@ namespace OeTube.Application.Dtos.Videos
             return destination;
         }
     }
+    public class UploadTaskDto
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public string Arguments { get; set; } = string.Empty;
+    }
+
     public class VideoUploadStateDto
     {
         public Guid Id { get; set; }

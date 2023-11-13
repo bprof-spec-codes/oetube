@@ -1,5 +1,5 @@
 ﻿using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Services.Url;
+using OeTube.Application.Url;
 using OeTube.Domain.Entities.Videos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
@@ -8,23 +8,19 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class VideoListItemMapper : IObjectMapper<Video, VideoListItemDto>, ITransientDependency
+    public class VideoListItemMapper : AsyncNewDestinationObjectMapper<Video, VideoListItemDto>, ITransientDependency
     {
-        private readonly IVideoUrlService _videoUrlService;
-        private readonly IObjectMapper<Guid?, CreatorDto?> _creatorMapper;
+        private readonly VideoUrlService _videoUrlService;
+        private readonly CreatorDtoMapper _creatorMapper;
 
-        public VideoListItemMapper(IVideoUrlService videoUrlService, IObjectMapper<Guid?, CreatorDto?> creatorMapper)
+        public VideoListItemMapper(VideoUrlService videoUrlService, CreatorDtoMapper creatorMapper)
         {
-            this._videoUrlService = videoUrlService;
+            _videoUrlService = videoUrlService;
             _creatorMapper = creatorMapper;
         }
 
-        public VideoListItemDto Map(Video source)
-        {
-            return Map(source, new VideoListItemDto());
-        }
 
-        public VideoListItemDto Map(Video source, VideoListItemDto destination)
+        public override async Task<VideoListItemDto> MapAsync(Video source, VideoListItemDto destination)
         {
             destination.Id = source.Id;
             destination.CreationTime = source.CreationTime;
@@ -32,7 +28,7 @@ namespace OeTube.Application.Dtos.Videos
             destination.Name = source.Name;
             destination.PlaylistId = null;
             destination.IndexImage = _videoUrlService.GetIndexImageUrl(source.Id);
-            destination.Creator = _creatorMapper.Map(source.CreatorId);
+            destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             return destination;
         }
     }
