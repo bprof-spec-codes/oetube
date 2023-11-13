@@ -16,12 +16,12 @@ namespace OeTube.Infrastructure.FileHandlers
         {
         }
 
-        public async Task HandleFileAsync<TRelatedType>(ByteContent content, ImageUploadHandlerArgs args, CancellationToken cancellationToken = default)
+        public async Task HandleFileAsync<TRelatedType>(ImageUploadHandlerArgs args, CancellationToken cancellationToken = default)
         {
             var container = _fileContainerFactory.Create<TRelatedType>();
 
-            await SaveImageAsync(container, new SourceImagePath(args.Id), _sourceImageConfig, content, cancellationToken);
-            await SaveImageAsync(container, new ThumbnailImagePath(args.Id),_thumbnailConfig, content, cancellationToken);
+            await SaveImageAsync(container, new SourceImagePath(args.Id), _sourceImageConfig, args.Content, cancellationToken);
+            await SaveImageAsync(container, new ThumbnailImagePath(args.Id),_thumbnailConfig, args.Content, cancellationToken);
         }
 
         private async Task SaveImageAsync(IFileContainer container,

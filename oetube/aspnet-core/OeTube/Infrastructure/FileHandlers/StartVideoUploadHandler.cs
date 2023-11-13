@@ -27,10 +27,10 @@ namespace OeTube.Infrastructure.FileHandlers
         {
         }
 
-        public override async Task<Video> HandleFileAsync<TRelatedType>(ByteContent content, StartVideoUploadHandlerArgs args, CancellationToken cancellationToken = default)
+        public override async Task<Video> HandleFileAsync<TRelatedType>(StartVideoUploadHandlerArgs args, CancellationToken cancellationToken = default)
         {
             var container = _fileContainerFactory.Create<TRelatedType>();
-            var sourceInfo = await _ffprobeService.AnalyzeAsync(content, cancellationToken);
+            var sourceInfo = await _ffprobeService.AnalyzeAsync(args.Content, cancellationToken);
             _videoFileValidator.ValidateSourceVideo(sourceInfo);
             var sourceVideoStream = sourceInfo.VideoStreams[0];
             var resolution = sourceVideoStream.Resolution;
@@ -42,13 +42,13 @@ namespace OeTube.Infrastructure.FileHandlers
                    .SetDescription(args.Description)
                    .SetAccess(args.Access);
 
-            await container.SaveFileAsync(new SourcePath(video.Id), content, cancellationToken);
+            await container.SaveFileAsync(new SourcePath(video.Id), args.Content!, cancellationToken);
             if (_videoFileValidator.IsInDesiredResolutionAndFormat(sourceInfo))
             {
-                await container.SaveFileAsync(new ResizedPath(video.Id, resolution), content, cancellationToken);
+                await container.SaveFileAsync(new ResizedPath(video.Id, resolution), args.Content!, cancellationToken);
                 video.Resolutions.Get(resolution).MarkReady();
             }
-            await _repository.InsertAsync(video, true, cancellationToken);
+            //await _repository.InsertAsync(video, true, cancellationToken);
             await ProcessUploadIfIsItReadyAsync(video, sourceInfo);
             return video;
         }
