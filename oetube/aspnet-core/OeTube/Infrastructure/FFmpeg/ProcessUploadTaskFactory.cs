@@ -1,13 +1,14 @@
 ﻿using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
+using OeTube.Domain.Infrastructure.FileHandlers;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFmpeg
+namespace OeTube.Infrastructure.FFMpeg
 {
     public class ProcessUploadTaskFactory : IProcessUploadTaskFactory, ITransientDependency
     {
-        public ProcessUploadTask Create(Video video, VideoInfo videoInfo)
+        public ProcessVideoUploadArgs Create(Video video, VideoInfo videoInfo)
         {
             var resolutions = video.GetResolutionsBy(true).ToArray();
             var extractFrameTarget = resolutions.OrderByDescending(r => r.Height).First();
@@ -17,7 +18,7 @@ namespace OeTube.Infrastructure.FFmpeg
             int sourceFrameCount = videoInfo.VideoStreams[0].Frames;
             string extractFramesArguments = GetExractFramesArguments(sourceFrameCount, frameCount);
 
-            return new ProcessUploadTask(video.Id,
+            return new ProcessVideoUploadArgs(video.Id,
                                          resolutions,
                                          extractFrameTarget,
                                          video.IsAllResolutionReady(),

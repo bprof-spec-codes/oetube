@@ -1,35 +1,31 @@
-﻿using OeTube.Domain.Infrastructure.FileClasses;
+﻿using OeTube.Domain.FilePaths;
+using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Infrastructure.Videos;
-using OeTube.Infrastructure.FileClasses;
 
 namespace OeTube.Domain.Infrastructure.FileContainers
 {
-    public interface IFileProvider
-    {
-        Task<ByteContent> GetFileAsync(IFileClass file, CancellationToken cancellationToken = default);
-        Task<ByteContent?> GetFileOrNullAsync(IFileClass file, CancellationToken cancellationToken = default);
-    }
- 
-    public interface IReadOnlyFileContainer:IFileProvider
+   
+    public interface IReadOnlyFileContainer
     {
         Type RelatedType { get; }
         string RootDirectory { get; }
-
-        string? Find(IFileClass fileClass);
+        Task<ByteContent> GetFileAsync(IFilePath file, CancellationToken cancellationToken = default);
+        Task<ByteContent?> GetFileOrNullAsync(IFilePath file, CancellationToken cancellationToken = default);
+        string? FindDefaultFile<TDefaultFilePath>() where TDefaultFilePath : IDefaultFilePath;
+        string? FindFile(IFilePath path);
+        Task<ByteContent?> GetDefaultFileOrNullAsync<TDefaultFilePath>(CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
         IEnumerable<string> GetFiles(object key);
+        Task<ByteContent> GetFileOrDefault<TDefaultFilePath>(TDefaultFilePath path, CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
     }
 
     public interface IFileContainer :IReadOnlyFileContainer
     {
-      
-        Task<bool> DeleteFileAsync(IFileClass file, CancellationToken cancellationToken = default);
+        Task<bool> DeleteDefaultFileAsync<TDefaultFilePath>(CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
+        Task<bool> DeleteFileAsync(IFilePath path, CancellationToken cancellationToken = default);
         Task DeleteKeyFilesAsync(object key, CancellationToken cancellationToken = default);
-        Task SaveFileAsync(IFileClass fileClass, ByteContent content, CancellationToken cancellationToken = default);
+        Task SaveDefaultFileAsync<TDefaultFilePath>(ByteContent content, CancellationToken cancellationToken = default) where TDefaultFilePath : IDefaultFilePath;
+        Task SaveFileAsync(IFilePath path, ByteContent content, CancellationToken cancellationToken = default);
     }
-    public interface IFileProvider<TFileClass>
-     where TFileClass : IFileClass
-    {
-        Task<ByteContent> GetFileAsync(TFileClass file, CancellationToken cancellationToken = default);
-        Task<ByteContent?> GetFileOrNullAsync(TFileClass file, CancellationToken cancellationToken = default);
-    }
+   
+
 }

@@ -1,5 +1,5 @@
 import type { GroupListItemDto, GroupQueryDto } from './dtos/groups/models';
-import type { StartVideoUploadDto, UpdateAccessGroupsDto, UpdateVideoDto, VideoDto, VideoListItemDto, VideoQueryDto, VideoUploadStateDto } from './dtos/videos/models';
+import type { StartVideoUploadDto, UpdateAccessGroupsDto, UpdateVideoDto, VideoDto, VideoIndexImagesDto, VideoListItemDto, VideoQueryDto, VideoUploadStateDto } from './dtos/videos/models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
@@ -49,7 +49,7 @@ export class VideoService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/video/${id}/${width}x${height}/list.m3u8`,
+      url: `/api/src/video/${id}/${width}x${height}/list.m3u8`,
     },
     { apiName: this.apiName,...config });
   
@@ -58,7 +58,7 @@ export class VideoService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/video/${id}/${width}x${height}/${segment}.ts`,
+      url: `/api/src/video/${id}/${width}x${height}/${segment}.ts`,
     },
     { apiName: this.apiName,...config });
   
@@ -67,7 +67,24 @@ export class VideoService {
     this.restService.request<any, Blob>({
       method: 'GET',
       responseType: 'blob',
-      url: `/api/app/video/${id}/index_image`,
+      url: `/api/src/video/${id}/index_image`,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getIndexImageByIndex = (id: string, index: number, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: `/api/src/video/${id}/index_image/${index}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getIndexImages = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, VideoIndexImagesDto>({
+      method: 'GET',
+      url: `/api/app/video/${id}/index-images`,
     },
     { apiName: this.apiName,...config });
   

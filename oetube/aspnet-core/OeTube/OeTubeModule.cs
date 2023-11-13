@@ -60,6 +60,8 @@ using Volo.Abp.BackgroundWorkers;
 using OeTube.Workers;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Volo.Abp.Imaging;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace OeTube;
 
@@ -113,7 +115,9 @@ namespace OeTube;
     [DependsOn(typeof(AbpBlobStoringFileSystemModule))]
     [DependsOn(typeof(AbpBackgroundJobsModule))]    
     [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
-public class OeTubeModule : AbpModule
+    [DependsOn(typeof(AbpImagingAbstractionsModule))]
+    [DependsOn(typeof(AbpImagingImageSharpModule))]
+    public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
     private const bool IsMultiTenant = false;
@@ -164,6 +168,19 @@ public class OeTubeModule : AbpModule
         ConfigureBackgroundJobs();
         ConfigureNewtonsoftJson(context);
         ConfigureRequestSizeLimit();
+        ConfigureImageHandling();
+    }
+
+    private void ConfigureImageHandling()
+    {
+        Configure<ImageSharpCompressOptions>(options =>
+        {
+            options.WebpEncoder = new WebpEncoder
+            {
+                Quality = 70
+            };
+
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

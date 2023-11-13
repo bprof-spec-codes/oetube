@@ -34,13 +34,13 @@ namespace OeTube.Application.Services.Url
             return BaseUrl + "/" + template;
         }
 
-        public string? GetUrl<T>(string methodName, params RouteTemplateParameter[] parameters)
+        public string GetUrl<T>(string methodName, params RouteTemplateParameter[] parameters)
         {
             var type = typeof(T);
             var attribute = type.GetMethod(methodName)?.GetCustomAttribute<HttpMethodAttribute>();
             if (attribute is null || attribute.Template is null)
             {
-                return null;
+                throw new ArgumentException(typeof(T).Name);
             }
 
             return GetUrl(attribute.Template, parameters);

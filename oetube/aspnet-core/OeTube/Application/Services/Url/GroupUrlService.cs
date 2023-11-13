@@ -9,9 +9,14 @@ namespace OeTube.Application.Services.Url
         {
         }
 
-        public string? GetImageUrl(Guid id)
+        public string GetImageUrl(Guid id)
         {
             return GetUrl<GroupAppService>(nameof(GroupAppService.GetImageAsync), new RouteTemplateParameter(id));
+        }
+
+        public string GetThumbnailImageUrl(Guid id)
+        {
+            return GetUrl<GroupAppService>(nameof(GroupAppService.GetThumbnailImageAsync), new RouteTemplateParameter(id));
         }
     }
 

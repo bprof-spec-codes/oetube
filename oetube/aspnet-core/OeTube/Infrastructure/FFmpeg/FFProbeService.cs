@@ -1,20 +1,21 @@
-﻿using OeTube.Domain.Infrastructure.FFmpeg;
+﻿using OeTube.Domain.FilePaths;
+using OeTube.Domain.Infrastructure;
+using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.Videos;
-using OeTube.Infrastructure.FileClasses;
 using OeTube.Infrastructure.ProcessTemplate;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFmpeg
+namespace OeTube.Infrastructure.FFMpeg
 {
     public class FFProbeService : ITransientDependency, IFFProbeService
     {
-        private readonly FFprobeProcess _ffprobe;
+        private readonly FFProbeProcess _ffprobe;
         private readonly IFileContainer _container;
         public Guid Id { get; }
         public string RootDirectory => Path.Combine(_container.RootDirectory, Id.ToString());
-        public FFProbeService(FFprobeProcess ffprobe, IFileContainerFactory containerFactory)
+        public FFProbeService(FFProbeProcess ffprobe, IFileContainerFactory containerFactory)
         {
             Id = Guid.NewGuid();
             _ffprobe = ffprobe;
@@ -29,7 +30,7 @@ namespace OeTube.Infrastructure.FFmpeg
             }
 
             string name = "input." + input.Format;
-            await _container.SaveFileAsync(new SimpleFileClass(Id,name), input, cancellationToken);
+            await _container.SaveFileAsync(new CustomFilePath(Id,name), input, cancellationToken);
             var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(name),RootDirectory), cancellationToken);
             await _container.DeleteKeyFilesAsync(Id, cancellationToken);
             return videoInfo;

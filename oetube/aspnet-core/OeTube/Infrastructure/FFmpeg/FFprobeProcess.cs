@@ -5,9 +5,9 @@ using OeTube.Infrastructure.ProcessTemplate;
 using System.Diagnostics;
 using Volo.Abp.DependencyInjection;
 
-namespace OeTube.Infrastructure.FFmpeg
+namespace OeTube.Infrastructure.FFMpeg
 {
-    public class FFprobeProcess : FFProcess<VideoInfo>, ITransientDependency
+    public class FFProbeProcess : FFProcess<VideoInfo>, ITransientDependency
     {
         public static readonly string FFprobeExe = Path.Combine(FFmpegDir, "ffprobe.exe");
         public override string PreArguments => "-v quiet -print_format json -show_format -show_streams";

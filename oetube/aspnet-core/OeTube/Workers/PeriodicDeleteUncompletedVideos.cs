@@ -1,5 +1,5 @@
 ﻿using OeTube.Domain.Entities.Videos;
-using OeTube.Domain.Managers;
+using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Threading;
@@ -19,9 +19,9 @@ namespace OeTube.Workers
         {
             Logger.LogInformation("Starting: " + GetType().Name);
 
-            var videoManager = workerContext
+            var repository = workerContext
                 .ServiceProvider
-                .GetRequiredService<VideoManager>();
+                .GetRequiredService<IVideoRepository>();
             
             List<Video> videos;
             var args = new QueryArgs()
@@ -31,8 +31,8 @@ namespace OeTube.Workers
 
             do
             {
-                videos = await videoManager.GetUncompletedVideosAsync(period, args);
-                await videoManager.DeleteManyAsync(videos, true);
+                videos = await repository.GetUncompletedVideosAsync(period, args);
+                await repository.DeleteManyAsync(videos, true);
             } while (videos.Count != 0);
 
 

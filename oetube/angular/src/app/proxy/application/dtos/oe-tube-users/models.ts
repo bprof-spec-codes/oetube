@@ -1,5 +1,10 @@
 import type { EntityDto } from '@abp/ng.core';
 
+export interface CreatorDto extends EntityDto<string> {
+  name?: string;
+  thumbnailImage?: string;
+}
+
 export interface UpdateUserDto {
   name: string;
   aboutMe?: string;
@@ -10,14 +15,14 @@ export interface UserDto extends EntityDto<string> {
   aboutMe?: string;
   emailDomain?: string;
   registrationDate?: string;
-  imageSource?: string;
+  image?: string;
 }
 
 export interface UserListItemDto extends EntityDto<string> {
   name?: string;
   registrationDate?: string;
   emailDomain?: string;
-  imageSource?: string;
+  thumbnailImageSource?: string;
 }
 
 export interface UserQueryDto {

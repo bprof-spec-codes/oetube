@@ -26,7 +26,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.EmailDomain = source.EmailDomain;
             destination.Name = source.Name;
             destination.RegistrationDate = source.CreationTime;
-            destination.ImageSource = _urlService.GetImageUrl( source.Id);
+            destination.ThumbnailImageSource = _urlService.GetThumbnailImageUrl( source.Id);
 
             return destination;
         }
@@ -37,6 +37,6 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         public string Name { get; set; } = string.Empty;
         public DateTime RegistrationDate { get; set; }
         public string EmailDomain { get; set; } = string.Empty;
-        public string? ImageSource { get; set; }
+        public string? ThumbnailImageSource { get; set; }
     }
 }
