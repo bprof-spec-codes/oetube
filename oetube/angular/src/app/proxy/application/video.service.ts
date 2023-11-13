@@ -1,6 +1,6 @@
 import type { GroupListItemDto, GroupQueryDto } from './dtos/groups/models';
 import type { PaginationDto } from './dtos/models';
-import type { StartVideoUploadDto, UpdateVideoDto, VideoDto, VideoIndexImagesDto, VideoListItemDto, VideoQueryDto, VideoUploadStateDto } from './dtos/videos/models';
+import type { ContinueVideoUploadDto, StartVideoUploadDto, UpdateVideoDto, VideoDto, VideoIndexImagesDto, VideoListItemDto, VideoQueryDto, VideoUploadStateDto } from './dtos/videos/models';
 import { RestService, Rest } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
 
@@ -11,11 +11,11 @@ export class VideoService {
   apiName = 'Default';
   
 
-  continueUpload = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
+  continueUpload = (id: string, input: ContinueVideoUploadDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, VideoUploadStateDto>({
       method: 'POST',
       url: `/api/app/video/${id}/continue-upload`,
-      body: input,
+      body: input.content,
     },
     { apiName: this.apiName,...config });
   
@@ -40,7 +40,7 @@ export class VideoService {
     this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
       url: `/api/app/video/${id}/access-groups`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -93,16 +93,7 @@ export class VideoService {
     this.restService.request<any, PaginationDto<VideoListItemDto>>({
       method: 'GET',
       url: '/api/app/video',
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  selectIndexImage = (id: string, index: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
-      method: 'POST',
-      url: `/api/app/video/${id}/select-index-image`,
-      params: { index },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   

@@ -15,7 +15,8 @@ export class GroupService {
     this.restService.request<any, GroupDto>({
       method: 'POST',
       url: '/api/app/group',
-      body: input,
+      params: { name: input.name, description: input.description, emailDomains: input.emailDomains, members: input.members },
+      body: input.image,
     },
     { apiName: this.apiName,...config });
   
@@ -58,7 +59,7 @@ export class GroupService {
     this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
       url: '/api/app/group',
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -76,7 +77,8 @@ export class GroupService {
     this.restService.request<any, GroupDto>({
       method: 'PUT',
       url: `/api/app/group/${id}`,
-      body: input,
+      params: { name: input.name, description: input.description, emailDomains: input.emailDomains, members: input.members },
+      body: input.image,
     },
     { apiName: this.apiName,...config });
   
@@ -85,15 +87,6 @@ export class GroupService {
     this.restService.request<any, void>({
       method: 'POST',
       url: '/api/app/group/upload-default-image',
-      body: input,
-    },
-    { apiName: this.apiName,...config });
-  
-
-  uploadImage = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
-      method: 'POST',
-      url: `/api/app/group/${id}/upload-image`,
       body: input,
     },
     { apiName: this.apiName,...config });
