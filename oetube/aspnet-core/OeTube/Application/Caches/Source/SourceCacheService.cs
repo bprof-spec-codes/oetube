@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Volo.Abp.Caching;
 using Volo.Abp.Domain.Entities;
@@ -16,12 +17,12 @@ namespace OeTube.Application.Caches.Source
         where TEntity : class, IEntity<TKey>
     {
         protected virtual TimeSpan RelativeExpiration { get; } = TimeSpan.FromHours(1);
-        protected IDistributedCache<CacheSourceItem, CacheKey> SoureCache { get; }
+        protected IDistributedCache<CacheSourceItem, CacheKey> SourceCache { get; }
         public Type EntityType { get; }
         public SourceCacheService(IDistributedCache<CacheSourceItem, CacheKey> sourceCache)
         {
             EntityType = typeof(TEntity);
-            SoureCache = sourceCache;
+            SourceCache = sourceCache;
         }
         protected virtual CacheKey CreateKey(TKey id)
         {
@@ -31,13 +32,14 @@ namespace OeTube.Application.Caches.Source
         public virtual async Task<int?> GetSourceCheckSumAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var key = CreateKey(id);
-            return (await SoureCache.GetAsync(key, false, false, cancellationToken))?.CheckSum;
+            var item = await SourceCache.GetAsync(key, false, false, cancellationToken);
+            return item?.CheckSum;
         }
         public virtual async Task RefreshSourceAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var key = CreateKey(id);
-            var item = new CacheSourceItem();
-            await SoureCache.SetAsync(key, item, new DistributedCacheEntryOptions()
+            var item = new CacheSourceItem(DateTime.Now.GetHashCode());
+            await SourceCache.SetAsync(key, item, new DistributedCacheEntryOptions()
             {
                 AbsoluteExpirationRelativeToNow = RelativeExpiration
             }, false, false, cancellationToken);

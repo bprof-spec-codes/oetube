@@ -3,9 +3,9 @@
     public class CacheSourceItem
     {
         public int CheckSum { get; }
-        public CacheSourceItem()
+        public CacheSourceItem(int checkSum)
         {
-            CheckSum = DateTime.Now.GetHashCode();
+            CheckSum = checkSum;
         }
 
     }

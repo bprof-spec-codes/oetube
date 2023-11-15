@@ -1,6 +1,7 @@
 ﻿using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.EventBus.Local;
 using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Methods
@@ -9,7 +10,6 @@ namespace OeTube.Application.Methods
     {
         protected IAbpLazyServiceProvider ServiceProvider { get; }
         public IAuthorizationChecker? Authorization { get; set; }
-
         protected ApplicationMethod(IAbpLazyServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
@@ -28,7 +28,10 @@ namespace OeTube.Application.Methods
                 await Authorization.CheckPolicyAsync();
             }
         }
-
+        protected ILocalEventBus GetLocalEventBus()
+        {
+            return ServiceProvider.LazyGetRequiredService<ILocalEventBus>();
+        }
         protected async Task CheckRightsAsync(object requestedObject)
         {
             if (Authorization is not null)
