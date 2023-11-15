@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
@@ -33,7 +34,6 @@ namespace OeTube.Application.Dtos.OeTubeUsers
                 var content = await ByteContent.FromRemoteStreamContentAsync(source.Image);
                 await _imageUploadHandler.HandleFileAsync<OeTubeUser>(new ImageUploadHandlerArgs(destination.Id, content));
             }
-            await _cacheService.DeleteCreatorNameAsync(destination);
             return destination;
         }
     }

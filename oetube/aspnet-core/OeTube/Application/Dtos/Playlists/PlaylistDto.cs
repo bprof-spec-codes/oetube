@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities.Playlists;
@@ -18,7 +19,6 @@ namespace OeTube.Application.Dtos.Playlists
         {
             _creatorMapper = creatorMapper;
             _playlistCache = playlistCache;
-            _playlistCache.ConfigureTotalDuration(repository);
             _urlService = urlService;
         }
 
@@ -36,25 +36,6 @@ namespace OeTube.Application.Dtos.Playlists
         }
     }
 
-    public static class PlaylistDtoCacheExtension
-    {
-        public static PlaylistCacheService ConfigureTotalDuration(this PlaylistCacheService cacheService, IPlaylistRepository repository)
-        {
-            cacheService.RequesterDtoCache.ConfigureProperty<PlaylistDto, TimeSpan>
-                (p => p.TotalDuration, async (key, entity, userId) => await repository.GetAvaliableTotalDurationAsync(userId, entity!), TimeSpan.FromMinutes(5));
-            return cacheService;
-        }
-
-        public static async Task<TimeSpan> GetOrAddTotalDurationAsync(this PlaylistCacheService cacheService, Playlist entity)
-        {
-            return await cacheService.RequesterDtoCache.GetOrAddAsync<PlaylistDto, TimeSpan>(entity, p => p.TotalDuration);
-        }
-
-        public static async Task DeleteTotalDurationAsync(this PlaylistCacheService cacheService, Playlist entity)
-        {
-            await cacheService.RequesterDtoCache.DeleteAsync<PlaylistDto, TimeSpan>(entity, p => p.TotalDuration);
-        }
-    }
 
     public class PlaylistDto : EntityDto<Guid>, IMayHaveCreatorDto
     {

@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities.Playlists;

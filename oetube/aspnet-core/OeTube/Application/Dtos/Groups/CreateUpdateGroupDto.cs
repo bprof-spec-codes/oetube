@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
@@ -50,7 +51,6 @@ namespace OeTube.Application.Dtos.Groups
                 var content = await ByteContent.FromRemoteStreamContentAsync(source.Image);
                 await _imageUploadHandler.HandleFileAsync<Group>(new ImageUploadHandlerArgs(destination.Id, content));
             }
-            await _cacheService.DeleteMembersCountAsync(destination);
             return destination;
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using OeTube.Application.Caches;
+using OeTube.Application.Caches.Access;
+using OeTube.Application.Caches.Composite;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using Volo.Abp.DependencyInjection;
@@ -10,7 +12,7 @@ namespace OeTube.Application.AuthorizationCheckers
 {
     public abstract class AccessChecker<TEntity, TKey, TAccessCacheService> : AuthorizationChecker, IAuthorizationManyChecker<TEntity>
         where TEntity : class, IEntity<TKey>
-        where TAccessCacheService : ICompositeAccessCacheService<TEntity, TKey>
+        where TAccessCacheService : ICompositeAccessCacheService<TEntity,TKey>
     {
         protected TAccessCacheService Cache { get; }
 

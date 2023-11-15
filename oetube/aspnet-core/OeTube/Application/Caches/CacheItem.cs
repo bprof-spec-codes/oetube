@@ -2,11 +2,13 @@
 {
     public class CacheItem<TValue>
     {
-        public TValue Value { get; set; }
+        public int? SourceCheckSum { get; set; }
+        public TValue? Value { get; set; }
 
-        public CacheItem(TValue value)
+        public CacheItem(TValue? value, int? sourceCheckSum)
         {
             Value = value;
+            SourceCheckSum = sourceCheckSum;
         }
     }
 }

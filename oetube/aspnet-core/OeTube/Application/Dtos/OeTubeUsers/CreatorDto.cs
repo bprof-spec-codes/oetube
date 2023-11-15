@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Repositories;
@@ -19,11 +20,11 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         private readonly ICurrentUser _currentUser;
         private readonly UserCacheService _cacheService;
 
-        public CreatorDtoMapper(UserUrlService urlService, IUserRepository userRepository, ICurrentUser currentUser, UserCacheService cacheService)
+        public CreatorDtoMapper(UserUrlService urlService,ICurrentUser currentUser, UserCacheService cacheService)
         {
             _urlService = urlService;
             _currentUser = currentUser;
-            _cacheService = cacheService.ConfigureCreatorName(userRepository);
+            _cacheService = cacheService;
         }
 
         public override async Task<CreatorDto?> MapAsync(Guid? source, CreatorDto? destination)
@@ -42,30 +43,6 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             }
         }
     }
-
-    public static class CreatorCacheExtension
-    {
-        public static UserCacheService ConfigureCreatorName(this UserCacheService cacheService, IUserRepository repository)
-        {
-            cacheService.GlobalDtoCache.ConfigureProperty<CreatorDto, string>(c => c.Name, async (key, user, currentUserId) =>
-            {
-                user = await repository.GetAsync(key);
-                return user.Name;
-            }, TimeSpan.FromMinutes(10));
-            return cacheService;
-        }
-
-        public static async Task<string> GetOrAddCreatorNameAsync(this UserCacheService cacheService, Guid id)
-        {
-            return (await cacheService.GlobalDtoCache.GetOrAddAsync<CreatorDto, string>(id, null, c => c.Name))!;
-        }
-
-        public static async Task DeleteCreatorNameAsync(this UserCacheService cacheService, OeTubeUser user)
-        {
-            await cacheService.GlobalDtoCache.DeleteAsync<CreatorDto, string>(user, c => c.Name);
-        }
-    }
-
     public class CreatorDto : EntityDto<Guid>
     {
         public string Name { get; set; } = string.Empty;

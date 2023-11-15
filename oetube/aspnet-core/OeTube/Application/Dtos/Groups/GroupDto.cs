@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities.Groups;
@@ -14,13 +15,11 @@ namespace OeTube.Application.Dtos.Groups
         private readonly CreatorDtoMapper _creatorMapper;
         private readonly GroupCacheService _cacheService;
 
-        public GroupMapper(GroupUrlService urlService, CreatorDtoMapper creatorMapper, GroupCacheService cacheService, IGroupRepository repository)
+        public GroupMapper(GroupUrlService urlService, CreatorDtoMapper creatorMapper, GroupCacheService cacheService)
         {
             _urlService = urlService;
             _creatorMapper = creatorMapper;
             _cacheService = cacheService;
-            _cacheService.ConfigureMembersCount(repository)
-                         .ConfigureCurrentUserIsMember(repository);
         }
 
         public override async Task<GroupDto> MapAsync(Group source, GroupDto destination)
@@ -37,36 +36,6 @@ namespace OeTube.Application.Dtos.Groups
             destination.TotalMembersCount = await _cacheService.GetOrAddMembersCountAsync(source);
 
             return destination;
-        }
-    }
-
-    public static class GroupCacheExtension
-    {
-        public static GroupCacheService ConfigureMembersCount(this GroupCacheService cacheService, IGroupRepository repository)
-        {
-            cacheService.GlobalDtoCache.ConfigureProperty<GroupDto, int>(g => g.TotalMembersCount, async (key, group, userId) => await repository.GetMembersCountAsync(group!), TimeSpan.FromSeconds(30));
-            return cacheService;
-        }
-
-        public static async Task<int> GetOrAddMembersCountAsync(this GroupCacheService cacheService, Group group)
-        {
-            return await cacheService.GlobalDtoCache.GetOrAddAsync<GroupDto, int>(group, g => g.TotalMembersCount);
-        }
-
-        public static async Task DeleteMembersCountAsync(this GroupCacheService cacheService, Group group)
-        {
-            await cacheService.GlobalDtoCache.DeleteAsync<GroupDto, int>(group, g => g.TotalMembersCount);
-        }
-
-        public static async Task<bool> GetOrAddCurrentUserIsMemberAsync(this GroupCacheService cacheService, Group group)
-        {
-            return await cacheService.RequesterDtoCache.GetOrAddAsync<GroupDto, bool>(group, g => g.CurrentUserIsMember);
-        }
-
-        public static GroupCacheService ConfigureCurrentUserIsMember(this GroupCacheService cacheService, IGroupRepository repository)
-        {
-            cacheService.RequesterDtoCache.ConfigureProperty<GroupDto, bool>(g => g.CurrentUserIsMember, async (key, group, userId) => await repository.IsMemberAsync(userId, group!), TimeSpan.FromSeconds(30));
-            return cacheService;
         }
     }
 

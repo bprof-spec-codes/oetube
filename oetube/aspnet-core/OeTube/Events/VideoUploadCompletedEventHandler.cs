@@ -16,7 +16,7 @@ namespace OeTube.Events
 
     public class VideoUploadCompletedEventHandler : ILocalEventHandler<VideoUploadCompletedEto>, ITransientDependency
     {
-        public Task HandleEventAsync(VideoUploadCompletedEto eventData)
+        public virtual Task HandleEventAsync(VideoUploadCompletedEto eventData)
         {
             return Task.CompletedTask;
         }

@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
@@ -56,7 +57,6 @@ namespace OeTube.Application.Dtos.Playlists
                 await _imageUploadHandler.HandleFileAsync<Playlist>(new ImageUploadHandlerArgs(destination.Id, content));
             }
 
-            await _cacheService.DeleteTotalDurationAsync(destination);
             return destination;
         }
     }

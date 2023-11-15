@@ -1,5 +1,6 @@
 ﻿using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.DependencyInjection;
@@ -43,6 +44,12 @@ namespace OeTube.Events
     public class GroupDeletedEventHandler : EntityDeletedEventHandler<Group, Guid>, ITransientDependency
     {
         public GroupDeletedEventHandler(IFileContainerFactory factory) : base(factory)
+        {
+        }
+    }
+    public class PlaylistDeletedEventHandler : EntityDeletedEventHandler<Playlist, Guid>, ITransientDependency
+    {
+        public PlaylistDeletedEventHandler(IFileContainerFactory factory) : base(factory)
         {
         }
     }

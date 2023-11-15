@@ -2,8 +2,11 @@
 {
     public class CacheKey
     {
-        public string Key { get; set; } = string.Empty;
-
+        public CacheKey(string key)
+        {
+            Key = key;
+        }
+        public string Key { get; set; }
         public override string ToString()
         {
             return Key;

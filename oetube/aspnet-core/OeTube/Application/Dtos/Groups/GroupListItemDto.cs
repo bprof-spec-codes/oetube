@@ -1,4 +1,5 @@
 ﻿using OeTube.Application.Caches;
+using OeTube.Application.Caches.Composite;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Url;
 using OeTube.Domain.Entities.Groups;
@@ -19,8 +20,6 @@ namespace OeTube.Application.Dtos.Groups
             _urlService = urlService;
             _creatorMapper = creatorMapper;
             _cacheService = cacheService;
-            _cacheService.ConfigureCurrentUserIsMember(repository)
-                         .ConfigureMembersCount(repository);
         }
 
         public override async Task<GroupListItemDto> MapAsync(Group source, GroupListItemDto destination)

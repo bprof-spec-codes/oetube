@@ -16,7 +16,7 @@ namespace OeTube.Events
             _userRepository = userRepository;
         }
 
-        public async Task HandleEventAsync(EntityCreatedEventData<IdentityUser> eventData)
+        public virtual async Task HandleEventAsync(EntityCreatedEventData<IdentityUser> eventData)
         {
             await _userRepository.InsertAsync(new OeTubeUser(eventData.Entity), true);
         }
