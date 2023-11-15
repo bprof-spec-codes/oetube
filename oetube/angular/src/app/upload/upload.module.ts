@@ -8,8 +8,6 @@ import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,
 import { PaginationGridModule } from '../pagination-grid/pagination-grid.module';
 import { DxRadioGroupModule } from "devextreme-angular";
 
-
-
 @NgModule({
   declarations: [
     UploadComponent,

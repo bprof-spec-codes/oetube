@@ -9,7 +9,7 @@
             <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
         </div>
         <dxi-item>
-            <dx-file-uploader  #fileUploader uploadMode="useForm" [allowedFileExtensions]="['.mp4']" [accept]="'video/mp4'" multiple="false" ></dx-file-uploader>
+            <dx-file-uploader dialogTrigger="#upload" #fileUploader uploadMode="useForm" [allowedFileExtensions]="['.mp4']" [accept]="'video/mp4'" multiple="false" ></dx-file-uploader>
         </dxi-item>
         <dxi-item
           dataField="Choose visibility"
