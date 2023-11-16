@@ -47,7 +47,12 @@ namespace OeTube.Application
             return await _factory.CreateCreateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .CreateAsync(input);
         }
-
+        public async Task<PlaylistDto> UpdateAsync(Guid id,CreateUpdatePlaylistDto input)
+        {
+            return await _factory.CreateUpdateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
+                                 .SetAuthorizationAndPolicy(_creatorAuth)
+                                 .UpdateAsync(id, input);
+        }
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
