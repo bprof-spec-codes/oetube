@@ -17,9 +17,9 @@ namespace OeTube.Application.Caches.Source
         where TEntity : class, IEntity<TKey>
     {
         protected virtual TimeSpan RelativeExpiration { get; } = TimeSpan.FromHours(1);
-        protected IDistributedCache<CacheSourceItem, CacheKey> SourceCache { get; }
+        protected IDistributedCache<SourceCacheItem, CacheKey> SourceCache { get; }
         public Type EntityType { get; }
-        public SourceCacheService(IDistributedCache<CacheSourceItem, CacheKey> sourceCache)
+        public SourceCacheService(IDistributedCache<SourceCacheItem, CacheKey> sourceCache)
         {
             EntityType = typeof(TEntity);
             SourceCache = sourceCache;
@@ -38,7 +38,7 @@ namespace OeTube.Application.Caches.Source
         public virtual async Task RefreshSourceAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var key = CreateKey(id);
-            var item = new CacheSourceItem(DateTime.Now.GetHashCode());
+            var item = new SourceCacheItem(DateTime.Now.GetHashCode());
             await SourceCache.SetAsync(key, item, new DistributedCacheEntryOptions()
             {
                 AbsoluteExpirationRelativeToNow = RelativeExpiration

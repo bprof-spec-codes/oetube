@@ -12,9 +12,9 @@ namespace OeTube.Application.Caches.Source
 
     public class SourceCacheFactory : ISourceCacheFactory,ITransientDependency
     {
-        private readonly IDistributedCache<CacheSourceItem, CacheKey> SourceCache;
+        private readonly IDistributedCache<SourceCacheItem, CacheKey> SourceCache;
 
-        public SourceCacheFactory(IDistributedCache<CacheSourceItem, CacheKey> sourceCache)
+        public SourceCacheFactory(IDistributedCache<SourceCacheItem, CacheKey> sourceCache)
         {
             SourceCache = sourceCache;
         }

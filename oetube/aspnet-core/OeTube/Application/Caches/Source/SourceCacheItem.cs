@@ -1,9 +1,9 @@
 ﻿namespace OeTube.Application.Caches.Source
 {
-    public class CacheSourceItem
+    public class SourceCacheItem
     {
         public int CheckSum { get; }
-        public CacheSourceItem(int checkSum)
+        public SourceCacheItem(int checkSum)
         {
             CheckSum = checkSum;
         }
