@@ -18,6 +18,10 @@ namespace OeTube.Data.QueryExtensions
 
         public static IQueryable<OeTubeUser> GetMembers(this OeTubeDbContext context, Group group)
         {
+            var creator = from user in context.Set<OeTubeUser>()
+                          where user.Id == @group.CreatorId
+                          select user;
+
             var explicitMembers = from member in context.Set<Member>()
                                   where member.GroupId == @group.Id
                                   join user in context.Set<OeTubeUser>()
@@ -28,20 +32,23 @@ namespace OeTube.Data.QueryExtensions
                                 where emailDomain.GroupId == @group.Id
                                 join user in context.Set<OeTubeUser>()
                                 on emailDomain.Domain equals user.EmailDomain
-                                where user.Id != @group.CreatorId
                                 select user;
 
-            return explicitMembers.Concat(domainMembers).Distinct();
+            return creator.Concat(explicitMembers.Concat(domainMembers)).Distinct();
         }
 
         public static IQueryable<Member> GetMembers(this OeTubeDbContext context)
         {
+            var creators = from @group in context.Set<Group>()
+                           where @group.CreatorId!=null
+                           select new Member(@group.Id, @group.CreatorId!.Value);
+
             var domainMembers = from emailDomain in context.Set<EmailDomain>()
                                 join user in context.Set<OeTubeUser>()
                                 on emailDomain.Domain equals user.EmailDomain
                                 select new Member(emailDomain.GroupId, user.Id);
 
-            return context.Set<Member>().Concat(domainMembers).Distinct();
+            return creators.Concat(context.Set<Member>()).Concat(domainMembers).Distinct();
         }
     }
 }
