@@ -1,11 +1,13 @@
-<dx-data-grid #dataGrid [dataSource]="dataSource"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
+<dx-data-grid #dxGrid [dataSource]="dataSource"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
      showBorders="true" [height]="height" [width]="width" [allowColumnResizing]="true">
-    <dxo-paging></dxo-paging>
-    <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
-        showNavigationButtons="true" showPageSizeSelector="true">
-    </dxo-pager>
-    <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
+    <dxo-paging #dxPaging></dxo-paging>
+    <dxo-pager></dxo-pager>
+    <dxo-selection #dxGridSelection [mode]="selectionMode" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-editing mode="row"
+        [allowDeleting]="allowDelete"
+        [allowUpdating]="allowEdit"
+    ></dxo-editing>
 
     <dxi-column [visible]="showThumbnailImage" dataField="thumbnailImage" caption="" [width]="100" cellTemplate="imageTemplate"
         [allowSorting]="false" headerCellTemplate="" [allowFiltering]="false"
@@ -33,4 +35,6 @@
         </div>
     </div>
     <dxi-column [visible]="showIsMember" dataField="currentUserIsMember" caption="Joined" [allowFiltering]="false" [allowSorting]="false"  ></dxi-column>
+    <dxi-column type="buttons">
+    </dxi-column>
 </dx-data-grid>

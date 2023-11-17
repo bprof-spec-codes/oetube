@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
+import { DxTabPanelModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { PlaylistCreateComponent } from './playlist-create/playlist-create.compo
   ],
   imports: [
     CommonModule,
-    PlaylistRoutingModule
+    PlaylistRoutingModule,
+    DxTabPanelModule
   ]
 })
 export class PlaylistModule { }

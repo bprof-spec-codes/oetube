@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { OeTubeUserService } from '@proxy/application';
-import { UserListItemDto, UserQueryDto } from '@proxy/application/dtos/oe-tube-users';
+import { PaginationDto } from '@proxy/application/dtos';
+import { UpdateUserDto, UserDto, UserListItemDto, UserQueryDto } from '@proxy/application/dtos/oe-tube-users';
 import { LoadOptions } from 'devextreme/data';
 import DataSource from 'devextreme/data/data_source';
+import { Observable } from 'rxjs';
 import { PaginationGridComponent } from '../pagination-grid.component';
 
 
@@ -15,20 +17,20 @@ import { PaginationGridComponent } from '../pagination-grid.component';
 })
 
 export class UserPaginationGridComponent extends
-  PaginationGridComponent<OeTubeUserService, UserQueryDto, UserListItemDto> implements OnInit, OnDestroy {
+  PaginationGridComponent<UserQueryDto,UserDto,UserListItemDto,UpdateUserDto> implements OnInit, OnDestroy {
 
 @Input() showName:boolean=true
-@Input() showId:boolean=true
 @Input() showThumbnailImage:boolean=true
 @Input() showCreationTime:boolean=true
 @Input() showEmailDomain:boolean=true
 
 
-  constructor(userService: OeTubeUserService) {
+  constructor(public userService: OeTubeUserService) {
     super()
-    this.listProvider = userService
   }
-
+getList(): Observable<PaginationDto<UserListItemDto>> {
+    return this.userService.getList(this.queryArgs)
+}
   handleFilter(options: LoadOptions): void {
     this.queryArgs.name = this.findFilterValue(options.filter, "contains", "name")
     this.queryArgs.emailDomain = this.findFilterValue(options.filter, "contains", "emailDomain")

@@ -1,45 +1,106 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild,Output, EventEmitter} from '@angular/core';
 import { lastValueFrom, Observable } from 'rxjs';
 import { PaginationDto, QueryDto } from '@proxy/application/dtos';
-import { Rest } from '@abp/ng.core/public-api';
-import { HttpParameterCodec } from '@angular/common/http';
 import DataSource from 'devextreme/data/data_source';
 import { LoadOptions } from 'devextreme/data';
 import { DxDataGridComponent } from 'devextreme-angular';
+import { DxiButtonComponent, DxoEditingComponent, DxoPagerComponent, DxoPagingComponent, DxoSelectionComponent } from 'devextreme-angular/ui/nested';
 @Component({
   template: '',
 })
 export abstract class PaginationGridComponent<
-  TListProvider extends ListProvider<TQueryArgs, TOutputDto>,
   TQueryArgs extends QueryDto,
-  TOutputDto
+  TOutputDto,
+  TOutputListDto,
+  TUpdateDto
 > implements OnInit, OnDestroy
 {
   defaultItemPerPage: number = 10;
   pageSizes: Array<number> = [this.defaultItemPerPage, 20, 50, 100];
-  dataSource: DataSource<TOutputDto, string>;
-  listProvider: TListProvider;
+  dataSource: DataSource<TOutputListDto, string>;
   allowedPageSizes: Array<number>;
+  allowDelete:boolean=true
+  allowEdit:boolean=true
+
+  @ViewChild("dxGrid",{static:true}) dxGrid:DxDataGridComponent
+  @ViewChild("dxPager",{static:true}) dxPager:DxoPagerComponent
+  @ViewChild("dxPaging",{static:true}) dxPaging:DxoPagingComponent
+  @ViewChild("dxEditButton",{static:true}) dxEditButton:DxiButtonComponent 
+  @ViewChild("dxDeleteButton",{static:true}) dxDeleteButton:DxiButtonComponent 
+  @ViewChild("dxShowDetailsButton",{static:true}) dxShowDetailsButton:DxiButtonComponent 
+  @ViewChild("dxGridSelection",{static:true}) dxGridSelection:DxoSelectionComponent
+  @ViewChild("dxEditing",{static:true}) dxEditing:DxoEditingComponent
   
-  @ViewChild("dataGrid",{static:true}) dataGrid:DxDataGridComponent
   @Input() height:number
   @Input() width:number
   @Input() queryArgs: TQueryArgs={itemPerPage:this.defaultItemPerPage,page:0} as TQueryArgs
-  @Input() allowSelection: boolean=true
-
+  @Input() showId:boolean=true
+  @Input() selectionMode: string="multiple"
   @Input() selectedItems:Array<string>
+  @Input() updateModel:TUpdateDto
+  @Output() updateModelChanged:EventEmitter<TUpdateDto>=new EventEmitter<TUpdateDto>()
+
+  
+  
+
+  initDataGrid(){
+    this.dxGrid.dataSource=this.dataSource
+    this.dxGrid.remoteOperations=true
+    this.dxGrid.cacheEnabled=true
+    this.dxGrid.showBorders=true
+    this.dxGrid.allowColumnResizing=true
+    this.initPaging()
+    this.initPager()
+    this.initSelectedRowKeys()
+    this.subscribeSelectedRowKeyChange()
+  }
+  initPaging(){
+
+  }
+  initPager(){
+    this.dxPager.visible=true
+    this.dxPager.allowedPageSizes=this.allowedPageSizes
+    this.dxPager.displayMode="full"
+    this.dxPager.showInfo=true
+    this.dxPager.showNavigationButtons=true
+    this.dxPager.showPageSizeSelector=true
+  }
+  initSelection(){
+    this.dxGridSelection.showCheckBoxesMode="always"
+    this.dxGridSelection.selectAllMode="page"
+
+  }
   initSelectedRowKeys(){
-    this.dataGrid.selectedRowKeys=this.selectedItems.map(i=>{id:i})
+    if(this.selectedItems){
+      this.dxGrid.selectedRowKeys=this.selectedItems.map(i=>{id:i})
+    }
   }
   @Output() selectedItemsChange:EventEmitter<Array<string>>=new EventEmitter<Array<string>>()
   subscribeSelectedRowKeyChange(){
-    this.dataGrid.selectedRowKeysChange.subscribe((value:{id:string}[])=>{
+    this.dxGrid.selectedRowKeysChange.subscribe((value:{id:string}[])=>{
       this.selectedItemsChange.emit(value.map(item=>item.id))
     })
   }
  
+  abstract getList(): Observable<PaginationDto<TOutputListDto>>
+  
+  getDetails(key:string):Observable<TOutputDto>{
+    return undefined
+  }
+  delete(key:string):Observable<any>{
+    return undefined
+  }
+
+  mapOutputToUpdate(dto:TOutputDto):TUpdateDto{
+    return undefined
+  }
 
 
+  update(model:TUpdateDto):Observable<TOutputDto>{
+  return undefined   
+  }
+
+ 
   setAllowedPageSizes(totalCount: number) {
     this.allowedPageSizes = [this.pageSizes[0]];
     for (let index = 1; index < this.pageSizes.length; index++) {
@@ -50,9 +111,9 @@ export abstract class PaginationGridComponent<
       this.allowedPageSizes.push(element);
     }
   }
-  handleResponseData(data:PaginationDto<TOutputDto>){
-
+  handleListData(data:PaginationDto<TOutputListDto>){
   }
+
   handlePagination(options: LoadOptions): void {
     if (options.take == null && options.take > 0) {
       this.queryArgs.itemPerPage = options.take;
@@ -97,11 +158,11 @@ export abstract class PaginationGridComponent<
           this.handleSorting(options.sort[0] as { selector: string; desc: boolean });
         }
         
-        return lastValueFrom(this.listProvider.getList(this.queryArgs))
+        return lastValueFrom(this.getList())
           .then(response => {
 
             this.setAllowedPageSizes(response.totalCount);
-            this.handleResponseData(response)
+            this.handleListData(response)
             return {
               data: response.items,
               totalCount: response.totalCount,
@@ -111,28 +172,17 @@ export abstract class PaginationGridComponent<
             throw 'loading error';
           });
       },
-    
       key:["id"],
       paginate: true,
+      remove:async(key)=>{
+        await lastValueFrom(this.delete(key))
+      },
+      update:async(key,values)=>{
+        this.updateModel=this.mapOutputToUpdate(await lastValueFrom(this.update(this.updateModel)))
+      }
     });
-    this.initSelectedRowKeys()
-    this.subscribeSelectedRowKeyChange()
+   
   }
   ngOnDestroy(): void {;}
-}
-
-export interface ListProvider<TInput, TOutput> {
-  getList(
-    input: TInput,
-    config?: Partial<
-      Partial<{
-        apiName: string;
-        skipHandleError: boolean;
-        skipAddingHeader: boolean;
-        observe: Rest.Observe;
-        httpParamEncoder?: HttpParameterCodec;
-      }>
-    >
-  ): Observable<PaginationDto<TOutput>>;
 }
 

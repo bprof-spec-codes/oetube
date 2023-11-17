@@ -49,7 +49,7 @@ export class GroupCreateComponent implements OnInit, OnDestroy {
     this.model.members=[]
     this.groupService.create(this.model).subscribe()
   }
-  test(){
-  
+  modelToJson(){
+  return JSON.stringify(this.model,null,4)
   }
 }

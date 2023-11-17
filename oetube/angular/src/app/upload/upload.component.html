@@ -16,8 +16,8 @@
                         <span class="dx-button-text group-option-text">
                             {{accessTypeEnum[item]}}
                         </span>
-                        <div *ngIf="item==accessTypeEnum.Group;else notGroup">
-                                <dx-button (onClick)="showGroups()" icon="edit" type="default" [disabled]="uploadModel.access!=item">
+                        <div *ngIf="item===accessTypeEnum.Group;else notGroup">
+                                <dx-button (onClick)="showGroups()" icon="edit" type="default" [disabled]="uploadModel.access!==item">
                                 </dx-button>
                         </div>
                     </div>

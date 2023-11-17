@@ -25,14 +25,14 @@ function configureRoutes(routesService: RoutesService) {
         layout: eLayoutType.application,
       },
       {
-        path: '/playlist/create',
-        name: 'Create Playlist',
+        path: '/playlist',
+        name: 'Playlist',
         order: 3,
         layout: eLayoutType.application,
       },
       {
-        path:'/group/create',
-        name:'Create Group',
+        path:'/group',
+        name:'Group',
         order: 5,
         layout:eLayoutType.application
       }

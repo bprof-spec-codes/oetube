@@ -1,16 +1,19 @@
-<dx-data-grid #dataGrid [dataSource]="dataSource" [remoteOperations]="true" cacheEnabled="true" class="data-grid"
-     showBorders="true" [height]="height" [width]="width" [allowColumnResizing]="true">
-    <dxo-paging></dxo-paging>
-    <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
-        showNavigationButtons="true" showPageSizeSelector="true">
+<dx-data-grid #dxGrid [height]="height" [width]="width">
+    <dxo-paging #dxPaging></dxo-paging>
+    <dxo-pager #dxPager >
     </dxo-pager>
-    <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="page"></dxo-selection>
+    <dxo-selection #dxSelection [mode]="selectionMode"></dxo-selection>
+    <dxo-editing #dxEditing mode="row"
+    [allowDeleting]="allowDelete"
+    [allowUpdating]="allowEdit"
+></dxo-editing>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
 
     <dxi-column [visible]="showThumbnailImage" dataField="thumbnailImageSource" caption="" [width]="100" cellTemplate="imageTemplate"
         [allowSorting]="false" headerCellTemplate="" [allowFiltering]="false"
         [allowResizing]="false">
     </dxi-column>
+    
     <div *dxTemplate="let data of 'imageTemplate'">
         <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
     </div>
@@ -19,4 +22,8 @@
     <dxi-column [visible]="showName" dataField="name" selectedFilterOperation="contains" [filterOperations]="[]" />
     <dxi-column [visible]="showEmailDomain" dataField="emailDomain" selectedFilterOperation="contains" [filterOperations]="[]"></dxi-column>
     <dxi-column [visible]="showCreationTime" dataType="date" dataField="creationTime" selectedFilterOperation="between" [filterOperations]="[]" format="yyyy.MM.dd" caption="Registration Date"></dxi-column>
+    <dxi-column type="buttons">
+        <dxi-button #dxEditButton name="edit"></dxi-button>
+        <dxi-button #dxDeleteButton name="delete"></dxi-button>
+    </dxi-column>
 </dx-data-grid>
