@@ -1,10 +1,34 @@
-﻿using OeTube.Domain.Entities.Playlists;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 
 namespace OeTube.Data.QueryExtensions
 {
+    public class PlaylistAccessibility
+    {
+        public OeTubeUser? User { get; set; }
+        public Playlist? Playlist { get; set; }
+    }
     public static class PlaylistQueryExtension
     {
+        public static IQueryable<PlaylistAccessibility> GetPlaylistAccessibilities(this OeTubeDbContext context,IQueryable<Playlist>? playlists=null)
+        {
+            playlists??= context.Set<Playlist>();
+
+            var result= from playlist in playlists
+                        join videoItem in context.Set<VideoItem>()
+                        on playlist.Id equals videoItem.PlaylistId
+                        join accessibility in context.GetVideoAccessibilities()
+                        on videoItem.VideoId equals accessibility.Video!.Id
+                        select new PlaylistAccessibility()
+                        {
+                            Playlist = playlist,
+                            User = accessibility.User
+                        };
+
+            return result.Distinct();
+                            
+        }
         public static bool HasAccess(this OeTubeDbContext context, Guid? requesterId, Playlist playlist)
         {
             if (playlist.CreatorId == requesterId)
@@ -12,11 +36,9 @@ namespace OeTube.Data.QueryExtensions
                 return true;
             }
 
-            return context.GetAvaliableVideos(requesterId)
-                          .OrderBy(p => p.Id)
-                          .FirstOrDefault(p => p.Id == playlist.Id) is not null;
+            return context.GetAvaliableVideos(requesterId, playlist).Any();
         }
-
+        
         public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context, Guid? requesterId, Playlist playlist)
         {
             return context.GetAvaliableVideos(requesterId, GetVideos(context, playlist));
@@ -35,17 +57,10 @@ namespace OeTube.Data.QueryExtensions
 
         public static IQueryable<Playlist> GetAvaliablePlaylists(this OeTubeDbContext context, Guid? requesterId, IQueryable<Playlist>? playlists = null)
         {
-            playlists ??= context.Set<Playlist>();
+            var result = from accessibility in context.GetPlaylistAccessibilities(playlists)
+                         where accessibility.User!.Id == requesterId
+                         select accessibility.Playlist;
 
-            var videos = from videoItem in context.Set<VideoItem>()
-                         join video in context.GetAvaliableVideos(requesterId)
-                         on videoItem.VideoId equals video.Id
-                         select videoItem;
-
-            var result = (from playlist in playlists
-                          join videoItem in videos
-                          on playlist.Id equals videoItem.PlaylistId
-                          select playlist).Distinct();
             return result;
         }
     }

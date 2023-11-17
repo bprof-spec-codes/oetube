@@ -1,8 +1,15 @@
-﻿using OeTube.Domain.Entities.Groups;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 
 namespace OeTube.Data.QueryExtensions
 {
+    public class VideoAccessibility
+    {
+        public OeTubeUser? User { get; set; }
+        public Video? Video { get; set; }
+    }
+
     public static class VideoQueryExtension
     {
         public static IQueryable<Group> GetAccessGroups(this OeTubeDbContext context, Video video)
@@ -13,41 +20,51 @@ namespace OeTube.Data.QueryExtensions
                    on accessGroup.GroupId equals @group.Id
                    select @group;
         }
-
-        public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context, Guid? requesterId, IQueryable<Video>? videoQueryable = null)
+        public static IQueryable<VideoAccessibility> GetVideoAccessibilities(this OeTubeDbContext context, IQueryable<Video>? videos=null)
         {
-            videoQueryable ??= context.Set<Video>();
-            videoQueryable = from video in videoQueryable
-                             where video.IsUploadCompleted
-                             select video;
+            videos ??= context.Set<Video>();
 
-            if (requesterId is null)
-            {
-                return from video in videoQueryable
-                       where video.Access == AccessType.Public
-                       select video;
-            }
+            var publicAccess = from video in videos
+                               where video.Access == AccessType.Public
+                               from user in context.Set<OeTubeUser>()
+                               select new VideoAccessibility()
+                               {
+                                   Video = video,
+                                   User = user
+                               };
 
-            var accessGroups = context.Set<AccessGroup>();
-            var members = context.GetMembers();
+            var privateAccess = from video in videos
+                                where video.Access == AccessType.Private
+                                join user in context.Set<OeTubeUser>()
+                                on video.CreatorId equals user.Id
+                                select new VideoAccessibility()
+                                {
+                                    Video = video,
+                                    User = user
+                                };
 
-            var joined = (from member in members
-                          where member.UserId == requesterId
-                          join accessGroup in accessGroups
-                          on member.GroupId equals accessGroup.GroupId
-                          select accessGroup.VideoId).Distinct();
-
-            var groupAccess = from video in videoQueryable
+            var groupAccess = from video in videos
                               where video.Access == AccessType.Group
-                              join id in joined
-                              on video.Id equals id
-                              select video;
+                              join accessGroup in context.Set<AccessGroup>()
+                              on video.Id equals accessGroup.VideoId
+                              join membership in context.GetMemberships()
+                              on accessGroup.GroupId equals membership.Group!.Id
+                              select new VideoAccessibility()
+                              {
+                                  Video = video,
+                                  User = membership.User
+                              };
 
-            var trivialAccess = from video in videoQueryable
-                                where video.Access == AccessType.Public || video.CreatorId == requesterId
-                                select video;
+            var result = publicAccess.Union(privateAccess).Union(groupAccess).Distinct()
+                       .Where(a => a.Video!.IsUploadCompleted);
+            return result;
+        }
 
-            return groupAccess.Concat(trivialAccess).Distinct();
+        public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context,Guid? requesterId,IQueryable<Video>? videos=null)
+        {
+            return from accessibility in GetVideoAccessibilities(context,videos)
+                   where accessibility.User!.Id == requesterId
+                   select accessibility.Video;
         }
 
         public static bool HasAccess(this OeTubeDbContext context, Guid? requesterId, Video video)
@@ -70,19 +87,10 @@ namespace OeTube.Data.QueryExtensions
                 {
                     return false;
                 }
-                var groups = from accessGroup in context.Set<AccessGroup>()
-                             where accessGroup.VideoId == video.Id
-                             join @group in context.Set<Group>()
-                             on accessGroup.GroupId equals @group.Id
-                             select @group;
 
-                var members = context.GetMembers();
-                var result = (from @group in groups
-                              join member in members
-                on @group.Id equals member.GroupId
-                              select @group.Id).FirstOrDefault();
+                var groups = context.GetJoinedGroups(requesterId);
 
-                return result != default;
+                return groups.Any(g => video.AccessGroups.Contains(g.Id));
             }
         }
 
