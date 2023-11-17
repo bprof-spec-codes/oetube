@@ -1,0 +1,19 @@
+
+<div class="dx-field">
+    <div class="dx-field-label">
+        <label>Image</label>
+    </div>
+
+    <div class="dx-field-value">
+        <div class="img-container">
+            <ng-container *ngIf="imageUrl; else elseTemplate">
+                <img *ngIf="imageUrl" class="center" [src]="imageUrl">
+                
+            </ng-container>
+            <ng-template #elseTemplate>
+                <p class="center">No image selected</p>
+            </ng-template>
+        </div>
+        <dx-file-uploader accept="image/*" [(value)]="files" (onValueChanged)="onValueChanged($event)"  #fileUploader uploadMode="useForm" multiple="false" ></dx-file-uploader>
+    </div>
+</div>

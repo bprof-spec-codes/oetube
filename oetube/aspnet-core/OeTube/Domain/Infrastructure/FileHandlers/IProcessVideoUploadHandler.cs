@@ -1,12 +1,8 @@
 ﻿using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Infrastructure.FFMpeg;
-using OeTube.Infrastructure.FileContainers;
-using Volo.Abp.Domain.Repositories;
 
 namespace OeTube.Domain.Infrastructure.FFmpeg
 {
-
     public class ProcessVideoUploadArgs
     {
         public Guid Id { get; private set; }

@@ -3,7 +3,6 @@ using Volo.Abp.Http;
 
 namespace OeTube.Domain.Infrastructure
 {
-
     public class ByteContent
     {
         public static async Task<ByteContent> FromStreamAsync(string format, Stream stream, CancellationToken cancellationToken = default)
@@ -36,7 +35,6 @@ namespace OeTube.Domain.Infrastructure
         public byte[] Bytes { get; }
         public string ContentType { get; }
 
-
         public ByteContent WithNewFormat(string format)
         {
             return new ByteContent(format, Bytes, ContentType);
@@ -52,9 +50,9 @@ namespace OeTube.Domain.Infrastructure
             return new MemoryStream(Bytes, true);
         }
 
-        public IRemoteStreamContent GetRemoteStreamContent(string? name=null,string? contentType = null)
+        public IRemoteStreamContent GetRemoteStreamContent(string? name = null, string? contentType = null)
         {
-            return new RemoteStreamContent(GetStream(), (name??"content") +"."+ Format, contentType ?? ContentType);
+            return new RemoteStreamContent(GetStream(), (name ?? "content") + "." + Format, contentType ?? ContentType);
         }
     }
 }

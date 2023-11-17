@@ -1,21 +1,17 @@
-﻿using OeTube.Configs;
-using OeTube.Domain.Configs;
+﻿using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
-using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Validators;
-using OeTube.Infrastructure.FileContainers;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FileHandlers
 {
-    public class StartVideoUploadHandler : VideoUploadHandler<StartVideoUploadHandlerArgs>,IStartVideoUploadHandler,ITransientDependency
+    public class StartVideoUploadHandler : VideoUploadHandler<StartVideoUploadHandlerArgs>, IStartVideoUploadHandler, ITransientDependency
     {
         public StartVideoUploadHandler(IFileContainerFactory fileContainerFactory,
                                 IBackgroundJobManager backgroundJobManager,
@@ -23,14 +19,14 @@ namespace OeTube.Infrastructure.FileHandlers
                                   IFFProbeService ffprobeService,
                                   IVideoFileValidator videoFileValidator,
                                   IVideoRepository repository,
-                                  IVideoFileConfig config) : base(fileContainerFactory,backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
+                                  IVideoFileConfig config) : base(fileContainerFactory, backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
         {
         }
 
-        public override async Task<Video> HandleFileAsync<TRelatedType>(ByteContent content, StartVideoUploadHandlerArgs args, CancellationToken cancellationToken = default)
+        public override async Task<Video> HandleFileAsync<TRelatedType>(StartVideoUploadHandlerArgs args, CancellationToken cancellationToken = default)
         {
             var container = _fileContainerFactory.Create<TRelatedType>();
-            var sourceInfo = await _ffprobeService.AnalyzeAsync(content, cancellationToken);
+            var sourceInfo = await _ffprobeService.AnalyzeAsync(args.Content, cancellationToken);
             _videoFileValidator.ValidateSourceVideo(sourceInfo);
             var sourceVideoStream = sourceInfo.VideoStreams[0];
             var resolution = sourceVideoStream.Resolution;
@@ -42,13 +38,13 @@ namespace OeTube.Infrastructure.FileHandlers
                    .SetDescription(args.Description)
                    .SetAccess(args.Access);
 
-            await container.SaveFileAsync(new SourcePath(video.Id), content, cancellationToken);
+            await container.SaveFileAsync(new SourcePath(video.Id), args.Content!, cancellationToken);
             if (_videoFileValidator.IsInDesiredResolutionAndFormat(sourceInfo))
             {
-                await container.SaveFileAsync(new ResizedPath(video.Id, resolution), content, cancellationToken);
+                await container.SaveFileAsync(new ResizedPath(video.Id, resolution), args.Content!, cancellationToken);
                 video.Resolutions.Get(resolution).MarkReady();
             }
-            await _repository.InsertAsync(video, true, cancellationToken);
+            //await _repository.InsertAsync(video, true, cancellationToken);
             await ProcessUploadIfIsItReadyAsync(video, sourceInfo);
             return video;
         }

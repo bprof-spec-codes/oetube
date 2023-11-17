@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OeTube.Configs;
 using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;

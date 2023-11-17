@@ -1,52 +1,55 @@
 ﻿using OeTube.Application.Dtos.OeTubeUsers;
-using OeTube.Application.Services.Url;
+using OeTube.Application.Url;
 using OeTube.Domain.Entities.Videos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Entities;
-using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class VideoMapper : IObjectMapper<Video, VideoDto>, ITransientDependency
+    public class VideoMapper : AsyncNewDestinationObjectMapper<Video, VideoDto>, ITransientDependency
     {
-        private readonly IVideoUrlService _videoUrlService;
+        private readonly VideoUrlService _videoUrlService;
+        private readonly CreatorDtoMapper _creatorMapper;
 
-        public VideoMapper(IVideoUrlService videoUrlService)
+        public VideoMapper(VideoUrlService videoUrlService, CreatorDtoMapper creatorMapper)
         {
             _videoUrlService = videoUrlService;
+            _creatorMapper = creatorMapper;
         }
 
-        public VideoDto Map(Video source)
+        public override async Task<VideoDto> MapAsync(Video source, VideoDto destination)
         {
-            return Map(source, new VideoDto());
-        }
-
-        public VideoDto Map(Video video, VideoDto destination)
-        {
-            destination.Id = video.Id;
-            destination.AccessGroups = video.AccessGroups.Select(ag => ag.GroupId).ToList();
-            destination.CreationTime = video.CreationTime;
-            destination.Description = video.Description;
-            destination.Duration = video.Duration;
-            destination.IndexImage = _videoUrlService.GetIndexImageUrl(video.Id);
-            destination.IsUploadCompleted = video.IsUploadCompleted;
-            destination.Name = video.Name;
+            destination.Id = source.Id;
+            destination.AccessGroups = source.AccessGroups.Select(ag => ag.GroupId).ToList();
+            destination.CreationTime = source.CreationTime;
+            destination.Description = source.Description;
+            destination.Duration = source.Duration;
+            destination.IndexImage = _videoUrlService.GetIndexImageUrl(source.Id);
+            destination.IsUploadCompleted = source.IsUploadCompleted;
+            destination.Name = source.Name;
             destination.PlaylistId = null;
-            destination.HlsResolutions = video.GetResolutionsBy(true).Select(r => new HlsResolutionDto()
+            destination.HlsResolutions = source.GetResolutionsBy(true).Select(r => new HlsResolutionDto()
             {
-                Width=r.Width,
-                Height=r.Height,
-                HlsList = _videoUrlService.GetHlsListUrl(video.Id, r.Width, r.Height)
+                Width = r.Width,
+                Height = r.Height,
+                HlsList = _videoUrlService.GetHlsListUrl(source.Id, r.Width, r.Height)
             }).ToList();
+            destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             return destination;
         }
     }
- 
-    public class VideoDto:EntityDto<Guid>,IMayHaveCreatorDto
+
+    public class HlsResolutionDto
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public string HlsList { get; set; } = string.Empty;
+    }
+
+    public class VideoDto : EntityDto<Guid>, IMayHaveCreatorDto
     {
         public List<HlsResolutionDto> HlsResolutions { get; set; } = new();
-        public string? IndexImage { get; set; } 
+        public string? IndexImage { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public DateTime CreationTime { get; set; }

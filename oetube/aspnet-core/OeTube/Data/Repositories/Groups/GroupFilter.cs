@@ -10,6 +10,7 @@ namespace OeTube.Data.Repositories.Groups
         protected override Expression<Func<Group, bool>> GetFilter(IGroupQueryArgs args)
         {
             return group =>
+                 (args.CreatorId == null || group.CreatorId == args.CreatorId) &&
                  (string.IsNullOrWhiteSpace(args.Name) || group.Name.ToLower().Contains(args.Name.ToLower())) &&
                  (args.CreationTimeMin == null || args.CreationTimeMin <= group.CreationTime) &&
                  (args.CreationTimeMax == null || args.CreationTimeMax >= group.CreationTime);

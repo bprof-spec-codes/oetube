@@ -1,4 +1,4 @@
-﻿using OeTube.Entities;
+﻿using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
@@ -18,14 +18,8 @@ namespace OeTube.Domain.Entities.Videos
         public VideoResolution(Guid videoId, Resolution resolution)
         {
             VideoId = videoId;
-            if (resolution.Width <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Width, null);
-            }
-            if (resolution.Height <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(resolution), resolution.Height, null);
-            }
+            Check.Range(resolution.Width, nameof(resolution), 1);
+            Check.Range(resolution.Height, nameof(resolution), 1);
             Width = resolution.Width;
             Height = resolution.Height;
         }

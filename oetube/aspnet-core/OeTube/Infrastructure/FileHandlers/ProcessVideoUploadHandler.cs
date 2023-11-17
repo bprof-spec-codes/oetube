@@ -8,7 +8,7 @@ using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Infrastructure.FileHandlers
 {
-    public class ProcessVideoUploadHandler : IProcessVideoUploadHandler,ITransientDependency
+    public class ProcessVideoUploadHandler : IProcessVideoUploadHandler, ITransientDependency
     {
         private readonly IFileContainerFactory _fileContainerFactory;
         private readonly IVideoRepository _repository;
@@ -35,8 +35,8 @@ namespace OeTube.Infrastructure.FileHandlers
             var video = await _repository.GetAsync(args.Id);
             if (video.IsAllResolutionReady())
             {
-                await ExtractFramesAsync<TRelatedType>(container,args, cancellationToken);
-                await CreateHlsStreamAsync(container,args, cancellationToken);
+                await ExtractFramesAsync<TRelatedType>(container, args, cancellationToken);
+                await CreateHlsStreamAsync(container, args, cancellationToken);
 
                 if (args.IsUploadReady)
                 {
@@ -47,6 +47,7 @@ namespace OeTube.Infrastructure.FileHandlers
                 }
             }
         }
+
         private async Task ExtractFramesAsync<TRelatedType>(IFileContainer container, ProcessVideoUploadArgs args, CancellationToken cancellationToken = default)
         {
             Guid id = args.Id;
@@ -64,7 +65,7 @@ namespace OeTube.Infrastructure.FileHandlers
                     await container.SaveFileAsync(new FramePath(id, index), content, cancellationToken);
                     if (cancellationToken.IsCancellationRequested) break;
                 }
-                await _selectFrameHandler.HandleFileAsync<TRelatedType>(new SelectVideoFrameHandlerArgs(id,1), cancellationToken);
+                await _selectFrameHandler.HandleFileAsync<TRelatedType>(new SelectVideoFrameHandlerArgs(id, 1), cancellationToken);
             }
             finally
             {

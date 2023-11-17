@@ -1,7 +1,5 @@
-﻿using OeTube.Configs;
-using OeTube.Domain.Configs;
+﻿using OeTube.Domain.Configs;
 using OeTube.Domain.Entities.Videos;
-using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Domain.Infrastructure.FileContainers;
@@ -12,7 +10,7 @@ using Volo.Abp.BackgroundJobs;
 
 namespace OeTube.Infrastructure.FileHandlers
 {
-    public abstract class VideoUploadHandler<TArgs> : IContentFileHandler<TArgs, Video>
+    public abstract class VideoUploadHandler<TArgs> : IFileHandler<TArgs, Video>
     {
         protected readonly IFileContainerFactory _fileContainerFactory;
         protected readonly IBackgroundJobManager _backgroundJobManager;
@@ -39,7 +37,7 @@ namespace OeTube.Infrastructure.FileHandlers
             _config = config;
         }
 
-        public abstract Task<Video> HandleFileAsync<TRelatedType>(ByteContent content, TArgs args, CancellationToken cancellationToken = default);
+        public abstract Task<Video> HandleFileAsync<TRelatedType>(TArgs args, CancellationToken cancellationToken = default);
 
         protected async Task ProcessUploadIfIsItReadyAsync(Video video, VideoInfo videoInfo)
         {

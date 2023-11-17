@@ -3,7 +3,6 @@ using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Infrastructure.ProcessTemplate;
 using Volo.Abp.DependencyInjection;
 
@@ -15,6 +14,7 @@ namespace OeTube.Infrastructure.FFMpeg
         private readonly IFileContainer _container;
         public Guid Id { get; }
         public string RootDirectory => Path.Combine(_container.RootDirectory, Id.ToString());
+
         public FFProbeService(FFProbeProcess ffprobe, IFileContainerFactory containerFactory)
         {
             Id = Guid.NewGuid();
@@ -30,11 +30,10 @@ namespace OeTube.Infrastructure.FFMpeg
             }
 
             string name = "input." + input.Format;
-            await _container.SaveFileAsync(new CustomFilePath(Id,name), input, cancellationToken);
-            var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(name),RootDirectory), cancellationToken);
+            await _container.SaveFileAsync(new CustomFilePath(Id, name), input, cancellationToken);
+            var videoInfo = await _ffprobe.StartProcessAsync(new ProcessSettings(new NamedArguments(name), RootDirectory), cancellationToken);
             await _container.DeleteKeyFilesAsync(Id, cancellationToken);
             return videoInfo;
-
         }
     }
 }

@@ -6,12 +6,12 @@
         public int MaxHeight { get; }
         public string OutputFormat { get; }
     }
-    public interface ISourceImageFileConfig:IImageFileConfig
-    {
-     
-    }
-    public interface IThumbnailImageFileConfig:IImageFileConfig
-    {
 
+    public interface ISourceImageFileConfig : IImageFileConfig
+    {
+    }
+
+    public interface IThumbnailImageFileConfig : IImageFileConfig
+    {
     }
 }

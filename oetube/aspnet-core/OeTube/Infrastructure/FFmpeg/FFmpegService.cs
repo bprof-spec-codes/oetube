@@ -2,7 +2,6 @@
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Infrastructure.ProcessTemplate;
 using Volo.Abp.DependencyInjection;
 
@@ -15,7 +14,7 @@ namespace OeTube.Infrastructure.FFMpeg
         public Guid Id { get; }
         public bool WriteToDebug { get; set; }
         public string RootDirectory => Path.Combine(_container.RootDirectory, Id.ToString());
-     
+
         public FFMpegService(FFMpegProcess ffmpeg, IFileContainerFactory containerFactory)
         {
             Id = Guid.NewGuid();
@@ -25,12 +24,12 @@ namespace OeTube.Infrastructure.FFMpeg
 
         public async Task<bool> DeleteAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _container.DeleteFileAsync(new CustomFilePath(Id,name), cancellationToken);
+            return await _container.DeleteFileAsync(new CustomFilePath(Id, name), cancellationToken);
         }
 
         public async Task<ByteContent> GetContentAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _container.GetFileAsync(new CustomFilePath(Id,name),cancellationToken);
+            return await _container.GetFileAsync(new CustomFilePath(Id, name), cancellationToken);
         }
 
         public HashSet<string> GetFiles()
@@ -44,10 +43,10 @@ namespace OeTube.Infrastructure.FFMpeg
             {
                 throw new ArgumentNullException(nameof(input));
             }
-            string name = "input."+input.Format;
+            string name = "input." + input.Format;
             arguments = $"-i {name} {arguments}";
 
-            var path = new CustomFilePath(Id, name); 
+            var path = new CustomFilePath(Id, name);
             await _container.SaveFileAsync(path, input, cancellationToken);
 
             var settings = new ProcessSettings(
