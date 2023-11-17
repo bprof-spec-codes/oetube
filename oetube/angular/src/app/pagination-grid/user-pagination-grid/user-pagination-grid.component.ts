@@ -24,9 +24,6 @@ export class UserPaginationGridComponent extends
 @Input() showEmailDomain:boolean=true
 
 
-  dataSource: DataSource
-  
-
   constructor(userService: OeTubeUserService) {
     super()
     this.listProvider = userService

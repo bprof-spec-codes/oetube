@@ -1,4 +1,4 @@
-<dx-data-grid #dataGrid [dataSource]="dataSource" [selectedRowKeys]="selectedItems"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
+<dx-data-grid #dataGrid [dataSource]="dataSource"  [remoteOperations]="true" cacheEnabled="true" class="data-grid"
      showBorders="true" [height]="height" [width]="width" [allowColumnResizing]="true">
     <dxo-paging></dxo-paging>
     <dxo-pager visible="true" [allowedPageSizes]="allowedPageSizes" displayMode="full" showInfo="true"
@@ -24,7 +24,7 @@
     
     <dxi-column [visible]="showCreationTime" dataType="date" dataField="creationTime" selectedFilterOperation="between" [filterOperations]="[]" format="yyyy.MM.dd" caption="Creation Time"></dxi-column>
     
-    <dxi-column [visible]="showCreator" dataField="creator" caption="Creator" cellTemplate="creatorTemplate" selectedFilterOperation="equals" [filterOperations]="[]"  [allowSorting]="false">
+    <dxi-column [visible]="showCreator" dataField="creator" caption="Creator" cellTemplate="creatorTemplate" [allowFiltering]="false"  [allowSorting]="false">
     </dxi-column>
     <div *dxTemplate="let data of 'creatorTemplate'" class="d-flex flex-column">
         <div *ngIf="data.value">

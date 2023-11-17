@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, OnDestroy} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild,Output, EventEmitter} from '@angular/core';
 import { lastValueFrom, Observable } from 'rxjs';
 import { PaginationDto, QueryDto } from '@proxy/application/dtos';
 import { Rest } from '@abp/ng.core/public-api';
 import { HttpParameterCodec } from '@angular/common/http';
 import DataSource from 'devextreme/data/data_source';
 import { LoadOptions } from 'devextreme/data';
+import { DxDataGridComponent } from 'devextreme-angular';
 @Component({
   template: '',
 })
@@ -19,15 +20,26 @@ export abstract class PaginationGridComponent<
   dataSource: DataSource<TOutputDto, string>;
   listProvider: TListProvider;
   allowedPageSizes: Array<number>;
-
-  @Input() selectedItems:[]
+  
+  @ViewChild("dataGrid",{static:true}) dataGrid:DxDataGridComponent
   @Input() height:number
   @Input() width:number
   @Input() queryArgs: TQueryArgs={itemPerPage:this.defaultItemPerPage,page:0} as TQueryArgs
   @Input() allowSelection: boolean=true
+
+  @Input() selectedItems:Array<string>
+  initSelectedRowKeys(){
+    this.dataGrid.selectedRowKeys=this.selectedItems.map(i=>{id:i})
+  }
+  @Output() selectedItemsChange:EventEmitter<Array<string>>=new EventEmitter<Array<string>>()
+  subscribeSelectedRowKeyChange(){
+    this.dataGrid.selectedRowKeysChange.subscribe((value:{id:string}[])=>{
+      this.selectedItemsChange.emit(value.map(item=>item.id))
+    })
+  }
  
 
- 
+
   setAllowedPageSizes(totalCount: number) {
     this.allowedPageSizes = [this.pageSizes[0]];
     for (let index = 1; index < this.pageSizes.length; index++) {
@@ -103,6 +115,8 @@ export abstract class PaginationGridComponent<
       key:["id"],
       paginate: true,
     });
+    this.initSelectedRowKeys()
+    this.subscribeSelectedRowKeyChange()
   }
   ngOnDestroy(): void {;}
 }

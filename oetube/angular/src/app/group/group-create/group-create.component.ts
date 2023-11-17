@@ -14,9 +14,7 @@ export class GroupCreateComponent implements OnInit, OnDestroy {
     text:"Submit",
     useSubmitBehavior:true
   }
-
   imageFile:File
-  selectedItems:{id:string}[]=[]
 
   model:CreateUpdateGroupDto={
     name:"",
@@ -49,8 +47,6 @@ export class GroupCreateComponent implements OnInit, OnDestroy {
       this.model.image.append('image', this.imageFile, this.imageFile.name);
     }
     this.model.members=[]
-    this.selectedItems.forEach(i=>this.model.members.push(i.id))
-    
     this.groupService.create(this.model).subscribe()
   }
   test(){

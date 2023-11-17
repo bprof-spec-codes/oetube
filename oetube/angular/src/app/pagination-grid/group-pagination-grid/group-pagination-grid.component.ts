@@ -19,7 +19,8 @@ extends PaginationGridComponent<GroupService,GroupQueryDto,GroupListItemDto>
   @Input() showTotalMembersCount:boolean=true
   @Input() showIsMember:boolean=true
   @Input() showCreator:boolean=true
-  
+  @Input() creatorIdFilter?:string
+
   constructor(groupService:GroupService){
     super()
     this.listProvider=groupService
@@ -31,6 +32,6 @@ extends PaginationGridComponent<GroupService,GroupQueryDto,GroupListItemDto>
     this.queryArgs.name = this.findFilterValue(options.filter, "contains", "name")
     this.queryArgs.creationTimeMin = this.findFilterValue(options.filter, ">=", "creationTime")
     this.queryArgs.creationTimeMax = this.findFilterValue(options.filter, "<", "creationTime")
-    this.queryArgs.creatorId=this.findFilterValue(options.filter,"=","creatorId")
+    this.queryArgs.creatorId=this.creatorIdFilter
   }
 }
