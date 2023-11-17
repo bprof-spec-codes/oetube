@@ -4,7 +4,7 @@ import { FFService } from './services/FF.service';
 import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dtos/videos';
 import { firstValueFrom } from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms'
-import { DxFileUploaderComponent } from 'devextreme-angular';
+import { DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
 import { AccessType } from '@proxy/domain/entities/videos';
 import { GroupService } from '@proxy/application';
 @Component({
@@ -14,25 +14,26 @@ import { GroupService } from '@proxy/application';
 })
 export class UploadComponent implements OnInit {
   @ViewChild('fileUploader', { static: true }) fileUploader:DxFileUploaderComponent;
-
+  @ViewChild('accessRadioGroup', {static:true}) accessRadioGroup:DxRadioGroupComponent;
   progress: number;
   log:any
-
-  visibilityOptions = [
-    { text : "Public", value : "Public" },
-    { text : "Private", value : "Private"},
-    { text : "OE", value : "OE"},
-    { text : "Custom Group", value : "Custom Group"}]
-
-  selectedVisibility = this.visibilityOptions[0]
-
-  startVideoUpload:StartVideoUploadDto={
+  uploadModel:StartVideoUploadDto={
     name:"",
     description:"",
     access:AccessType.Public,
     content:undefined,
-    accessGroups:undefined
+    accessGroups:[]
   }
+
+accessTypeEnum=AccessType
+accessOptions=Object.values(AccessType).filter(x=>typeof AccessType[x]!="number")
+popupVisible=false
+showGroups(){
+  this.popupVisible=true
+}
+hideGroups(){
+  this.popupVisible=false
+}
   submitButtonOptions={
     text:"Submit",
     useSubmitBehavior:true,
@@ -43,10 +44,9 @@ export class UploadComponent implements OnInit {
     type:"default"
   }
 
-  constructor(private videoService: VideoService, private ffService: FFService, groupService:GroupService) {}
+  constructor(private videoService: VideoService, private ffService: FFService) {}
   subscription: any;
   ngOnInit(): void {
-    
     this.ffService.load();
     this.ffService.onProggress(progress => {
       this.progress = progress.ratio;
@@ -56,7 +56,9 @@ export class UploadComponent implements OnInit {
       console.log(log);
     });
   }
-
+modelToJson(){
+  return JSON.stringify(this.uploadModel,null,4)
+}
   isTranscoding() {
     this.ffService.isTranscoding();
   }
@@ -68,12 +70,12 @@ export class UploadComponent implements OnInit {
     const file = this.fileUploader.value[0];
     const source = new FormData();
     source.append('content', file, file.name);
-    this.startVideoUpload.content=source;
+    this.uploadModel.content=source;
     const inputFileName = 'input.' + file.name.split('.').pop();
 
     this.ffService.storeFile(file, inputFileName);
     let state = await firstValueFrom(
-    this.videoService.startUpload(this.startVideoUpload));
+    this.videoService.startUpload(this.uploadModel));
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
       const nextTask = state.remainingTasks.pop();
