@@ -4,6 +4,8 @@ using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Playlists;
 using OeTube.Application.Dtos.Videos;
 using OeTube.Application.Methods;
+using OeTube.Data;
+using OeTube.Data.QueryExtensions;
 using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.ImageFiles;
@@ -17,6 +19,28 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
+    public class QueryTest : IApplicationService,ITransientDependency
+    {
+        public OeTubeDbContext context;
+
+        public QueryTest(OeTubeDbContext context)
+        {
+            this.context = context;
+        }
+        public object GetMemberships()
+        {
+            return context.GetMemberships();
+        }
+        public object GetVideoAcc()
+        {
+            return context.GetVideoAccessibilities();
+        }
+        public object GetPlaylistAcc()
+        {
+            return context.GetPlaylistAccessibilities();
+        }
+
+    }
     public class PlaylistAppService : IApplicationService, ITransientDependency
     {
         private readonly PlaylistMethodFactory _factory;
