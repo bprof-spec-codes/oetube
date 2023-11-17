@@ -5,6 +5,7 @@ using OeTube.Domain.Repositories.CustomRepository;
 using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Users;
 
 namespace OeTube.Application.Methods.GetListMethods
 {
@@ -26,7 +27,8 @@ namespace OeTube.Application.Methods.GetListMethods
         {
             if (Repository is IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> childQueryAvaliable)
             {
-                return await childQueryAvaliable.GetAvaliableChildrenAsync(Authorization?.CurrentUser.Id, entity, args);
+                var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;
+                return await childQueryAvaliable.GetAvaliableChildrenAsync(requesterId, entity, args);
             }
             else
             {
