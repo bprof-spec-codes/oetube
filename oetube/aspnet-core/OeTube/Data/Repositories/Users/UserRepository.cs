@@ -20,7 +20,7 @@ namespace OeTube.Data.Repositories.Users
 
         public async Task<PaginationResult<Group>> GetChildrenAsync(OeTubeUser entity, IGroupQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
-            var queryable = (await GetDbContextAsync()).GetJoinedGroups(entity);
+            var queryable = (await GetDbContextAsync()).GetJoinedGroups(entity.Id);
             return await CreateListAsync<Group, GroupIncluder, GroupFilter, IGroupQueryArgs>(queryable, args, includeDetails, cancellationToken);
         }
     }

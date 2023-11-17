@@ -6,8 +6,6 @@ namespace OeTube.Application.AuthorizationCheckers
     public interface IAuthorizationChecker
     {
         string? PolicyName { get; set; }
-        public ICurrentUser CurrentUser { get; }
-
         Task CheckPolicyAsync();
 
         Task CheckRightsAsync(object? requestedObject);
@@ -22,7 +20,7 @@ namespace OeTube.Application.AuthorizationCheckers
     {
         public virtual string? PolicyName { get; set; }
         protected IAuthorizationService AuthorizationService { get; }
-        public ICurrentUser CurrentUser { get; }
+        protected ICurrentUser CurrentUser { get; }
 
         protected AuthorizationChecker(IAuthorizationService authorizationService, ICurrentUser currentUser)
         {
