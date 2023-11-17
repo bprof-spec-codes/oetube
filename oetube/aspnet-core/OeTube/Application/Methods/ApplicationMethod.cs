@@ -28,10 +28,7 @@ namespace OeTube.Application.Methods
                 await Authorization.CheckPolicyAsync();
             }
         }
-        protected ILocalEventBus GetLocalEventBus()
-        {
-            return ServiceProvider.LazyGetRequiredService<ILocalEventBus>();
-        }
+    
         protected async Task CheckRightsAsync(object requestedObject)
         {
             if (Authorization is not null)

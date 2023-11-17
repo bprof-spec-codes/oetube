@@ -2,6 +2,7 @@
 using OeTube.Events;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.EventBus.Local;
 
 namespace OeTube.Application.Methods.UpdateMethods
 {
@@ -24,7 +25,8 @@ namespace OeTube.Application.Methods.UpdateMethods
             await CheckRightsAsync(entity);
             entity = await MapAsync(input, entity);
             var updatedEntity = await Repository.UpdateAsync(entity, true);
-            await GetLocalEventBus().PublishAsync(new EntityUpdatingEventData<TEntity>(updatedEntity));
+            await ServiceProvider.GetRequiredService<ILocalEventBus>()
+                                 .PublishAsync(new EntityUpdatingEventData<TEntity>(updatedEntity));
 
             var output = await MapAsync<TEntity, TOutputDto>(updatedEntity);
             return output;
