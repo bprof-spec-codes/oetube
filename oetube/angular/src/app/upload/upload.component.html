@@ -33,7 +33,7 @@
             <h4>Access Groups</h4>
             <dx-button icon="close" (onClick)="hideGroups()"></dx-button>
         </div>
-        <app-group-pagination-grid [(selectedItems)]="uploadModel.accessGroups" [showId]="false" [showIsMember]="false">
+        <app-group-pagination-grid [(selectedKeys)]="uploadModel.accessGroups" [showId]="false" [showIsMember]="false">
         </app-group-pagination-grid>
     </dx-popup>
     <div class="mt-3">

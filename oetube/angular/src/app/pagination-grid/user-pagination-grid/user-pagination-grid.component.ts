@@ -17,7 +17,7 @@ import { PaginationGridComponent } from '../pagination-grid.component';
 })
 
 export class UserPaginationGridComponent extends
-  PaginationGridComponent<UserQueryDto,UserDto,UserListItemDto,UpdateUserDto> implements OnInit, OnDestroy {
+  PaginationGridComponent<UserQueryDto,UserDto,UserListItemDto,UpdateUserDto>  {
 
 @Input() showName:boolean=true
 @Input() showThumbnailImage:boolean=true

@@ -1,19 +1,8 @@
-<dx-data-grid #dxGrid [height]="height" [width]="width">
-    <dxo-paging #dxPaging></dxo-paging>
-    <dxo-pager #dxPager >
-    </dxo-pager>
-    <dxo-selection #dxSelection [mode]="selectionMode"></dxo-selection>
-    <dxo-editing #dxEditing mode="row"
-    [allowDeleting]="allowDelete"
-    [allowUpdating]="allowEdit"
-></dxo-editing>
-    <dxo-filter-row [visible]="true"></dxo-filter-row>
-
+<dx-data-grid>
     <dxi-column [visible]="showThumbnailImage" dataField="thumbnailImageSource" caption="" [width]="100" cellTemplate="imageTemplate"
         [allowSorting]="false" headerCellTemplate="" [allowFiltering]="false"
         [allowResizing]="false">
     </dxi-column>
-    
     <div *dxTemplate="let data of 'imageTemplate'">
         <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
     </div>
