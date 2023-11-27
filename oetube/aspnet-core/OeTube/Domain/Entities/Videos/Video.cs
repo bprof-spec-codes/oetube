@@ -1,5 +1,4 @@
-﻿using OeTube.Entities;
-using Volo.Abp;
+﻿using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 

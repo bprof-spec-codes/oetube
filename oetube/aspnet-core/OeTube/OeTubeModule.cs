@@ -51,10 +51,7 @@ using Volo.Abp.BlobStoring;
 using Volo.Abp.BackgroundJobs;
 using System.Reflection;
 using Volo.Abp.AspNetCore.SignalR;
-using OeTube.Infrastructure.SignalR;
 using OeTube.Application.Dtos.Videos;
-using Volo.Abp.Json;
-using Microsoft.AspNetCore.Mvc;
 using OeTube.Swagger;
 using Volo.Abp.BackgroundWorkers;
 using OeTube.Workers;
@@ -62,6 +59,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Volo.Abp.Imaging;
 using SixLabors.ImageSharp.Formats.Webp;
+using Volo.Abp.Caching;
+using Volo.Abp.Content;
 
 namespace OeTube;
 
@@ -117,6 +116,7 @@ namespace OeTube;
     [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
     [DependsOn(typeof(AbpImagingAbstractionsModule))]
     [DependsOn(typeof(AbpImagingImageSharpModule))]
+    [DependsOn(typeof(AbpCachingModule))]
     public class OeTubeModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
@@ -169,6 +169,7 @@ namespace OeTube;
         ConfigureNewtonsoftJson(context);
         ConfigureRequestSizeLimit();
         ConfigureImageHandling();
+        ConfigureCaching();
     }
 
     private void ConfigureImageHandling()
@@ -288,7 +289,12 @@ namespace OeTube;
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(typeof(StartVideoUploadDto));
+            var remoteStreamDtos = Assembly.GetExecutingAssembly().GetTypes()
+                                    .Where(t => t.Name.EndsWith("Dto") && t.GetProperties().Any(p => p.PropertyType == typeof(IRemoteStreamContent)));
+            foreach (var item in remoteStreamDtos)
+            {
+                options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(item);
+            }
             options.ConventionalControllers.Create(typeof(OeTubeModule).Assembly, opts =>
             {
 
@@ -300,7 +306,7 @@ namespace OeTube;
     {
         services.AddSwaggerGenNewtonsoftSupport();
         services.AddAbpSwaggerGenWithOAuth(
-            configuration["AuthServer:Authority"],
+            configuration["AuthServer:Authority"]!,
             new Dictionary<string, string>
             {
                     {"OeTube", "OeTube API"}
@@ -384,9 +390,16 @@ namespace OeTube;
             {
                 container.UseFileSystem(fileSystem =>
                 {
-                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+                    fileSystem.BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)!;
                 });
             });
+        });
+    }
+    private void ConfigureCaching()
+    {
+        Configure<AbpDistributedCacheOptions>(options =>
+        {
+            options.KeyPrefix = "OeTube";
         });
     }
     private void ConfigureBackgroundJobs()

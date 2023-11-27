@@ -1,16 +1,19 @@
-﻿using OeTube.Entities;
-using Volo.Abp.Auditing;
+﻿using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Entities.Videos
 {
-    public class AccessGroup : Entity, IHasCreationTime, IHasAtomicKey<Guid>
+    public class AccessGroup : Entity, IHasCreationTime, IHasAtomicKey<Guid>, IChildEntityReference<Guid, Guid>
     {
         public Guid VideoId { get; private set; }
         public Guid GroupId { get; private set; }
         public DateTime CreationTime { get; private set; }
 
         Guid IHasAtomicKey<Guid>.AtomicKey => GroupId;
+
+        Guid IChildEntityReference<Guid, Guid>.ParentKey => VideoId;
+
+        Guid IChildEntityReference<Guid, Guid>.ReferencedKey => GroupId;
 
         private AccessGroup()
         { }

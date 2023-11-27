@@ -1,14 +1,8 @@
 ﻿using System.Collections;
 using Volo.Abp.Domain.Entities;
 
-namespace OeTube.Entities
+namespace OeTube.Domain.Entities
 {
-    public interface IHasAtomicKey<TKey>
-        where TKey : notnull
-    {
-        public TKey AtomicKey { get; }
-    }
-
     public interface IReadOnlyEntitySet<TEntity, TKey> : IReadOnlyCollection<TEntity>
         where TEntity : IEntity, IHasAtomicKey<TKey>
         where TKey : notnull

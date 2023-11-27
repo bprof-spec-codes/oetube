@@ -1,5 +1,4 @@
-﻿using OeTube.Entities;
-using Volo.Abp;
+﻿using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 
@@ -21,13 +20,13 @@ namespace OeTube.Domain.Entities.Playlists
 
         Guid IHasAtomicKey<Guid>.AtomicKey => Id;
 
-        public Playlist()
+        protected Playlist()
         {
             items = new EntitySet<VideoItem, int>();
             Name = string.Empty;
         }
 
-        public Playlist(Guid id, string name, Guid creatorId) : this()
+        public Playlist(Guid id, string name, Guid? creatorId) : this()
         {
             Id = id;
             SetName(name);

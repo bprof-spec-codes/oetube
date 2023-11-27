@@ -1,7 +1,12 @@
-import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
 import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
+import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
 import type { EntityDto } from '@abp/ng.core';
 import type { CreatorDto } from '../oe-tube-users/models';
+import type { QueryDto } from '../models';
+
+export interface ContinueVideoUploadDto {
+  content: FormData;
+}
 
 export interface HlsResolutionDto {
   width: number;
@@ -14,9 +19,6 @@ export interface StartVideoUploadDto {
   description?: string;
   access: AccessType;
   content: FormData;
-}
-
-export interface UpdateAccessGroupsDto {
   accessGroups: string[];
 }
 
@@ -24,6 +26,8 @@ export interface UpdateVideoDto {
   name?: string;
   description?: string;
   access: AccessType;
+  accessGroups: string[];
+  indexImage?: number;
 }
 
 export interface UploadTaskDto {
@@ -58,15 +62,13 @@ export interface VideoListItemDto extends EntityDto<string> {
   creator: CreatorDto;
 }
 
-export interface VideoQueryDto {
+export interface VideoQueryDto extends QueryDto {
   name?: string;
   creationTimeMin?: string;
   creationTimeMax?: string;
   durationMin?: string;
   durationMax?: string;
-  skipCount?: number;
-  maxResultCount?: number;
-  sorting?: string;
+  creatorId?: string;
 }
 
 export interface VideoUploadStateDto {

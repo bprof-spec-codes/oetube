@@ -1,5 +1,5 @@
-﻿using OeTube.Domain.Repositories;
-using OeTube.Entities;
+﻿using OeTube.Domain.Entities;
+using OeTube.Domain.Repositories;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities.Events;
 using Volo.Abp.EventBus;
@@ -16,7 +16,7 @@ namespace OeTube.Events
             _userRepository = userRepository;
         }
 
-        public async Task HandleEventAsync(EntityCreatedEventData<IdentityUser> eventData)
+        public virtual async Task HandleEventAsync(EntityCreatedEventData<IdentityUser> eventData)
         {
             await _userRepository.InsertAsync(new OeTubeUser(eventData.Entity), true);
         }

@@ -49,6 +49,7 @@ export class UploadComponent implements OnInit {
     type: 'default',
   };
 
+
   selectFileUploadButtonOptions = {
     type: 'default',
   };
@@ -66,7 +67,9 @@ export class UploadComponent implements OnInit {
       this.log = log;
     });
   }
-
+modelToJson(){
+  return JSON.stringify(this.uploadModel,null,4)
+}
   isTranscoding() {
     this.ffService.isTranscoding();
   }
@@ -86,6 +89,7 @@ export class UploadComponent implements OnInit {
     this.ffService.storeFile(file, inputFileName);
     let state = await firstValueFrom(this.videoService.startUpload(this.startVideoUpload));
     this.numberOfTasks = state.remainingTasks.length;
+
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
       const nextTask = state.remainingTasks.pop();
@@ -100,6 +104,7 @@ export class UploadComponent implements OnInit {
       resized.append('input', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
       state = await firstValueFrom(this.videoService.continueUpload(state.id, resized));
+
     }
     event.preventDefault();
   }

@@ -5,7 +5,7 @@ using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Identity;
 
-namespace OeTube.Entities
+namespace OeTube.Domain.Entities
 {
     public class OeTubeUser : AggregateRoot<Guid>, IHasCreationTime, IHasAtomicKey<Guid>
     {

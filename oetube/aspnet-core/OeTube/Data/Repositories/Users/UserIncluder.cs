@@ -1,4 +1,4 @@
-﻿using OeTube.Entities;
+﻿using OeTube.Domain.Entities;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Data.Repositories.Users

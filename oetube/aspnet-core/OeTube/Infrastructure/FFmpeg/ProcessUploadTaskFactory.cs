@@ -1,7 +1,6 @@
 ﻿using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FFmpeg.Infos;
-using OeTube.Domain.Infrastructure.FileHandlers;
 using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Infrastructure.FFMpeg

@@ -1,38 +1,51 @@
 <div class="component-title">
-<h4>Upload your video</h4>
-<form  (submit)="onSubmit($event)">
-    <dx-form 
-    [formData]="startVideoUpload">
-        <dxi-item dataField="name" [isRequired]="true"></dxi-item>
-        <dxi-item dataField="description" [template]="'descriptionTemplate'"></dxi-item>
-        <div *dxTemplate="let data of 'descriptionTemplate'">
-            <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+    <h4>Upload your video</h4>
+    <form (submit)="onSubmit($event)">
+        <dx-form [formData]="uploadModel">
+            <dxi-item dataField="name" [isRequired]="true"/>
+            <dxi-item dataField="description" [template]="'descriptionTemplate'"/>
+            <div *dxTemplate="let data of 'descriptionTemplate'">
+                <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+            </div>
+            <dxi-item dataField="access">
+                <dxo-label text="Access"></dxo-label>
+                <dx-radio-group [dataSource]="accessOptions" 
+                                [(value)]="uploadModel.access" layout="horizontal"
+                                [itemTemplate]="'itemTemplate'">
+                    <div *dxTemplate="let item of 'itemTemplate'" class="d-flex flex-row align-items-center">
+                        <span class="dx-button-text group-option-text">
+                            {{accessTypeEnum[item]}}
+                        </span>
+                        <div *ngIf="item===accessTypeEnum.Group;else notGroup">
+                                <dx-button (onClick)="showGroups()" icon="edit" type="default" [disabled]="uploadModel.access!==item">
+                                </dx-button>
+                        </div>
+                    </div>
+                </dx-radio-group>
+                <dx-file-uploader dialogTrigger="#upload" #fileUploader uploadMode="useForm"
+                    [allowedFileExtensions]="['.mp4']" [accept]="'video/mp4'" multiple="false"></dx-file-uploader>
+            </dxi-item>
+            <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
+        </dx-form>
+    </form>
+    <dx-popup [(visible)]="popupVisible" [titleTemplate]="'titleTemplate'">
+        <div *dxTemplate="let data of'titleTemplate'" class="d-flex flex-row justify-content-between">
+            <h4>Access Groups</h4>
+            <dx-button icon="close" (onClick)="hideGroups()"></dx-button>
         </div>
-        <dxi-item>
-            <dx-file-uploader accept="video/mp4" dialogTrigger="#upload" #fileUploader uploadMode="useForm" multiple="false"></dx-file-uploader>
-        </dxi-item>
-        <dxi-item
-          dataField="Choose visibility"
-          editorType="dxRadioGroup"
-          [editorOptions]="{ dataSource: 'visibilityOptions', layout:'horizontal', valueExpr: 'value', displayExpr: 'text' }"
-        >
-            <dx-radio-group
-                [dataSource]="visibilityOptions"
-                [value]="selectedVisibility"
-                displayExpr="text">
-            </dx-radio-group>
-        </dxi-item>
-        <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
-        
-        
-
-    </dx-form>
-</form>
-
-<div class="mt-3">
-    <dx-progress-bar [value]="progress" max="1"></dx-progress-bar>
-    <p>
-       <em> {{ log?.message }} </em>
-    </p>
+        <app-group-pagination-grid [(selectedItems)]="uploadModel.accessGroups" [showId]="false" [showIsMember]="false">
+        </app-group-pagination-grid>
+    </dx-popup>
+    <div class="mt-3">
+        <dx-progress-bar [value]="progress" max="1"></dx-progress-bar>
+        <p>
+            <em> {{ log?.message }} </em>
+        </p>
+    </div>
+    {{modelToJson()}}
 </div>
-</div>
+
+
+
+
+

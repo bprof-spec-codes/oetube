@@ -3,7 +3,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Configs
 {
-    public class SourceImageFileConfig : ISourceImageFileConfig,ISingletonDependency
+    public class SourceImageFileConfig : ISourceImageFileConfig, ISingletonDependency
     {
         public SourceImageFileConfig()
         {

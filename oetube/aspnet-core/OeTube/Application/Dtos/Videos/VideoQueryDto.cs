@@ -1,16 +1,18 @@
-﻿using OeTube.Domain.Repositories.QueryArgs;
+﻿using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.Repositories.QueryArgs;
+using System.ComponentModel.DataAnnotations;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class VideoQueryDto : IVideoQueryArgs
+    public class VideoQueryDto : QueryDto, IVideoQueryArgs
     {
+        [StringLength(VideoConstants.NameMaxLength)]
         public string? Name { get; set; }
+
         public DateTime? CreationTimeMin { get; set; }
         public DateTime? CreationTimeMax { get; set; }
         public TimeSpan? DurationMin { get; set; }
         public TimeSpan? DurationMax { get; set; }
-        public int? SkipCount { get; set; }
-        public int? MaxResultCount { get; set; }
-        public string? Sorting { get; set; }
+        public Guid? CreatorId { get; set; }
     }
 }

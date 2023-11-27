@@ -1,5 +1,5 @@
-﻿using OeTube.Application.Services.Url;
-using OeTube.Entities;
+﻿using OeTube.Application.Url;
+using OeTube.Domain.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
@@ -8,7 +8,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
 {
     public class UserMapper : IObjectMapper<OeTubeUser, UserDto>, ITransientDependency
     {
-        private readonly IImageUrlService _urlService;
+        private readonly UserUrlService _urlService;
 
         public UserMapper(UserUrlService urlService)
         {
@@ -24,7 +24,8 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         {
             destination.Id = source.Id;
             destination.Name = source.Name;
-            destination.RegistrationDate = source.CreationTime;
+            destination.EmailDomain = source.EmailDomain;
+            destination.CreationTime = source.CreationTime;
             destination.Image = _urlService.GetImageUrl(source.Id);
             return destination;
         }
@@ -35,7 +36,7 @@ namespace OeTube.Application.Dtos.OeTubeUsers
         public string Name { get; set; } = string.Empty;
         public string? AboutMe { get; set; }
         public string EmailDomain { get; set; } = string.Empty;
-        public DateTime RegistrationDate { get; set; }
+        public DateTime CreationTime { get; set; }
         public string? Image { get; set; }
     }
 }

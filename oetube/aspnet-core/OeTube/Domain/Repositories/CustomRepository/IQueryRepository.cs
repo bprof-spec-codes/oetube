@@ -1,5 +1,4 @@
-﻿using OeTube.Domain.Entities.Videos;
-using OeTube.Domain.Repositories.QueryArgs;
+﻿using OeTube.Domain.Repositories.QueryArgs;
 using Volo.Abp.Domain.Entities;
 
 namespace OeTube.Domain.Repositories.CustomRepository
@@ -8,6 +7,16 @@ namespace OeTube.Domain.Repositories.CustomRepository
         where TEntity : class, IEntity
         where TQueryArgs : IQueryArgs
     {
-        Task<List<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
+        Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default);
+    }
+
+    public interface IQueryAvaliableRepository<TEntity, TQueryArgs> : IQueryRepository<TEntity, TQueryArgs>
+    where TEntity : class, IEntity
+    where TQueryArgs : IQueryArgs
+    {
+        Task<PaginationResult<TEntity>> GetAvaliableAsync(Guid? requesterId,
+                                              TQueryArgs? args = default,
+                                              bool includeDetails = false,
+                                              CancellationToken cancellationToken = default);
     }
 }

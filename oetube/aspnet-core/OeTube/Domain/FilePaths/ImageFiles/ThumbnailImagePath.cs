@@ -1,13 +1,10 @@
-﻿
-namespace OeTube.Domain.FilePaths.ImageFiles
+﻿namespace OeTube.Domain.FilePaths.ImageFiles
 {
-    public class ThumbnailImagePath : ImageFilePath,IDefaultFilePath
+    public class ThumbnailImagePath : ImageFilePath, IDefaultFilePath
     {
         public ThumbnailImagePath(Guid id) : base(id)
         {
         }
-
-   
 
         public override string Name => "thumbnail_image";
 

@@ -1,8 +1,8 @@
 ﻿using OeTube.Domain.Configs;
-using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Infrastructure;
-using Volo.Abp.Imaging;
+using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.Http;
+using Volo.Abp.Imaging;
 
 namespace OeTube.Infrastructure.FileHandlers
 {
@@ -12,6 +12,7 @@ namespace OeTube.Infrastructure.FileHandlers
         protected readonly IImageResizer _resizer;
         protected readonly IThumbnailImageFileConfig _thumbnailConfig;
         protected readonly ISourceImageFileConfig _sourceImageConfig;
+
         public ImageHandler(IFileContainerFactory fileContainerFactory,
                                   IImageResizer resizer,
                                   ISourceImageFileConfig sourceImageConfig,
@@ -29,7 +30,7 @@ namespace OeTube.Infrastructure.FileHandlers
                                          CancellationToken cancellationToken = default)
         {
             var args = new ImageResizeArgs(config.MaxWidth, config.MaxHeight, ImageResizeMode.Max);
-            var resized = await _resizer.ResizeAsync(content.Bytes, args,MimeTypes.GetByExtension("."+config.OutputFormat), cancellationToken);
+            var resized = await _resizer.ResizeAsync(content.Bytes, args, MimeTypes.GetByExtension("." + config.OutputFormat), cancellationToken);
             return new ByteContent(config.OutputFormat, resized.Result);
         }
     }

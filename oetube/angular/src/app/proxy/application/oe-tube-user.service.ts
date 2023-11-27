@@ -1,8 +1,7 @@
 import type { GroupListItemDto, GroupQueryDto } from './dtos/groups/models';
+import type { PaginationDto } from './dtos/models';
 import type { UpdateUserDto, UserDto, UserListItemDto, UserQueryDto } from './dtos/oe-tube-users/models';
-import type { VideoListItemDto, VideoQueryDto } from './dtos/videos/models';
 import { RestService, Rest } from '@abp/ng.core';
-import type { PagedResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -20,29 +19,11 @@ export class OeTubeUserService {
     { apiName: this.apiName,...config });
   
 
-  getAvaliableVideos = (id: string, input: VideoQueryDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<VideoListItemDto>>({
+  getGroups = (id: string, input: GroupQueryDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
-      url: `/api/app/oe-tube-user/${id}/avaliable-videos`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getCreatedGroups = (id: string, input: GroupQueryDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<GroupListItemDto>>({
-      method: 'GET',
-      url: `/api/app/oe-tube-user/${id}/created-groups`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getCreatedVideos = (id: string, input: VideoQueryDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<VideoListItemDto>>({
-      method: 'GET',
-      url: `/api/app/oe-tube-user/${id}/created-videos`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
+      url: `/api/app/oe-tube-user/${id}/groups`,
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -56,20 +37,11 @@ export class OeTubeUserService {
     { apiName: this.apiName,...config });
   
 
-  getJoinedGroups = (id: string, input: GroupQueryDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<GroupListItemDto>>({
-      method: 'GET',
-      url: `/api/app/oe-tube-user/${id}/joined-groups`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
-    },
-    { apiName: this.apiName,...config });
-  
-
   getList = (input: UserQueryDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<UserListItemDto>>({
+    this.restService.request<any, PaginationDto<UserListItemDto>>({
       method: 'GET',
       url: '/api/app/oe-tube-user',
-      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, skipCount: input.skipCount, maxResultCount: input.maxResultCount, sorting: input.sorting },
+      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -87,7 +59,8 @@ export class OeTubeUserService {
     this.restService.request<any, UserDto>({
       method: 'PUT',
       url: `/api/app/oe-tube-user/${id}`,
-      body: input,
+      params: { name: input.name, aboutMe: input.aboutMe },
+      body: input.image,
     },
     { apiName: this.apiName,...config });
   
@@ -96,15 +69,6 @@ export class OeTubeUserService {
     this.restService.request<any, void>({
       method: 'POST',
       url: '/api/app/oe-tube-user/upload-default-image',
-      body: input,
-    },
-    { apiName: this.apiName,...config });
-  
-
-  uploadImage = (id: string, input: FormData, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, void>({
-      method: 'POST',
-      url: `/api/app/oe-tube-user/${id}/upload-image`,
       body: input,
     },
     { apiName: this.apiName,...config });

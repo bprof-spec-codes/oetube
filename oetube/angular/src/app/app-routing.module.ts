@@ -36,8 +36,8 @@ const routes: Routes = [
   },
   { path: 'video', loadChildren: () => import('./video/video.module').then(m => m.VideoModule) },
   {
-    path:'ffmpeg-test',
-    loadChildren: ()=>import('./ffmpeg-test/ffmpeg-test.module').then(m=>m.FfmpegTestModule)
+    path:'group',
+    loadChildren: ()=>import('./group/group.module').then(m=>m.GroupModule) 
   }
 ];
 

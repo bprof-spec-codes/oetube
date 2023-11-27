@@ -1,155 +1,127 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OeTube.Application.AuthorizationCheckers;
+using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.Videos;
-using OeTube.Application.Services.Url;
+using OeTube.Application.Methods;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
-using OeTube.Domain.Infrastructure;
-using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
-using OeTube.Domain.Infrastructure.FileHandlers;
-using OeTube.Domain.Infrastructure.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
+using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
-    public class VideoAppService :
-        ReadOnlyCreatorAppService<IVideoRepository, Video, Guid,VideoDto, VideoListItemDto, IVideoQueryArgs, VideoQueryDto>,
-        IUpdateAppService<VideoDto, Guid, UpdateVideoDto>,
-        IDeleteAppService<Guid>
+    public class VideoAppService : IApplicationService, ITransientDependency
     {
-        private readonly IStartVideoUploadHandler _startVideoUpload;
-        private readonly IContinueVideoUploadHandler _continueVideoUpload;
-        private readonly ISelectVideoFrameHandler _selectVideoFrame;
-        private readonly IVideoUrlService _urlService;
-        public VideoAppService(IVideoRepository repository,
-                               IFileContainerFactory fileContainerFactory,
-                               IUserRepository userRepository,
-                               IStartVideoUploadHandler startVideoUpload,
-                               IContinueVideoUploadHandler continueVideoUpload,
-                               ISelectVideoFrameHandler selectVideoFrame,
-                               IVideoUrlService urlService) :
-            base(repository, fileContainerFactory, userRepository)
+        private readonly VideoMethodFactory _factory;
+        private readonly Type _creatorAuth = typeof(CreatorChecker);
+        private readonly Type _accessAuth = typeof(VideoAccessChecker);
+
+        public VideoAppService(VideoMethodFactory videoMethodFactory)
         {
-            _startVideoUpload = startVideoUpload;
-            _continueVideoUpload = continueVideoUpload;
-            _selectVideoFrame = selectVideoFrame;
-            _urlService = urlService;
+            _factory = videoMethodFactory;
         }
 
         public async Task<VideoUploadStateDto> StartUploadAsync(StartVideoUploadDto input)
         {
-            return await CreateAsync<Video, VideoUploadStateDto>(async () =>
-            {
-                var content = await ByteContent.FromRemoteStreamContentAsync(input.Content);
-                var args = await Task.FromResult(ObjectMapper.Map<StartVideoUploadDto, StartVideoUploadHandlerArgs>(input));
-
-                return await _startVideoUpload.HandleFileAsync<Video>(content,args);
-            });
+            return await _factory.CreateCreateMethod<StartVideoUploadDto, VideoUploadStateDto>()
+                                 .CreateAsync(input);
         }
 
-        public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, IRemoteStreamContent input)
+        public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, ContinueVideoUploadDto input)
         {
-            var video = await Repository.GetAsync(id);
-            return await UpdateAsync<Video, VideoUploadStateDto>(async () =>
-            {
-                var content = await ByteContent.FromRemoteStreamContentAsync(input);
-                var args = new ContinueVideoUploadHandlerArgs(video);
-                return await _continueVideoUpload.HandleFileAsync<Video>(content, args);
-            }, video);
+            return await _factory.CreateUpdateMethod<ContinueVideoUploadDto, VideoUploadStateDto>()
+                                 .SetAuthorizationAndPolicy(_creatorAuth)
+                                 .UpdateAsync(id, input);
         }
 
-        public async Task SelectIndexImageAsync(Guid id, int index)
+        public async Task<VideoDto> GetAsync(Guid id)
         {
-            var video = await Repository.GetAsync(id);
-            var args = new SelectVideoFrameHandlerArgs(id, index);
-            await UpdateAsync(async () => await _selectVideoFrame.HandleFileAsync<Video>(args) ,video);
+            return await _factory.CreateGetMethod<VideoDto>()
+                                 .SetAuthorizationAndPolicy(_accessAuth)
+                                 .GetAsync(id);
         }
+
+        public async Task<PaginationDto<VideoListItemDto>> GetListAsync(VideoQueryDto input)
+        {
+            return await _factory.CreateGetListMethod<VideoListItemDto>()
+                                 .GetListAsync(input);
+        }
+
+        public async Task<PaginationDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
+        {
+            return await _factory.CreateGetChildrenListMethod<Group, IGroupQueryArgs, GroupListItemDto>()
+                                 .SetAuthorizationAndPolicy(_accessAuth)
+                                 .GetChildrenListAsync(id, input);
+        }
+
         public async Task<VideoIndexImagesDto> GetIndexImagesAsync(Guid id)
         {
-            await CheckPolicyAsync(GetPolicy);
-            await GetAsync(id);
-            var selected = _urlService.GetIndexImageUrl(id);
-            var indexImages = new List<string>();
-            int index = 1;
-            do
-            {
-                var name = FileContainer.FindFile(new FramePath(id, index));
-                if (name == null)
-                {
-                    break;
-                }
-                indexImages.Add(_urlService.GetIndexImageByIndexUrl(id, index));
-                index++;
-            }
-            while (true);
-            return new VideoIndexImagesDto()
-            {
-                Id=id,
-                IndexImages = indexImages,
-                Selected = selected
-            };
-        }
-
-        public async Task<PagedResultDto<GroupListItemDto>> GetAccessGroupsAsync(Guid id, GroupQueryDto input)
-        {
-            var video = await Repository.GetAsync(id);
-            return await GetListAsync<Group, GroupListItemDto>
-                (async () => await Repository.GetAccessGroupsAsync(video, input));
+            return await _factory.CreateGetMethod<VideoIndexImagesDto>()
+                                 .SetAuthorizationAndPolicy(_creatorAuth)
+                                 .GetAsync(id);
         }
 
         public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
-            return await UpdateAsync<Video, Guid, VideoDto, UpdateVideoDto>(Repository, id, input);
+            return await _factory.CreateUpdateMethod<UpdateVideoDto, VideoDto>()
+                                 .SetAuthorizationAndPolicy(_creatorAuth)
+                                 .UpdateAsync(id, input);
         }
 
-        public async Task<VideoDto> UpdateAccessGroupsAsync(Guid id, UpdateAccessGroupsDto input)
-        {
-            var video = await Repository.GetAsync(id);
-            return await UpdateAsync<Video, VideoDto>
-                (async () => await Repository.UpdateAccessGroupsAsync(video, input.AccessGroups), video);
-        }
         public async Task DeleteAsync(Guid id)
         {
-            await DeleteAsync(Repository, id);
+            await _factory.CreateDeleteMethod()
+                          .SetAuthorizationAndPolicy(_creatorAuth)
+                          .DeleteAsync(id);
+        }
+
+        [HttpGet("api/src/video/{id}/{width}x{height}/{segment}.ts")]
+        public async Task<IRemoteStreamContent> GetHlsSegmentAsync(Guid id, int width, int height, int segment)
+        {
+            return await _factory.CreateGetFileMethod<HlsSegmentPath>()
+                                 .SetAuthorizationAndPolicy(_accessAuth)
+                                 .SetFileName($"{width}x{height}_{segment}")
+                                 .GetFileAsync(id, new HlsSegmentPath(id, new Resolution(width, height), segment));
         }
 
         [HttpGet("api/src/video/{id}/{width}x{height}/list.m3u8")]
         public async Task<IRemoteStreamContent?> GetHlsListAsync(Guid id, int width, int height)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_list";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new HlsListPath(id, new Resolution(width, height))),name);
-        }
-
-        [HttpGet("api/src/video/{id}/{width}x{height}/{segment}.ts")]
-        public async Task<IRemoteStreamContent?> GetHlsSegmentAsync(Guid id, int width, int height, int segment)
-        {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_{segment}";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new HlsSegmentPath(id, new Resolution(width, height), segment)),name);
+            return await _factory.CreateGetFileMethod<HlsListPath>()
+                                 .SetAuthorizationAndPolicy(_accessAuth)
+                                 .SetFileName($"{width}x{height}")
+                                 .GetFileAsync(id, new HlsListPath(id, new Resolution(width, height)));
         }
 
         [HttpGet("api/src/video/{id}/index_image")]
         public async Task<IRemoteStreamContent?> GetIndexImageAsync(Guid id)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_index_image";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new SelectedFramePath(id)),name);
+            return await _factory.CreateGetFileMethod<SelectedFramePath>()
+                                 .SetAuthorizationAndPolicy(_accessAuth)
+                                 .SetFileName("index_image")
+                                 .GetFileAsync(id, new SelectedFramePath(id));
         }
 
         [HttpGet("api/src/video/{id}/index_image/{index}")]
         public async Task<IRemoteStreamContent?> GetIndexImageByIndexAsync(Guid id, int index)
         {
-            var entity = Repository.GetAsync(id, false);
-            string name = $"{nameof(Video).ToLower()}_{id}_index_image_{index}";
-            return await GetFileOrNullAsync(async () => await FileContainer.GetFileOrNullAsync(new FramePath(id, index)),name);
+            return await _factory.CreateGetFileMethod<FramePath>()
+                                  .SetAuthorizationAndPolicy(_creatorAuth)
+                                  .SetFileName($"index_image_{index}")
+                                  .GetFileAsync(id, new FramePath(id, index));
         }
+    }
 
+    public class VideoMethodFactory : ApplicationMethodFactory<IVideoRepository, Video, Guid, IVideoQueryArgs>, ITransientDependency
+    {
+        public VideoMethodFactory(IVideoRepository repository, IAbpLazyServiceProvider serviceProvider, IFileContainerFactory fileContainerFactory) : base(repository, serviceProvider, fileContainerFactory)
+        {
+        }
     }
 }

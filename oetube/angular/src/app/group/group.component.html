@@ -1,0 +1,9 @@
+<dx-tab-panel>
+    <dxi-item title="Create">
+        <app-group-create></app-group-create>
+    </dxi-item>
+    <dxi-item title="My Groups">
+        <app-group-pagination-grid selectionMode="none" [creatorIdFilter]="currentUser.id" [showId]="false" [showIsMember]="false" [showCreator]="false">
+        </app-group-pagination-grid>
+    </dxi-item>
+</dx-tab-panel>

@@ -2,14 +2,20 @@
 {
     public interface IQueryArgs
     {
-        int? MaxResultCount { get; set; }
-        int? SkipCount { get; set; }
+        int Page { get; set; }
+        ItemPerPage ItemPerPage { get; set; }
         string? Sorting { get; set; }
     }
-    public class QueryArgs:IQueryArgs
+
+    public enum ItemPerPage
     {
-        public int? MaxResultCount { get; set; }
-        public int? SkipCount { get; set; }
-        public string? Sorting { get; set; }
+        P10 = 10, P20 = 20, P50 = 50, P100 = 100
+    }
+
+    public class QueryArgs : IQueryArgs
+    {
+        public virtual int Page { get; set; } = 0;
+        public virtual ItemPerPage ItemPerPage { get; set; }
+        public virtual string? Sorting { get; set; }
     }
 }

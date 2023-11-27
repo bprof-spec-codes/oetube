@@ -1,9 +1,14 @@
+import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
 import type { EntityDto } from '@abp/ng.core';
 import type { CreatorDto } from '../oe-tube-users/models';
+import type { QueryDto } from '../models';
 
 export interface CreateUpdateGroupDto {
   name: string;
   description?: string;
+  emailDomains: string[];
+  members: string[];
+  image?: FormData;
 }
 
 export interface GroupDto extends EntityDto<string> {
@@ -14,6 +19,8 @@ export interface GroupDto extends EntityDto<string> {
   members: string[];
   image?: string;
   creator: CreatorDto;
+  currentUserIsMember: boolean;
+  totalMembersCount: number;
 }
 
 export interface GroupListItemDto extends EntityDto<string> {
@@ -21,21 +28,13 @@ export interface GroupListItemDto extends EntityDto<string> {
   creationTime?: string;
   thumbnailImage?: string;
   creator: CreatorDto;
+  currentUserIsMember: boolean;
+  totalMembersCount: number;
 }
 
-export interface GroupQueryDto {
+export interface GroupQueryDto extends QueryDto {
   name?: string;
   creationTimeMin?: string;
   creationTimeMax?: string;
-  skipCount?: number;
-  maxResultCount?: number;
-  sorting?: string;
-}
-
-export interface ModifyEmailDomainsDto {
-  emailDomains: string[];
-}
-
-export interface ModifyMembersDto {
-  members: string[];
+  creatorId?: string;
 }
