@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
+import { DxFileUploaderModule } from 'devextreme-angular';
  
 import {
   DxTabPanelModule,
@@ -25,7 +26,8 @@ import {
     DxFormModule,
     DxTextAreaModule,
     DxRadioGroupModule,
-    DxFormModule
+    DxFormModule,
+    DxFileUploaderModule
   ]
 })
 export class PlaylistModule { }

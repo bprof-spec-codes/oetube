@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { PlaylistDto } from '@proxy/application/dtos/playlists';
+import { CreateUpdatePlaylistDto, PlaylistDto } from '@proxy/application/dtos/playlists';
 import { CreatorDto } from '@proxy/application/dtos/oe-tube-users'
+import { PlaylistService } from '@proxy/application/playlist.service';
 
 @Component({
   selector: 'app-playlist-create',
@@ -8,32 +9,30 @@ import { CreatorDto } from '@proxy/application/dtos/oe-tube-users'
   styleUrls: ['./playlist-create.component.scss']
 })
 export class PlaylistCreateComponent {
+  playlistService : PlaylistService
+
   submitButtonOptions={
-    text:"Submit",
+    text:"Create",
     useSubmitBehavior:true,
-    type:"normal"
+    type:"default"
   }
 
-  constructor() {
+  acceptedFileTypes: string = '.jpg, .jpeg, .png, .gif'
+
+  constructor(playlistService : PlaylistService) {
+    this.playlistService = playlistService
   }
 
-  playlistModel : PlaylistDto = {
+  playlistModel : CreateUpdatePlaylistDto = {
     name: '',
     description: '',
-    creationTime: '',
     items: [],
-    image: '',
-    creator: {
-      name: '',
-      thumbnailImage: '',
-      currentUserIsCreator: true
-    } ,
-    totalDuration: ''
+    image: new FormData()
   }
 
   onSubmit(event:Event) {
     event.preventDefault();
     console.log(this.playlistModel)
-
+    //this.playlistService.create(this.playlistModel)
   }
 }
