@@ -1,3 +1,14 @@
 <main>
-    <h3>Create you own playlist</h3>
+    <h4>Create you own playlist</h4>
+    <form (submit)="onSubmit($event)">
+        <dx-form [formData]="playlistModel">
+            <dxi-item dataField="title" [isRequired]="true"/>
+            <dxi-item dataField="description" [template]="'descriptionTemplate'"/>
+            <div *dxTemplate="let data of 'descriptionTemplate'">
+                <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+            </div>
+            
+            <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
+        </dx-form>
+    </form>
 </main>

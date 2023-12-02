@@ -24,7 +24,8 @@ import {
     DxTabPanelModule,
     DxFormModule,
     DxTextAreaModule,
-    DxRadioGroupModule
+    DxRadioGroupModule,
+    DxFormModule
   ]
 })
 export class PlaylistModule { }
