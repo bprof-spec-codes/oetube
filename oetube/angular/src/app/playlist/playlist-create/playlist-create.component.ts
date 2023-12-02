@@ -35,4 +35,8 @@ export class PlaylistCreateComponent {
     console.log(this.playlistModel)
     //this.playlistService.create(this.playlistModel)
   }
+
+  onFileSelected(event){
+    this.playlistModel.image = event.value;
+  }
 }

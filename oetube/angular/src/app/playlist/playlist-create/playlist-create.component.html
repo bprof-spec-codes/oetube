@@ -9,7 +9,10 @@
             </div>
             <dxi-item dataField="image">
                 <dx-file-uploader dialogTrigger="#upload" #fileUploader uploadMode="useForm"
-                        [accept]="acceptedFileTypes" multiple="false" [selectButtonText]="'Select image'"></dx-file-uploader>
+                        [accept]="acceptedFileTypes"
+                        multiple="false"
+                        [selectButtonText]="'Select image'"
+                        (onValueChanged)="onFileSelected($event)"></dx-file-uploader>
                 </dxi-item>
                     <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
         </dx-form>
