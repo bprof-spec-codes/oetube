@@ -18,6 +18,7 @@ import { registerLocale } from '@abp/ng.core/locale';
 import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
 import { DxRadioGroupModule } from "devextreme-angular";
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { SidebarModule } from './sidebar/sidebar.module';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     DxDropDownBoxModule,
     DxListModule,
     DxRadioGroupModule,
+    SidebarModule,
     CoreModule.forRoot({
       environment,
       registerLocaleFn: registerLocale(),
@@ -40,7 +42,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     SettingManagementConfigModule.forRoot(),
     FeatureManagementModule.forRoot(),
   ],
-  declarations: [AppComponent, SidebarComponent],
+  declarations: [AppComponent],
   providers: [APP_ROUTE_PROVIDER],
   bootstrap: [AppComponent],
 })

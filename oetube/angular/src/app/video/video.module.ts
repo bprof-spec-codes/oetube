@@ -18,6 +18,7 @@ import { VideoRoutingModule } from './video-routing.module';
 import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.component';
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
+import { SidebarModule } from '../sidebar/sidebar.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { VolumeControlComponent } from './video-player/volume-control/volume-con
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    SidebarModule
   ],
 })
 export class VideoModule {}
