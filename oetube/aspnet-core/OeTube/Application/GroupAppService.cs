@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
@@ -38,12 +39,14 @@ namespace OeTube.Application
                                  .GetListAsync(input);
         }
 
+        [Authorize]
         public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
         {
             return await _factory.CreateCreateMethod<CreateUpdateGroupDto, GroupDto>()
                                  .CreateAsync(input);
         }
 
+        [Authorize]
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
@@ -51,6 +54,7 @@ namespace OeTube.Application
                           .DeleteAsync(id);
         }
 
+        [Authorize]
         public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
         {
             return await _factory.CreateUpdateMethod<CreateUpdateGroupDto, GroupDto>()
@@ -58,6 +62,7 @@ namespace OeTube.Application
                                  .UpdateAsync(id, input);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task UploadDefaultImageAsync(IRemoteStreamContent input)
         {
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()

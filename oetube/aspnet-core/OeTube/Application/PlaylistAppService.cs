@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Playlists;
@@ -66,17 +67,22 @@ namespace OeTube.Application
                                  .GetListAsync(input);
         }
 
+        [Authorize]
         public async Task<PlaylistDto> CreateAsync(CreateUpdatePlaylistDto input)
         {
             return await _factory.CreateCreateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .CreateAsync(input);
         }
+
+        [Authorize]
         public async Task<PlaylistDto> UpdateAsync(Guid id,CreateUpdatePlaylistDto input)
         {
             return await _factory.CreateUpdateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .SetAuthorizationAndPolicy(_creatorAuth)
                                  .UpdateAsync(id, input);
         }
+
+        [Authorize]
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
@@ -84,6 +90,7 @@ namespace OeTube.Application
                           .DeleteAsync(id);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task UploadDefaultImageAsync(IRemoteStreamContent input)
         {
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()
