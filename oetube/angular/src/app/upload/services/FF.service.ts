@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
 import {
-  FFmpeg,
-  createFFmpeg,
-  fetchFile,
   CreateFFmpegOptions,
+  FFmpeg,
   LogCallback,
   ProgressCallback,
+  createFFmpeg,
+  fetchFile,
 } from '@ffmpeg/ffmpeg';
-import { mimeTypes } from 'mime-wrapper';
 import { FFprobeWorker, FileInfo, Stream } from 'ffprobe-wasm';
+
+import { Injectable } from '@angular/core';
+import { mimeTypes } from 'mime-wrapper';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class FFService {
     this.ffmpeg.setLogger(log);
   }
 
-  onProggress(progress: ProgressCallback) {
+  onProgress(progress: ProgressCallback) {
     this.ffmpeg.setProgress(progress);
   }
 
@@ -54,7 +55,7 @@ export class FFService {
     return Array.from(this.storedFiles.keys());
   }
 
-  getFile(fileName:string): File {
+  getFile(fileName: string): File {
     return this.storedFiles.get(fileName);
   }
 
@@ -81,7 +82,7 @@ export class FFService {
     try {
       this.transcoding = true;
       await this.ffmpeg.run(...this.getCommand(inputFileName, outputFileName, args).split(' '));
-    const data = this.ffmpeg.FS('readFile', outputFileName);
+      const data = this.ffmpeg.FS('readFile', outputFileName);
       const file = new File([data.buffer], outputFileName, {
         type: mimeTypes.getType(outputFileName),
       });
