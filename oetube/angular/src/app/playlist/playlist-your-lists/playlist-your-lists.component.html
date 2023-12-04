@@ -6,7 +6,10 @@
         selectionMode="single"
         searchMode="contains"
         [allowItemDeleting]="true"
-        (onItemClick)="navigateToList($event)">
+        (onItemClick)="navigateToList($event)"
+        (onItemDeleted)="deletePlaylist($event)"
+        [itemTemplate]="itemTemplate"
+        >
         <dxo-item-dragging 
             [allowReordering]="true">
     </dxo-item-dragging>
