@@ -29,10 +29,6 @@ export class UploadComponent implements OnInit {
   numberOfTasks: number;
   numberOfCompletedTasks: number;
 
-  popupVisible = false;
-
-  accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
-
   visibilityOptions = [
     { text: 'Public', value: 'Public' },
     { text: 'Private', value: 'Private' },
