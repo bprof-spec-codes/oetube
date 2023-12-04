@@ -1,7 +1,7 @@
 <div class="component-title">
     <h4>Upload your video</h4>
     <form (submit)="onSubmit($event)">
-        <dx-form [formData]="uploadModel">
+        <dx-form [formData]="startVideoUpload">
             <dxi-item dataField="name" [isRequired]="true"/>
             <dxi-item dataField="description" [template]="'descriptionTemplate'"/>
             <div *dxTemplate="let data of 'descriptionTemplate'">
@@ -10,14 +10,14 @@
             <dxi-item dataField="access">
                 <dxo-label text="Access"></dxo-label>
                 <dx-radio-group [dataSource]="accessOptions" 
-                                [(value)]="uploadModel.access" layout="horizontal"
+                                [(value)]="startVideoUpload.access" layout="horizontal"
                                 [itemTemplate]="'itemTemplate'">
                     <div *dxTemplate="let item of 'itemTemplate'" class="d-flex flex-row align-items-center">
                         <span class="dx-button-text group-option-text">
                             {{accessTypeEnum[item]}}
                         </span>
                         <div *ngIf="item===accessTypeEnum.Group;else notGroup">
-                                <dx-button (onClick)="showGroups()" icon="edit" type="default" [disabled]="uploadModel.access!==item">
+                                <dx-button (onClick)="showGroups()" icon="edit" type="default" [disabled]="startVideoUpload.access!==item">
                                 </dx-button>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
             <h4>Access Groups</h4>
             <dx-button icon="close" (onClick)="hideGroups()"></dx-button>
         </div>
-        <app-group-pagination-grid [(selectedItems)]="uploadModel.accessGroups" [showId]="false" [showIsMember]="false">
+        <app-group-pagination-grid [(selectedItems)]="startVideoUpload.accessGroups" [showId]="false" [showIsMember]="false">
         </app-group-pagination-grid>
     </dx-popup>
     <div class="mt-3">

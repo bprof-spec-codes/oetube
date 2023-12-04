@@ -28,13 +28,27 @@ export class UploadComponent implements OnInit {
   log: any;
   numberOfTasks: number;
   numberOfCompletedTasks: number;
-  uploadModel: StartVideoUploadDto = {
-    name: '',
+
+  popupVisible = false;
+
+  accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
+
+  visibilityOptions = [
+    { text: 'Public', value: 'Public' },
+    { text: 'Private', value: 'Private' },
+    { text: 'OE', value: 'OE' },
+    { text: 'Custom Group', value: 'Custom Group' },
+  ];
+
+  selectedVisibility = this.visibilityOptions[0];
+
+  startVideoUpload: StartVideoUploadDto = {
+      name: '',
     description: '',
     access: AccessType.Public,
     content: undefined,
-    accessGroups: [],
-  };
+    accessGroups: []
+  }
 
   accessTypeEnum = AccessType;
   accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
@@ -69,9 +83,11 @@ export class UploadComponent implements OnInit {
       console.log(log);
     });
   }
-  modelToJson() {
-    return JSON.stringify(this.uploadModel, null, 4);
-  }
+
+modelToJson(){
+  return JSON.stringify(this.startVideoUpload,null,4)
+}
+
   isTranscoding() {
     this.ffService.isTranscoding();
   }
@@ -85,11 +101,11 @@ export class UploadComponent implements OnInit {
     const file = this.fileUploader.value[0];
     const source = new FormData();
     source.append('content', file, file.name);
-    this.uploadModel.content = source;
+    this.startVideoUpload.content = source;
     const inputFileName = 'input.' + file.name.split('.').pop();
 
     this.ffService.storeFile(file, inputFileName);
-    let state = await firstValueFrom(this.videoService.startUpload(this.uploadModel));
+    let state = await firstValueFrom(this.videoService.startUpload(this.startVideoUpload));
     this.numberOfTasks = state.remainingTasks.length;
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
@@ -104,6 +120,7 @@ export class UploadComponent implements OnInit {
       const resized = new FormData();
       resized.append('input', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
+
       state = await firstValueFrom(
         this.videoService.continueUpload(state.id, { content: resized })
       );
