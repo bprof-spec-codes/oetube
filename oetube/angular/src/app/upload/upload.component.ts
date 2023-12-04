@@ -28,6 +28,10 @@ export class UploadComponent implements OnInit {
   numberOfTasks: number;
   numberOfCompletedTasks: number;
 
+  popupVisible = false;
+
+  accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
+
   visibilityOptions = [
     { text: 'Public', value: 'Public' },
     { text: 'Private', value: 'Private' },
@@ -42,6 +46,7 @@ export class UploadComponent implements OnInit {
     description: '',
     access: AccessType.Public,
     content: undefined,
+    accessGroups: []
   };
   submitButtonOptions = {
     text: 'Submit',
@@ -68,7 +73,7 @@ export class UploadComponent implements OnInit {
     });
   }
 modelToJson(){
-  return JSON.stringify(this.uploadModel,null,4)
+  return JSON.stringify(this.startVideoUpload,null,4)
 }
   isTranscoding() {
     this.ffService.isTranscoding();
@@ -103,7 +108,7 @@ modelToJson(){
       const resized = new FormData();
       resized.append('input', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
-      state = await firstValueFrom(this.videoService.continueUpload(state.id, resized));
+      state = await firstValueFrom(this.videoService.continueUpload(state.id, {content: resized}));
 
     }
     event.preventDefault();
