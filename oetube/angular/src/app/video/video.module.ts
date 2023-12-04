@@ -4,6 +4,7 @@ import {
   DxSliderModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
+import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
 
 import { CommonModule } from '@angular/common';
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
@@ -39,6 +40,8 @@ import { VolumeControlComponent } from './video-player/volume-control/volume-con
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    DxDropDownBoxModule,
+    DxListModule,
   ],
 })
 export class VideoModule {}
