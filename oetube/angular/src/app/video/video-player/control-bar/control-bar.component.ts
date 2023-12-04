@@ -1,6 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import { ValueChangedEvent } from 'devextreme/ui/progress_bar';
+import { VideoDto } from '@proxy/application/dtos/videos';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 
@@ -16,6 +25,12 @@ export class ControlBarComponent implements OnInit {
   currentTime = 0;
   label = 'Audio volume';
   private videoEnded = false;
+  @Input() video?: VideoDto;
+  @Input() resolutionIndex: number;
+  @Output() resolutionChanged: EventEmitter<number> = new EventEmitter();
+  resolutions = [];
+  isDropDownBoxOpened = false;
+  selectedResolution = '';
 
   constructor(private videoService: VideoService, private videoTimeService: VideoTimeService) {}
 
@@ -24,6 +39,12 @@ export class ControlBarComponent implements OnInit {
     this.videoTimeService.videoDuration$.subscribe(duration => (this.duration = duration));
     this.videoTimeService.videoProgress$.subscribe(progress => (this.currentProgress = progress));
     this.videoService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
+
+    this.videoService.loading$.subscribe(value => {
+      if (!value) {
+        this.resolutions = this.video?.hlsResolutions.map(r => r.width + 'p');
+      }
+    });
   }
 
   onPlayClick() {
@@ -51,6 +72,11 @@ export class ControlBarComponent implements OnInit {
         videoPlayerDiv.requestFullscreen();
       }
     }
+  }
+
+  changeResolution(index: number) {
+    this.resolutionChanged.emit(index);
+    return false;
   }
 
   get iconPlaying() {

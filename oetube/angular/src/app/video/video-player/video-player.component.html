@@ -4,7 +4,11 @@
       <div class="video-app">
         <div class="video-player">
           <app-video-wrapper [video]="video"></app-video-wrapper>
-          <app-control-bar></app-control-bar>
+          <app-control-bar
+            [resolutionIndex]="resolutionIndex"
+            (resolutionChanged)="onResolutionChanged($event)"
+            [video]="video"
+          ></app-control-bar>
         </div>
       </div>
       <div *ngIf="video !== undefined">
