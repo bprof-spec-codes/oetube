@@ -17,7 +17,9 @@
     </div>
 
     <div class="dropdown">
-      <button class="dropbtn">{{ resolutions[resolutionIndex] }}</button>
+      <button *ngIf="resolutions && resolutions.length > 0" class="dropbtn">
+        {{ resolutions[resolutionIndex] }}
+      </button>
       <div class="dropdown-content">
         <a *ngFor="let resolution of resolutions; index as i" (click)="changeResolution(i)">{{
           resolution
