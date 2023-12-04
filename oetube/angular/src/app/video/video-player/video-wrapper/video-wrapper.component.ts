@@ -86,8 +86,12 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.video != undefined) {
-      this.resolutionIndex = 0;
-      this.load(this.video.hlsResolutions[0].hlsList);
+      const currentTime = this.videoElement.nativeElement.currentTime;
+
+      this.load(this.video.hlsResolutions[this.resolutionIndex].hlsList);
+
+      this.videoTimeService.setCurrentTime(currentTime);
+      this.videoService.play();
     }
   }
 
