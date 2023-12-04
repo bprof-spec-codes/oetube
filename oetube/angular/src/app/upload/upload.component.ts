@@ -6,12 +6,13 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
 import { FormControl, FormGroup } from '@angular/forms';
 import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dtos/videos';
 
 import { AccessType } from '@proxy/domain/entities/videos';
-import { DxFileUploaderComponent } from 'devextreme-angular';
 import { FFService } from './services/FF.service';
+import { GroupService } from '@proxy/application';
 import { VideoService } from '@proxy/application/video.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,7 +23,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class UploadComponent implements OnInit {
   @ViewChild('fileUploader', { static: true }) fileUploader: DxFileUploaderComponent;
-
+  @ViewChild('accessRadioGroup', { static: true }) accessRadioGroup: DxRadioGroupComponent;
   progress: number;
   log: any;
   numberOfTasks: number;
@@ -42,18 +43,27 @@ export class UploadComponent implements OnInit {
   selectedVisibility = this.visibilityOptions[0];
 
   startVideoUpload: StartVideoUploadDto = {
-    name: '',
+      name: '',
     description: '',
     access: AccessType.Public,
     content: undefined,
     accessGroups: []
-  };
+  }
+
+  accessTypeEnum = AccessType;
+  accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
+  popupVisible = false;
+  showGroups() {
+    this.popupVisible = true;
+  }
+  hideGroups() {
+    this.popupVisible = false;
+  }
   submitButtonOptions = {
     text: 'Submit',
     useSubmitBehavior: true,
     type: 'default',
   };
-
 
   selectFileUploadButtonOptions = {
     type: 'default',
@@ -70,11 +80,14 @@ export class UploadComponent implements OnInit {
     });
     this.ffService.onLogging(log => {
       this.log = log;
+      console.log(log);
     });
   }
+
 modelToJson(){
   return JSON.stringify(this.startVideoUpload,null,4)
 }
+
   isTranscoding() {
     this.ffService.isTranscoding();
   }
@@ -94,7 +107,6 @@ modelToJson(){
     this.ffService.storeFile(file, inputFileName);
     let state = await firstValueFrom(this.videoService.startUpload(this.startVideoUpload));
     this.numberOfTasks = state.remainingTasks.length;
-
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
       const nextTask = state.remainingTasks.pop();
@@ -108,8 +120,10 @@ modelToJson(){
       const resized = new FormData();
       resized.append('input', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
-      state = await firstValueFrom(this.videoService.continueUpload(state.id, {content: resized}));
 
+      state = await firstValueFrom(
+        this.videoService.continueUpload(state.id, { content: resized })
+      );
     }
     event.preventDefault();
   }
