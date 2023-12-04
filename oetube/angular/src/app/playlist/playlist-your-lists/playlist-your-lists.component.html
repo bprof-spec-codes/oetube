@@ -1,6 +1,14 @@
 <main class="component-title">
-    <dx-data-grid
+    <dx-list
         [dataSource]="playlists"
-        keyExpr="id">
-    </dx-data-grid>
+        keyExpr="id"
+        displayExpr="name"
+        selectionMode="single"
+        searchMode="contains"
+        [allowItemDeleting]="true"
+        (onItemClick)="navigateToList($event)">
+        <dxo-item-dragging 
+            [allowReordering]="true">
+    </dxo-item-dragging>
+    </dx-list>
 </main>
