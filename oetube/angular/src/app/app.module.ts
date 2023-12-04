@@ -17,9 +17,8 @@ import { environment } from '../environments/environment';
 import { registerLocale } from '@abp/ng.core/locale';
 import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
 import { DxRadioGroupModule } from "devextreme-angular";
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarModule } from './sidebar/sidebar.module';
-import { PlaylistYourListsComponent } from './playlist/playlist-your-lists/playlist-your-lists.component';
+//import { PlaylistYourListsComponent } from './playlist/playlist-your-lists/playlist-your-lists.component';
 
 @NgModule({
   imports: [
@@ -43,7 +42,7 @@ import { PlaylistYourListsComponent } from './playlist/playlist-your-lists/playl
     SettingManagementConfigModule.forRoot(),
     FeatureManagementModule.forRoot(),
   ],
-  declarations: [AppComponent, PlaylistYourListsComponent],
+  declarations: [AppComponent],
   providers: [APP_ROUTE_PROVIDER],
   bootstrap: [AppComponent],
 })

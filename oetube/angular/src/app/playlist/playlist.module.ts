@@ -6,6 +6,8 @@ import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
 import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
 import { DxFileUploaderModule } from 'devextreme-angular';
+import { DxDataGridModule } from 'devextreme-angular';
+
  
 import {
   DxTabPanelModule,
@@ -30,6 +32,7 @@ import {
     DxRadioGroupModule,
     DxFormModule,
     DxFileUploaderModule,
+    DxDataGridModule
   ]
 })
 export class PlaylistModule { }
