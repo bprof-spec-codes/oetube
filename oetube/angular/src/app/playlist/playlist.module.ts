@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
+import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
 import { DxFileUploaderModule } from 'devextreme-angular';
  
 import {
@@ -17,7 +18,8 @@ import {
 @NgModule({
   declarations: [
     PlaylistComponent,
-    PlaylistCreateComponent
+    PlaylistCreateComponent,
+    PlaylistYourListsComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,7 @@ import {
     DxTextAreaModule,
     DxRadioGroupModule,
     DxFormModule,
-    DxFileUploaderModule
+    DxFileUploaderModule,
   ]
 })
 export class PlaylistModule { }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { DxTabsModule } from 'devextreme-angular';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
+import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
 import { TabbedItem } from 'devextreme/ui/form';
 
 @Component({
