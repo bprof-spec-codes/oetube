@@ -1,8 +1,11 @@
-﻿using OeTube.Data.QueryExtensions;
+﻿using Microsoft.EntityFrameworkCore;
+using OeTube.Data.QueryExtensions;
 using OeTube.Data.Repositories.Groups;
+using OeTube.Data.Repositories.Playlists;
 using OeTube.Data.Repositories.Users;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Repositories;
 using OeTube.Domain.Repositories.QueryArgs;
