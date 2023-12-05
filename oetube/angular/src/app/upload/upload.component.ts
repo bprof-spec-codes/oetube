@@ -13,7 +13,6 @@ import { delay, firstValueFrom } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DxButtonComponent, DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
 import { AccessType } from '@proxy/domain/entities/videos';
-import { FFService } from './services/FF.service';
 import { GroupService } from '@proxy/application';
 import { time } from 'console';
 @Component({
@@ -33,23 +32,13 @@ export class UploadComponent implements OnInit {
     content: undefined,
     accessGroups: [],
   };
+  numberOfTasks: number;
+  numberOfCompletedTasks: number;
 
   showButtonOptions:Partial<DxButtonComponent& any>
   accessTypeEnum = AccessType;
   accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
-  popupVisible = false;
-  groupsLoaded=false
-  showGroups() {
-    if(!this.groupsLoaded){
-        setTimeout(() => {
-          this.groupsLoaded=true
-      }, 50);
-    }
-    this.popupVisible=true
-  }
-  hideGroups() {
-    this.popupVisible = false;
-  }
+
   submitButtonOptions = {
     text: 'Submit',
     useSubmitBehavior: true,
@@ -93,6 +82,7 @@ export class UploadComponent implements OnInit {
 
     this.ffService.storeFile(file, inputFileName);
     let state = await firstValueFrom(this.videoService.startUpload(this.uploadModel));
+    this.numberOfTasks = state.remainingTasks.length;
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
       const nextTask = state.remainingTasks.pop();
@@ -105,6 +95,8 @@ export class UploadComponent implements OnInit {
       );
       const resized = new FormData();
       resized.append('content', resizedFile, resizedFile.name);
+      this.numberOfCompletedTasks++;
+
       state = await firstValueFrom(
         this.videoService.continueUpload(state.id, { content: resized })
       );

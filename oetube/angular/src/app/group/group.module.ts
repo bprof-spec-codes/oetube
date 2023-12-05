@@ -6,7 +6,6 @@ import { GroupCreateComponent } from './group-create/group-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DxButtonModule,DxCheckBoxModule,DxDataGridModule, DxDateRangeBoxModule, DxDraggableModule, DxFileUploaderModule, DxFormModule, DxListModule, DxLookupModule, DxPopupModule, DxScrollViewModule, DxSelectBoxModule, DxTabPanelComponent, DxTabPanelModule, DxTagBoxModule, DxTextAreaModule, DxTextBoxModule, DxTileViewModule, DxValidatorModule} from 'devextreme-angular';
 import { ImageUploaderModule } from '../image-uploader/image-uploader.module';
-import { GroupUpdateComponent } from './group-update/group-update.component';
 import { GroupComponent } from './group.component';
 import { DxoPagerModule, DxoPagingModule } from 'devextreme-angular/ui/nested';
 import { PaginationGridModule } from '../pagination-grid/pagination-grid.module';
@@ -23,7 +22,6 @@ import { RouterModule,RouterLink } from '@angular/router'
   declarations: [
     GroupComponent,
     GroupCreateComponent,
-    GroupUpdateComponent,
     GroupExploreComponent,
     GroupTileItemComponent,
     GroupListItemComponent,
