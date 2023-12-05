@@ -10,7 +10,11 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.AuthorizationCheckers
 {
-    public abstract class AccessChecker<TEntity, TKey, TAccessCacheService> : AuthorizationChecker, IAuthorizationManyChecker<TEntity>
+    public interface IAccessChecker<TEntity,TKey>:IAuthorizationManyChecker<TEntity>
+    {
+        Task<bool?> HasAccess(object? requestedObject);
+    }
+    public abstract class AccessChecker<TEntity, TKey, TAccessCacheService> : AuthorizationChecker, IAuthorizationManyChecker<TEntity>,IAccessChecker<TEntity,TKey>
         where TEntity : class, IEntity<TKey>
         where TAccessCacheService : ICompositeAccessCacheService<TEntity,TKey>
     {
@@ -20,12 +24,22 @@ namespace OeTube.Application.AuthorizationCheckers
         {
             Cache = cache;
         }
-
+        public async Task<bool?> HasAccess(object? requestedObject)
+        {
+            if(requestedObject is TEntity entity)
+            {
+                return !await Cache.AccessCacheService.GetOrAddAsync(entity);
+            }
+            return null;
+        }
         public override async Task CheckRightsAsync(object? requestedObject)
         {
             if (requestedObject is TEntity entity)
             {
-                await Cache.AccessCacheService.GetOrAddAsync(entity);
+               if(!await Cache.AccessCacheService.GetOrAddAsync(entity))
+                {
+                    throw new Exception();
+                }
             }
         }
 
