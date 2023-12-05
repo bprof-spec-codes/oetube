@@ -19,7 +19,7 @@ export class GroupDetailsComponent implements OnInit {
   selectedDatas:UserListItemDto[]
   selectedIndex:number
   constructor(private groupService:GroupService,private activatedRoute:ActivatedRoute,private title:Title,currentUserService:CurrentUserService,private router:Router){
-    this.currentUser=currentUserService.get()
+    this.currentUser=currentUserService.getCurrentUser()
   }
 
   ngOnInit(): void {

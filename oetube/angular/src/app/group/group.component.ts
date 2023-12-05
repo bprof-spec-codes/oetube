@@ -12,7 +12,7 @@ export class GroupComponent {
 
   currentUser:CurrentUser
   constructor(currentUserService:CurrentUserService,private router:Router){
-    this.currentUser=currentUserService.get()
+    this.currentUser=currentUserService.getCurrentUser()
   }
   onSubmitted(e:GroupDto){
     this.router.navigate(['group/'+e.id])

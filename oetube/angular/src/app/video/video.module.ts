@@ -18,6 +18,12 @@ import { VideoRoutingModule } from './video-routing.module';
 import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.component';
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
+import { AppModule } from '../app.module';
+import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -39,6 +45,11 @@ import { VolumeControlComponent } from './video-player/volume-control/volume-con
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    AuthUrlPipe
+  ],
+  exports:[
   ],
 })
 export class VideoModule {}
+
+

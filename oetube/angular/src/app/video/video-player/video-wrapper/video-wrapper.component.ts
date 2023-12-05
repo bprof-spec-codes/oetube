@@ -10,12 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { HlsResolutionDto, VideoDto } from '@proxy/application/dtos/videos';
-
 import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
-
+import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 @Component({
   selector: 'app-video-wrapper',
   templateUrl: './video-wrapper.component.html',
@@ -27,7 +26,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
   playing = false;
   playNext = true;
   private videoEnded = false;
-  private hls = new Hls();
+  private hls:Hls
   private videoListeners = {
     loadedmetadata: () =>
       this.videoTimeService.setVideoDuration(this.videoElement.nativeElement.duration),
@@ -35,7 +34,6 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
     seeking: () => this.videoService.setLoading(true),
     timeupdate: () => {
       this.videoTimeService.setVideoProgress(this.videoElement.nativeElement.currentTime);
-
       if (
         this.videoElement.nativeElement.currentTime === this.videoElement.nativeElement.duration &&
         this.videoElement.nativeElement.duration > 0
@@ -47,6 +45,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
       }
     },
   };
+
   @Input() video?: VideoDto;
   @ViewChild('video', { static: true }) videoElement: ElementRef<HTMLVideoElement> =
     {} as ElementRef<HTMLVideoElement>;
@@ -54,8 +53,17 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
   constructor(
     private videoService: VideoService,
     private volumeService: VolumeService,
-    private videoTimeService: VideoTimeService
-  ) {}
+    private videoTimeService: VideoTimeService,
+    private currentUserService:CurrentUserService
+  ) {
+    this.hls=new Hls({
+      xhrSetup(xhr, url) {
+        xhr.withCredentials=true
+        const [header,value]=currentUserService.getAuthorizationHeaderValue()
+        xhr.setRequestHeader(header,value)
+      }})
+    }
+  
 
   ngAfterViewInit() {
     this.subscriptions();
