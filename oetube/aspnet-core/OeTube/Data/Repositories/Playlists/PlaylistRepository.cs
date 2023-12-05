@@ -1,4 +1,5 @@
-﻿using OeTube.Data.QueryExtensions;
+﻿using Microsoft.EntityFrameworkCore;
+using OeTube.Data.QueryExtensions;
 using OeTube.Data.Repositories.Users;
 using OeTube.Data.Repositories.Videos;
 using OeTube.Domain.Entities;
@@ -22,8 +23,15 @@ namespace OeTube.Data.Repositories.Playlists
 
         private TimeSpan GetTotalDuration(IQueryable<Video> videos)
         {
-            var totalSeconds = videos.Sum(v => v.Duration.TotalSeconds);
-            return TimeSpan.FromSeconds(totalSeconds);
+            if (videos.Any())
+            {
+                var totalSeconds = videos.Sum(v => v.Duration.TotalSeconds);
+                return TimeSpan.FromSeconds(totalSeconds);
+            }
+            else
+            {
+                return TimeSpan.Zero;
+            }
         }
 
         public async Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId, Playlist playlist)
@@ -35,7 +43,6 @@ namespace OeTube.Data.Repositories.Playlists
         {
             return GetTotalDuration((await GetDbContextAsync()).GetVideos(playlist));
         }
-
         public async Task<PaginationResult<Playlist>> GetAvaliableAsync(Guid? requesterId, IPlaylistQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var queryable = (await GetDbContextAsync()).GetAvaliablePlaylists(requesterId);
