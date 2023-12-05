@@ -18,7 +18,8 @@ import { HttpResponse } from '@angular/common/http';
 
 
 //https://www.thisdot.co/blog/getting-authenticated-images-in-angular
- @Injectable() @Pipe({ name: 'auth', pure: false ,standalone:true})
+ @Injectable( {providedIn: 'root'
+}) @Pipe({ name: 'auth', pure: false ,standalone:true})
 export class AuthUrlPipe implements PipeTransform, OnDestroy {
   private subscription = new Subscription();
   public transformValue = new BehaviorSubject<string>('');
