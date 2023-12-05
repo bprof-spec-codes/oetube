@@ -25,6 +25,7 @@ namespace OeTube.Application.Dtos.Videos
             destination.Name = source.Name;
             destination.PlaylistId = null;
             destination.IndexImage = _videoUrlService.GetIndexImageUrl(source.Id);
+            destination.Access = source.Access;
             destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             return destination;
         }
@@ -37,6 +38,7 @@ namespace OeTube.Application.Dtos.Videos
         public TimeSpan Duration { get; set; }
         public DateTime CreationTime { get; set; }
         public Guid? PlaylistId { get; set; }
+        public AccessType Access { get; set; }
         public CreatorDto? Creator { get; set; }
     }
 }
