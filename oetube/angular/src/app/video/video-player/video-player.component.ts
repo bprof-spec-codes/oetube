@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { VideoService as VideoAppService } from '@proxy/application';
 import { VideoDto } from '@proxy/application/dtos/videos';
 import { VideoService } from 'src/app/services/video/video.service';
@@ -17,6 +17,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   public videoUrl: string;
 
   public video?: VideoDto;
+  public resolutionIndex: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +32,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         this.video = data;
       });
     });
+  }
+
+  onResolutionChanged(index: number) {
+    this.resolutionIndex = index;
   }
 
   ngOnDestroy() {
