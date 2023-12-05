@@ -1,0 +1,14 @@
+<app-scroll-view [isChild]=true>
+    <app-drop-down-search>
+        <dx-text-box appNameSearchItem/>
+        <dx-text-box appSearchItem [appSearchItemDisplay]="'Email Domain'" [appSearchItemKey]="'emailDomain'"/>
+        <dx-date-range-box appCreationTimeSearchItem [appSearchItemDisplay]="'Registration'"/>
+    </app-drop-down-search>
+  
+    <div *appScrollViewContentTemplate="let item; icon: 'rowfield'; hint: 'Tile';layoutClassList: 'd-flex flex-row flex-wrap justify-content-center'">
+        <app-user-tile-item [item]="item"></app-user-tile-item>
+    </div>
+    <div *appScrollViewContentTemplate="let item; icon: 'fields'; hint: 'List';layoutClassList:'d-flex flex-column flex-wrap justify-content-center'">
+        <app-user-list-item [item]="item"></app-user-list-item>
+    </div>
+  </app-scroll-view>
