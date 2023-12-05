@@ -1,19 +1,20 @@
-
-<div class="dx-field">
-    <div class="dx-field-label">
-        <label>Image</label>
-    </div>
-
-    <div class="dx-field-value">
-        <div class="img-container">
-            <ng-container *ngIf="imageUrl; else elseTemplate">
-                <img *ngIf="imageUrl" class="center" [src]="imageUrl">
-                
-            </ng-container>
-            <ng-template #elseTemplate>
-                <p class="center">No image selected</p>
-            </ng-template>
-        </div>
-        <dx-file-uploader accept="image/*" [(value)]="files" (onValueChanged)="onValueChanged($event)"  #fileUploader uploadMode="useForm" multiple="false" ></dx-file-uploader>
-    </div>
+<div class="d-flex flex-row my-auto uploader card">
+  <dx-file-uploader
+    class="my-auto w-25"
+    accept="image/*"
+    [(value)]="files"
+    (onValueChanged)="onValueChange($event)"
+    #fileUploader
+    uploadMode="useForm"
+    [showFileList]="false"
+    multiple="false"
+  ></dx-file-uploader>
+  <div class="img-container my-auto">
+    <ng-container *ngIf="imageUrl; else elseTemplate">
+      <img *ngIf="imageUrl" class="mx-auto my-auto" [src]="imageUrl" />
+    </ng-container>
+    <ng-template #elseTemplate>
+      <p class="mx-auto my-auto">No image selected</p>
+    </ng-template>
+  </div>
 </div>

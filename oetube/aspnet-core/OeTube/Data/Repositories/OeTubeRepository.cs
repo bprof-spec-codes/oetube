@@ -88,30 +88,32 @@ namespace OeTube.Data.Repositories
             {
                 return new PaginationResult<TListEntity>();
             }
+
+            string defaultSorting = "id asc";
+            string sorting = args?.Sorting ?? defaultSorting;
             try
             {
-                queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(args?.Sorting is not null, args!.Sorting!);
+                queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(true,sorting);
             }
-            catch { }
+            catch { 
+                queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(true,defaultSorting);
+            }
 
-            int itemPerPage = (int)(args?.ItemPerPage ?? ItemPerPage.P10);
-
+            var pagination = args?.Pagination ?? new Pagination()
+            {
+                Skip = 0,
+                Take = 10
+            };
+           
             int totalCount = queryable.Count();
-            (int quotient, int remainder) = Math.DivRem(totalCount, itemPerPage);
-            int totalPage = remainder > 0 ? quotient + 1 : quotient;
 
-            int page = args?.Page ?? 0;
-            page = page >= 0 ? page : 0;
-            page = page < totalPage ? page : totalPage - 1;
-
-            queryable = queryable.Skip(page * itemPerPage);
-            queryable = queryable.Take(itemPerPage);
+            queryable = queryable.Skip(pagination.Skip).Take(pagination.Take);
 
             var items = await queryable.ToListAsync(cancellationToken);
             return new PaginationResult<TListEntity>()
             {
-                CurrentPage = page,
-                PageCount = totalPage,
+                Skip =pagination.Skip,
+                Take=pagination.Take,
                 Items = items,
                 TotalCount = totalCount
             };
@@ -148,14 +150,22 @@ namespace OeTube.Data.Repositories
            where TManyEntity : class, IEntity<TEntityKey>
            where TEntityIncluder : IIncluder<TManyEntity>
         {
+            var entities = await GetManyQueryableAsync<TManyEntity, TEntityKey, TEntityIncluder>(ids, includeDetails);
+            return await entities.ToListAsync(cancellationToken);
+        }
+        protected async Task<IQueryable<TManyEntity>> GetManyQueryableAsync<TManyEntity,TEntityKey,TEntityIncluder>
+            (IEnumerable<TEntityKey> ids,bool includeDetails)
+            where TManyEntity : class, IEntity<TEntityKey>
+           where TEntityIncluder : IIncluder<TManyEntity>
+        {
             var queryable = (await GetQueryableAsync<TManyEntity>()).Where(e => ids.Contains(e.Id));
             if (includeDetails)
             {
                 var includer = LazyServiceProvider.LazyGetRequiredService<TEntityIncluder>();
                 queryable = includer.Include(queryable);
             }
+            return queryable;
 
-            return await queryable.ToListAsync(cancellationToken);
         }
     }
 }

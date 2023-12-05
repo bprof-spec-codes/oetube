@@ -1,21 +1,20 @@
 import {
-  AfterViewInit,
   Component,
+  ViewChild,
   ContentChild,
   ElementRef,
   OnInit,
-  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
-import { DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
-import { FormControl, FormGroup } from '@angular/forms';
-import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dtos/videos';
-
-import { AccessType } from '@proxy/domain/entities/videos';
-import { FFService } from './services/FF.service';
-import { GroupService } from '@proxy/application';
 import { VideoService } from '@proxy/application/video.service';
-import { firstValueFrom } from 'rxjs';
-
+import { FFService } from './services/FF.service';
+import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dtos/videos';
+import { delay, firstValueFrom } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
+import { DxButtonComponent, DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
+import { AccessType } from '@proxy/domain/entities/videos';
+import { GroupService } from '@proxy/application';
+import { time } from 'console';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -26,35 +25,20 @@ export class UploadComponent implements OnInit {
   @ViewChild('accessRadioGroup', { static: true }) accessRadioGroup: DxRadioGroupComponent;
   progress: number;
   log: any;
-  numberOfTasks: number;
-  numberOfCompletedTasks: number;
-
-  visibilityOptions = [
-    { text: 'Public', value: 'Public' },
-    { text: 'Private', value: 'Private' },
-    { text: 'OE', value: 'OE' },
-    { text: 'Custom Group', value: 'Custom Group' },
-  ];
-
-  selectedVisibility = this.visibilityOptions[0];
-
-  startVideoUpload: StartVideoUploadDto = {
-      name: '',
+  uploadModel: StartVideoUploadDto = {
+    name: '',
     description: '',
     access: AccessType.Public,
     content: undefined,
-    accessGroups: []
-  }
+    accessGroups: [],
+  };
+  numberOfTasks: number;
+  numberOfCompletedTasks: number;
 
+  showButtonOptions:Partial<DxButtonComponent& any>
   accessTypeEnum = AccessType;
   accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
-  popupVisible = false;
-  showGroups() {
-    this.popupVisible = true;
-  }
-  hideGroups() {
-    this.popupVisible = false;
-  }
+
   submitButtonOptions = {
     text: 'Submit',
     useSubmitBehavior: true,
@@ -76,18 +60,14 @@ export class UploadComponent implements OnInit {
     });
     this.ffService.onLogging(log => {
       this.log = log;
-      console.log(log);
     });
   }
-
-modelToJson(){
-  return JSON.stringify(this.startVideoUpload,null,4)
-}
-
+  modelToJson() {
+    return JSON.stringify(this.uploadModel, null, 4);
+  }
   isTranscoding() {
     this.ffService.isTranscoding();
   }
-
   async onSubmit(event: Event) {
     if (this.fileUploader.value.length < 1) {
       return;
@@ -97,11 +77,11 @@ modelToJson(){
     const file = this.fileUploader.value[0];
     const source = new FormData();
     source.append('content', file, file.name);
-    this.startVideoUpload.content = source;
+    this.uploadModel.content = source;
     const inputFileName = 'input.' + file.name.split('.').pop();
 
     this.ffService.storeFile(file, inputFileName);
-    let state = await firstValueFrom(this.videoService.startUpload(this.startVideoUpload));
+    let state = await firstValueFrom(this.videoService.startUpload(this.uploadModel));
     this.numberOfTasks = state.remainingTasks.length;
     while (state.remainingTasks.length != 0) {
       const format = state.outputFormat;
@@ -114,7 +94,7 @@ modelToJson(){
         nextTask.arguments
       );
       const resized = new FormData();
-      resized.append('input', resizedFile, resizedFile.name);
+      resized.append('content', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
 
       state = await firstValueFrom(

@@ -4,31 +4,9 @@ using OeTube.Domain.Entities.Videos;
 
 namespace OeTube.Data.QueryExtensions
 {
-    public class PlaylistAccessibility
-    {
-        public OeTubeUser? User { get; set; }
-        public Playlist? Playlist { get; set; }
-    }
+
     public static class PlaylistQueryExtension
     {
-        public static IQueryable<PlaylistAccessibility> GetPlaylistAccessibilities(this OeTubeDbContext context,IQueryable<Playlist>? playlists=null)
-        {
-            playlists??= context.Set<Playlist>();
-
-            var result= from playlist in playlists
-                        join videoItem in context.Set<VideoItem>()
-                        on playlist.Id equals videoItem.PlaylistId
-                        join accessibility in context.GetVideoAccessibilities()
-                        on videoItem.VideoId equals accessibility.Video!.Id
-                        select new PlaylistAccessibility()
-                        {
-                            Playlist = playlist,
-                            User = accessibility.User
-                        };
-
-            return result.Distinct();
-                            
-        }
         public static bool HasAccess(this OeTubeDbContext context, Guid? requesterId, Playlist playlist)
         {
             if (playlist.CreatorId == requesterId)
@@ -57,11 +35,16 @@ namespace OeTube.Data.QueryExtensions
 
         public static IQueryable<Playlist> GetAvaliablePlaylists(this OeTubeDbContext context, Guid? requesterId, IQueryable<Playlist>? playlists = null)
         {
-            var result = from accessibility in context.GetPlaylistAccessibilities(playlists)
-                         where accessibility.User!.Id == requesterId
-                         select accessibility.Playlist;
+            playlists??= context.Set<Playlist>();
 
-            return result;
+            var result = from playlist in playlists
+                         join videoItem in context.Set<VideoItem>()
+                         on playlist.Id equals videoItem.VideoId
+                         join video in context.GetAvaliableVideos(requesterId)
+                         on videoItem.VideoId equals video.Id
+                         select playlist;
+
+            return result.Distinct();
         }
     }
 }

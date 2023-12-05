@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
+using OeTube.Application.Dtos.Playlists;
 using OeTube.Application.Dtos.Videos;
 using OeTube.Application.Methods;
 using OeTube.Domain.Entities.Groups;
@@ -49,7 +50,7 @@ namespace OeTube.Application
                                  .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetAsync(id);
         }
-
+ 
         public async Task<PaginationDto<VideoListItemDto>> GetListAsync(VideoQueryDto input)
         {
             return await _factory.CreateGetListMethod<VideoListItemDto>()

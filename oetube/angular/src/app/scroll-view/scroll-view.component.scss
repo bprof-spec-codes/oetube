@@ -1,0 +1,25 @@
+img {
+    max-width:60px;
+    max-height: 60px;
+    border-radius: 20%;
+    object-fit: cover;
+}
+
+.filter-badge span{
+  text-overflow:clip;
+}
+
+::ng-deep .dx-sortable{
+  min-height: 300px !important;
+}
+
+.dragged-item{
+  scale: 0.8;
+  opacity: 0.8;
+}
+::ng-deep .popover-link{
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 1px dashed;
+  text-decoration: none;
+}

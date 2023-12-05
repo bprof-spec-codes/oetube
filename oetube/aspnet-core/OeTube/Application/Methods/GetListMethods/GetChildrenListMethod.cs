@@ -21,27 +21,19 @@ namespace OeTube.Application.Methods.GetListMethods
                                   IChildQueryRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> repository) : base(serviceProvider, repository)
         {
             Repository = repository;
+
         }
 
-        protected virtual async Task<PaginationResult<TChildEntity>> GetChildrenByQueryAsync(TEntity entity, TChildQueryArgs args)
+ 
+        public virtual async Task<PaginationDto<TChildOutputListItemDto>> GetCustomChildrenListAsync<TRepository>(TKey id,Func<TRepository,TEntity,Task<PaginationResult<TChildEntity>>> getListMethod)
+        where TRepository:class, IChildQueryRepository<TEntity,TKey,TChildEntity,TChildQueryArgs>
         {
-            if (Repository is IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> childQueryAvaliable)
-            {
-                var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;
-                return await childQueryAvaliable.GetAvaliableChildrenAsync(requesterId, entity, args);
-            }
-            else
-            {
-                return await Repository.GetChildrenAsync(entity, args);
-            }
-        }
-
-        public virtual async Task<PaginationDto<TChildOutputListItemDto>> GetChildrenListAsync(TKey id, TChildQueryArgs input)
-        {
+            var repository = Repository as TRepository ?? throw new InvalidCastException(nameof(TRepository));
             await CheckPolicyAsync();
             var entity = await GetByIdAsync(id);
             await CheckRightsAsync(entity);
-            PaginationResult<TChildEntity> pagination = await Repository.GetChildrenAsync(entity, input);
+
+            PaginationResult<TChildEntity> pagination = await getListMethod(repository,entity);
             if (Authorization is IAuthorizationManyChecker<TChildEntity> manyChecker)
             {
                 await manyChecker.CheckRightsManyAsync(pagination);
@@ -53,6 +45,20 @@ namespace OeTube.Application.Methods.GetListMethods
                 dtos.Items.Add(dto);
             }
             return dtos;
+        }
+        public virtual async Task<PaginationDto<TChildOutputListItemDto>> GetChildrenListAsync(TKey id, TChildQueryArgs input)
+        {
+                if (Repository is IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> childQueryAvaliable)
+                {
+                    var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;
+                    return await GetCustomChildrenListAsync<IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs>>
+                        (id, (repository, entity) => repository.GetAvaliableChildrenAsync(requesterId, entity, input));
+                }
+                else
+                {
+                    return await GetCustomChildrenListAsync<IChildQueryRepository<TEntity, TKey, TChildEntity, TChildQueryArgs>>
+                        (id, (repository, entity) => repository.GetChildrenAsync(entity, input));
+                }
         }
     }
 }

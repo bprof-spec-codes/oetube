@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-body h-auto d-flex flex-row justify-content-between">
+      <img
+        [style.width.px]="90"
+        [style.height.px]="90"
+        [src]="item.thumbnailImage"
+        [alt]="item.name"
+        class="rounded-star my-auto img-responsive"
+      />
+      <strong class="my-auto text-wrap mx-auto">{{ item.name }}</strong>
+    </div>
+    <div class="d-flex card-footer justify-content-between h-25">
+      <small class="text-muted">{{ item.creationTime | date : 'yyyy.MM.dd' }}</small>
+      <small class="text-muted mx-3">{{ item.emailDomain }}</small>
+    </div>
+  </div>
+  

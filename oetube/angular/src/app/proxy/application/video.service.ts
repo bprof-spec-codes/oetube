@@ -40,7 +40,7 @@ export class VideoService {
     this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
       url: `/api/app/video/${id}/access-groups`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -93,7 +93,7 @@ export class VideoService {
     this.restService.request<any, PaginationDto<VideoListItemDto>>({
       method: 'GET',
       url: '/api/app/video',
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
