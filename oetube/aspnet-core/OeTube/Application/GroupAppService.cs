@@ -4,6 +4,7 @@ using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
 using OeTube.Application.Methods;
+using OeTube.Data.Repositories.Groups;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
 using OeTube.Domain.FilePaths.ImageFiles;
@@ -31,7 +32,7 @@ namespace OeTube.Application
         {
             return await _factory.CreateGetMethod<GroupDto>().GetAsync(id);
         }
-
+    
         public async Task<PaginationDto<GroupListItemDto>> GetListAsync(GroupQueryDto input)
         {
             return await _factory.CreateGetListMethod<GroupListItemDto>()
@@ -63,13 +64,21 @@ namespace OeTube.Application
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()
                                   .UploadFile(input);
         }
-
+        public async Task<PaginationDto<UserListItemDto>> GetExplicitMembers(Guid id, UserQueryDto input)
+        {
+            return await _factory.CreateGetChildrenListMethod<OeTubeUser, IUserQueryArgs, UserListItemDto>()
+                                  .GetChildrenListAsync(id, input);
+        }
         public async Task<PaginationDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
         {
             return await _factory.CreateGetChildrenListMethod<OeTubeUser, IUserQueryArgs, UserListItemDto>()
-                                 .GetChildrenListAsync(id, input);
+                                 .GetCustomChildrenListAsync<GroupRepository>(id,(repository,entity)=>repository.GetMembers(entity,input));
         }
-
+        [HttpGet("api/src/group/default-image")]
+        public async Task<IRemoteStreamContent> GetDefaultImageAsync()
+        {
+            return await _factory.CreateGetDefaultFileMethod<SourceImagePath>().GetDefaultFileAsync();
+        }
         [HttpGet("api/src/group/{id}/image")]
         public async Task<IRemoteStreamContent> GetImageAsync(Guid id)
         {
