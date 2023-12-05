@@ -6,20 +6,22 @@ import { LoadOptions } from 'devextreme/data';
 import { Observable } from 'rxjs';
 import { PaginationGridComponent } from '../pagination-grid.component';
 import { GroupPaginationGridComponent } from './group-pagination-grid.component';
+import {ConfigStateService} from '@abp/ng.core'
+import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-access-group-pagination-grid',
-  templateUrl: './group-pagination-grid.component.html',
-  styleUrls: ['./group-pagination-grid.component.scss']
+  templateUrl: '../pagination-grid.component.html',
+  styleUrls: ['../pagination-grid.component.scss']
 })
 export class AccessGroupPaginationGridComponent extends GroupPaginationGridComponent{
+  videoId:string
+  constructor(protected activatedRoute:ActivatedRoute,protected router:Router, protected currentUserService: CurrentUserService, protected groupService: GroupService,protected videoService:VideoService) {
+      super(currentUserService,groupService)
+  }
 
-  @Input() videoId:string
-  constructor(public groupService:GroupService,public videoService:VideoService){
-    super(groupService)
-  }
-  
-  getList(): Observable<PaginationDto<GroupListItemDto>> {
-      return this.videoService.getAccessGroups(this.videoId,this.queryArgs)
-  }
+  getList(query: GroupQueryDto): Observable<PaginationDto<GroupListItemDto>> {
+      return this.videoService.getAccessGroups(this.videoId,query)
+  }  
 }

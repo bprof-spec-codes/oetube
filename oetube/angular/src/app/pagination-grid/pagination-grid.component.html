@@ -1,0 +1,20 @@
+<dx-data-grid>
+    <div *dxTemplate="let data of 'nameTemplate'">
+        <a [routerLink]="">{{data.value}}</a>
+    </div>
+    <div *dxTemplate="let data of 'creatorHeaderTemplate'" class="d-flex flex-row align-items-center">
+        <p class="m-2">Creator</p>
+        <dx-select-box *ngIf="isAuthenticated()" [items]="creatorFilters"  class="w-50" displayExpr="id" [value]="selectedCreatorFilter" (valueChange)="creatorFilterChanged($event)">
+        </dx-select-box>
+    </div>
+    <div *dxTemplate="let data of 'creatorTemplate'" class="d-flex flex-column">
+        <div *ngIf="data.value">
+            <p>{{data.value.name}}</p>
+            <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value.thumbnailImage">
+        </div>
+    </div>
+    <div *dxTemplate="let data of 'thumbnailTemplate'">
+        <img crossorigin="anonymous" class="thumbnail-image" [src]="data.value">
+    </div>
+</dx-data-grid>
+
