@@ -19,28 +19,6 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
-    public class QueryTest : IApplicationService,ITransientDependency
-    {
-        public OeTubeDbContext context;
-
-        public QueryTest(OeTubeDbContext context)
-        {
-            this.context = context;
-        }
-        public object GetMemberships()
-        {
-            return context.GetMemberships();
-        }
-        public object GetVideoAcc()
-        {
-            return context.GetVideoAccessibilities();
-        }
-        public object GetPlaylistAcc()
-        {
-            return context.GetPlaylistAccessibilities();
-        }
-
-    }
     public class PlaylistAppService : IApplicationService, ITransientDependency
     {
         private readonly PlaylistMethodFactory _factory;
@@ -100,7 +78,11 @@ namespace OeTube.Application
             }
             return videos;
         }
-
+        [HttpGet("api/src/playlist/default-image")]
+        public async Task<IRemoteStreamContent> GetDefaultImageAsync()
+        {
+            return await _factory.CreateGetDefaultFileMethod<SourceImagePath>().GetDefaultFileAsync();
+        }
         [HttpGet("api/src/playlist/{id}/image")]
         public async Task<IRemoteStreamContent> GetImageAsync(Guid id)
         {
