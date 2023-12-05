@@ -13,6 +13,7 @@ import { delay, firstValueFrom } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DxButtonComponent, DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
 import { AccessType } from '@proxy/domain/entities/videos';
+import { FFService } from './services/FF.service';
 import { GroupService } from '@proxy/application';
 import { time } from 'console';
 @Component({
@@ -63,8 +64,10 @@ export class UploadComponent implements OnInit {
   subscription: any;
   ngOnInit(): void {
     this.ffService.load();
-    this.ffService.onProggress(progress => {
-      this.progress = progress.ratio;
+    this.ffService.onProgress(progress => {
+      this.progress =
+        (1 / this.numberOfTasks) * this.numberOfCompletedTasks +
+        (1 / this.numberOfTasks) * progress.ratio;
     });
     this.ffService.onLogging(log => {
       this.log = log;
@@ -80,6 +83,8 @@ export class UploadComponent implements OnInit {
     if (this.fileUploader.value.length < 1) {
       return;
     }
+    this.numberOfCompletedTasks = 0;
+    this.progress = 0;
     const file = this.fileUploader.value[0];
     const source = new FormData();
     source.append('content', file, file.name);
