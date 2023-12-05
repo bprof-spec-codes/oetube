@@ -1,0 +1,20 @@
+<div *ngIf="hasItem" class="d-flex flex-row">
+  <dx-drop-down-button
+    [items]="searchItems"
+    useSelectMode="true"
+    displayExpr="display"
+    stylingMode="contained"
+    class="my-auto w-25"
+    [text]="selectedItem.display"
+    [(selectedItem)]="selectedItem"
+    (onItemClick)="onItemClick($event)"
+    (onSelectionChanged)="onSelectionChanged($event)"
+  >
+  </dx-drop-down-button>
+  <ng-content> </ng-content>
+
+  <dx-button [icon]="iconSearch" class="mx-1 my-auto" (onClick)="onSearchClick()"> </dx-button>
+  <dx-button-group class="my-auto" keyExpr="hint" selectionMode="single"  [selectedItems]="selectedSortBtn"  [items]="sortBtns" (onItemClick)="onSortBtnClick($event)">
+  </dx-button-group>
+
+</div>
