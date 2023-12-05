@@ -16,14 +16,15 @@ import { ActionButton, ScrollViewComponent, ScrollViewProviderComponent } from '
 })
 export class GroupExploreComponent extends ScrollViewProviderComponent<GroupListItemDto>  implements AfterViewInit{
   @ViewChild(ScrollViewComponent) provider:ScrollViewComponent<GroupListItemDto>
+  
   get scrollView(): ScrollViewComponent<GroupListItemDto> {
     return this.provider
   }
   constructor(public groupService:GroupService){
     super()
   }
-  initThis(){
-    this.getList=(args)=>this.groupService.getList(args)
-    this.scrollView.initScrollView()
+  setOptions(): void {
+      this._options.getList=(args)=>this.groupService.getList(args)
   }
-}
+  }
+

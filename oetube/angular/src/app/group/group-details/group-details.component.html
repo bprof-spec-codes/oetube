@@ -1,1 +1,6 @@
-<p>group-details works!</p>
+<app-lazy-tab-panel [(selectedIndex)]="selectedIndex" [currentUserId]="currentUser?.id" [creatorId]="model?.creator?.id">
+    <div *appLazyTabItem="let data;title:'Details'">
+        :()
+    </div>
+    <app-group-update (submitted)="onSubmitted($event)" (deleted)="onDeleted()" [selectedDatas]="selectedDatas"  [currentUserId]="currentUser?.id" [inputModel]="model"  *appLazyTabItem="let data;title:'Edit';onlyCreator:true"></app-group-update>
+</app-lazy-tab-panel>

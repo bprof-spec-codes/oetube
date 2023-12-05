@@ -7,26 +7,27 @@ import { Injectable } from '@angular/core';
 })
 export class CurrentUserService{
 
-    get():{
-        isAuthenticated?: boolean;
-        id?: string;
-        tenantId?: string;
-        impersonatorUserId?: string;
-        impersonatorTenantId?: string;
-        impersonatorUserName?: string;
-        impersonatorTenantName?: string;
-        userName?: string;
-        name?: string;
-        surName?: string;
-        email?: string;
-        emailVerified?: boolean;
-        phoneNumber?: string;
-        phoneNumberVerified?: boolean;
-        roles?: string[];
-    }
+    get():CurrentUser
     {
         return this.config.getOne("currentUser")
     }
     constructor(private config:ConfigStateService){
     }
+}
+export type CurrentUser={
+    isAuthenticated?: boolean;
+    id?: string;
+    tenantId?: string;
+    impersonatorUserId?: string;
+    impersonatorTenantId?: string;
+    impersonatorUserName?: string;
+    impersonatorTenantName?: string;
+    userName?: string;
+    name?: string;
+    surName?: string;
+    email?: string;
+    emailVerified?: boolean;
+    phoneNumber?: string;
+    phoneNumberVerified?: boolean;
+    roles?: string[];
 }
