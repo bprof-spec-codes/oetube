@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { VideoQueryDto } from '@proxy/application/dtos/videos';
-import { ConfigStateService } from '@abp/ng.core';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
-  styleUrls: ['./group.component.scss']
+  styleUrls: ['./group.component.scss'],
 })
-export class GroupComponent implements OnInit {
+export class GroupComponent {
 
-  constructor(private config:ConfigStateService) {
-  
+items:TabItem[]=[
+  {title:"explore",loaded:false,visible:true,template:"explore"},
+  {title:"create",loaded:false,visible:true,template:"create"}
+]
+selectedItem:TabItem
+
+onSelectedItemChange(item:TabItem){
+  if(!item.loaded){
+    item.loaded=true
   }
-  currentUser=this.config.getOne("currentUser")
-
-  panels=["Explore","Create","My Groups"]
-  ngOnInit(): void {
-  ;
-    
-  }
-
 }
+}
+
+type TabItem={title:string,visible:boolean,loaded:boolean,template:string}

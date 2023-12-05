@@ -1,17 +1,13 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { GroupComponent } from './group.component';
+import { RouterModule, Routes } from '@angular/router';
 import { GroupCreateComponent } from './group-create/group-create.component';
+import { GroupDetailsComponent } from './group-details/group-details.component';
+import { GroupUpdateComponent } from './group-update/group-update.component';
+import { GroupComponent } from './group.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: GroupComponent,
-  },
-  {
-    path: 'create',
-    component: GroupCreateComponent,
-  },
+  {path:'', component:GroupComponent},
+  {path:':id', component:GroupDetailsComponent}
 ];
 
 @NgModule({
