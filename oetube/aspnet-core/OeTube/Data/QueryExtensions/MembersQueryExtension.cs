@@ -22,6 +22,14 @@ namespace OeTube.Data.QueryExtensions
                           select membership.Group;
             return groups;
         }
+        public static IQueryable<OeTubeUser> GetExplicitMembers(this OeTubeDbContext context, Group group)
+        {
+            return from member in context.Set<Member>()
+                   where member.GroupId == @group.Id
+                   join user in context.OeTubeUsers
+                   on member.UserId equals user.Id
+                   select user;
+        }
         public static IQueryable<OeTubeUser> GetMembers(this OeTubeDbContext context,Group group)
         {
             return from membership in context.GetMemberships()
