@@ -4,7 +4,6 @@ import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
-import { ItemPerPage } from '@proxy/domain/repositories/query-args';
 
 @Component({
   selector: 'app-video-grid',
@@ -41,7 +40,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({name:searchPhrase,itemPerPage:ItemPerPage.P50,page:0})
+      .getList({name:searchPhrase,pagination:{take:100,skip:0}})
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;
