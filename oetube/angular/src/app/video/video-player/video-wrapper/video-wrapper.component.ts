@@ -47,6 +47,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
   };
 
   @Input() video?: VideoDto;
+  @Input() resolutionIndex?: number;
   @ViewChild('video', { static: true }) videoElement: ElementRef<HTMLVideoElement> =
     {} as ElementRef<HTMLVideoElement>;
 
@@ -90,11 +91,18 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
     });
     this.hls.detachMedia();
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.video != undefined) {
-      this.load(this.video.hlsResolutions[0].hlsList);
+      const currentTime = this.videoElement.nativeElement.currentTime;
+
+      this.load(this.video.hlsResolutions[this.resolutionIndex].hlsList);
+
+      this.videoTimeService.setCurrentTime(currentTime);
+      this.videoService.play();
     }
   }
+
   /** Play/Pause video on click */
   onVideoClick() {
     if (this.playing) {

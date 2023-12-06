@@ -4,6 +4,7 @@ import {
   DxSliderModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
+import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
 
 import { CommonModule } from '@angular/common';
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
@@ -48,6 +49,8 @@ import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
     AuthUrlPipe
   ],
   exports:[
+    DxDropDownBoxModule,
+    DxListModule,
   ],
 })
 export class VideoModule {}
