@@ -51,6 +51,7 @@ export interface VideoDto extends EntityDto<string> {
 
 export interface VideoIndexImagesDto extends EntityDto<string> {
   indexImages: string[];
+  selected:string
 }
 
 export interface VideoListItemDto extends EntityDto<string> {
