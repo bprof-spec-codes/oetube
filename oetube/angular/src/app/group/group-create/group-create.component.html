@@ -1,51 +1,55 @@
-<form (submit)="onSubmit($event)">
-    <div class="dx-fieldset">
-        <div class="dx-fieldset-header">
-            Group Details
+<div class="component-title">
+  <h4>Create a group</h4>
+  <form (submit)="onSubmit($event)">
+    <dx-form [formData]="model" [labelLocation]="'left'">
+      <dxi-item dataField="name" [isRequired]="true" />
+      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
+      <div *dxTemplate="let data of 'descriptionTemplate'">
+        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      </div>
+      <dxi-item dataField="emailDomains">
+        <div *dxTemplate="let data">
+          <dx-tag-box
+            [(value)]="data.component.option('formData')[data.dataField]"
+            acceptCustomValue="true"
+          >
+          </dx-tag-box>
         </div>
-        <div class="dx-field">
-            <div class="dx-field-label" >Name</div>
-            <div class="dx-field-value">
-                <dx-text-box [(value)]="model.name" maxLength="100">
-                    <dx-validator>
-                        <dxi-validation-rule type="required"/>
-                        <dxi-validation-rule type="stringLength" [min]="3"/>
-                    </dx-validator>
-                </dx-text-box>
-            </div>
+      </dxi-item>
+      <dxi-item dataField="image">
+        <div *dxTemplate="let data">
+          <app-image-uploader
+            [name]="data.dataField"
+            [(value)]="data.component.option('formData')[data.dataField]"
+            [defaultImgUrl]="defaultImgUrl"
+          ></app-image-uploader>
         </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Description</div>
-            <div class="dx-field-value">
-                <dx-text-area [(value)]="model.description" maxLength="1000" height="300">
-                    <dx-validator>
-                        <dxi-validation-rule type="stringLength" [max]="1000"/>
-                    </dx-validator>
-                </dx-text-area>
-            </div>
+      </dxi-item>
+      <dxi-item dataField="members">
+        <div *dxTemplate="let data">
+          <app-scroll-view-selector-popup
+            [title]="'Edit Members'"
+            [icon]="'edit'"
+            [text]="'edit'"
+            [(value)]="data.component.option('formData')[data.dataField]"
+          >
+            <app-scroll-view-selector
+              [contextId]="inputModel?.id"
+              [getInitialSelection]="getInitialSelection"
+            >
+              <app-user-explore
+              [filteredKeys]="[currentUserId]"
+              ></app-user-explore>
+            </app-scroll-view-selector>
+          </app-scroll-view-selector-popup>
         </div>
-        <app-image-uploader (imageFileChanged)="onImageChanged($event)"></app-image-uploader>
-    </div>
-    <div class="dx-fieldset">
-        <div class="dx-fieldset-header">
-            Members
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Email Domains</div>
-            <div class="dx-field-value">
-                <dx-tag-box  [(value)]="model.emailDomains" acceptCustomValue="true" >
-                </dx-tag-box>
-            </div>
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Specific Users</div>
-            <div class="dx-field-value">
-                <app-user-pagination-grid [(selectedItems)]="model.members"
-                    [showId]="false"
-                                         />
-            </div>
-        </div>
-    </div>
-    <dx-button text="Create" [useSubmitBehavior]="true"></dx-button>
-</form>     
-{{modelToJson()}}
+      </dxi-item>
+      <dxi-item
+        itemType="button"
+        [buttonOptions]="submitButtonOptions"
+        onClick="onSubmit($event)"
+      ></dxi-item>
+    </dx-form>
+  </form>
+</div>
+{{ modelToJson() }}

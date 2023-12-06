@@ -1,1 +1,1 @@
-export * from './item-per-page.enum';
+export * from './models';

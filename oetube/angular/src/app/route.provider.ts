@@ -33,7 +33,13 @@ function configureRoutes(routesService: RoutesService) {
       {
         path:'/group',
         name:'Group',
-        order: 5,
+        order: 4,
+        layout:eLayoutType.application
+      },
+      {
+        path:'/user',
+        name:'User',
+        order:5,
         layout:eLayoutType.application
       }
     ]);

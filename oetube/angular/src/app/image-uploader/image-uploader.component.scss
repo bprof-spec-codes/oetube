@@ -1,15 +1,14 @@
 .img-container{
-    height: 200px;
+    width: 200px;
     max-height: 200px;
-    width: auto;
     max-width: 200px;
     display: flex;
 }
 img{
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 190px;
+    max-height: 190px;
     object-fit:cover;
 }
-.center{
-    margin: auto;
+.card{
+    height: 220px;
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
+using OeTube.Application.Dtos.Playlists;
 using OeTube.Application.Dtos.Videos;
 using OeTube.Application.Methods;
 using OeTube.Domain.Entities.Groups;
@@ -27,12 +29,14 @@ namespace OeTube.Application
             _factory = videoMethodFactory;
         }
 
+        [Authorize]
         public async Task<VideoUploadStateDto> StartUploadAsync(StartVideoUploadDto input)
         {
             return await _factory.CreateCreateMethod<StartVideoUploadDto, VideoUploadStateDto>()
                                  .CreateAsync(input);
         }
 
+        [Authorize]
         public async Task<VideoUploadStateDto> ContinueUploadAsync(Guid id, ContinueVideoUploadDto input)
         {
             return await _factory.CreateUpdateMethod<ContinueVideoUploadDto, VideoUploadStateDto>()
@@ -46,7 +50,7 @@ namespace OeTube.Application
                                  .SetAuthorizationAndPolicy(_accessAuth)
                                  .GetAsync(id);
         }
-
+ 
         public async Task<PaginationDto<VideoListItemDto>> GetListAsync(VideoQueryDto input)
         {
             return await _factory.CreateGetListMethod<VideoListItemDto>()
@@ -67,6 +71,7 @@ namespace OeTube.Application
                                  .GetAsync(id);
         }
 
+        [Authorize]
         public async Task<VideoDto> UpdateAsync(Guid id, UpdateVideoDto input)
         {
             return await _factory.CreateUpdateMethod<UpdateVideoDto, VideoDto>()
@@ -74,6 +79,7 @@ namespace OeTube.Application
                                  .UpdateAsync(id, input);
         }
 
+        [Authorize]
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
-import { DxTabPanelModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -15,7 +15,10 @@ import { DxTabPanelModule } from 'devextreme-angular';
   imports: [
     CommonModule,
     PlaylistRoutingModule,
-    DxTabPanelModule
+    DxTabPanelModule,
+    DxDataGridModule,
+    DxTemplateModule,
+    DxButtonModule
   ]
 })
 export class PlaylistModule { }

@@ -19,11 +19,20 @@ export class OeTubeUserService {
     { apiName: this.apiName,...config });
   
 
+  getDefaultImage = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: '/api/src/oe-tube-user/default-image',
+    },
+    { apiName: this.apiName,...config });
+  
+
   getGroups = (id: string, input: GroupQueryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
       url: `/api/app/oe-tube-user/${id}/groups`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -41,7 +50,7 @@ export class OeTubeUserService {
     this.restService.request<any, PaginationDto<UserListItemDto>>({
       method: 'GET',
       url: '/api/app/oe-tube-user',
-      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   

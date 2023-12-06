@@ -44,8 +44,8 @@ export interface VideoDto extends EntityDto<string> {
   creationTime?: string;
   duration?: string;
   accessGroups: string[];
+  access: AccessType;
   playlistId?: string;
-  isUploadCompleted: boolean;
   creator: CreatorDto;
 }
 
@@ -59,6 +59,7 @@ export interface VideoListItemDto extends EntityDto<string> {
   duration?: string;
   creationTime?: string;
   playlistId?: string;
+  access: AccessType;
   creator: CreatorDto;
 }
 

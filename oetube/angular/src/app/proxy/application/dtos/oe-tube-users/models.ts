@@ -11,7 +11,7 @@ export interface CreatorDto extends EntityDto<string> {
 export interface UpdateUserDto {
   name: string;
   aboutMe?: string;
-  image?: FormData;
+  image: FormData;
 }
 
 export interface UserDto extends EntityDto<string> {
@@ -26,7 +26,7 @@ export interface UserListItemDto extends EntityDto<string> {
   name?: string;
   creationTime?: string;
   emailDomain?: string;
-  thumbnailImageSource?: string;
+  thumbnailImage?: string;
 }
 
 export interface UserQueryDto extends QueryDto {

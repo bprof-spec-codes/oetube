@@ -5,6 +5,7 @@ using OeTube.Data.Repositories.Playlists;
 using OeTube.Data.Repositories.Videos;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
+using OeTube.Domain.Entities.Playlists;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Repositories.QueryArgs;
@@ -73,7 +74,7 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task<Group> SeedGroupAsync(string name, Abp.IdentityUser user)
         {
-            IGroupQueryArgs args = new GroupQueryArgs() { Name = name };
+            IGroupQueryArgs args = new GroupQueryArgs() { Name = name};
             Group? group;
             var result = await _groupRepository.GetListAsync(args, includeDetails: true);
             if (result.Items.Count > 0)
@@ -140,6 +141,7 @@ namespace OeTube.Data.SeedContributors
         {
             await SetDefaultImageAsync<Group>("group-default.png");
             await SetDefaultImageAsync<OeTubeUser>("user-default.png");
+            await SetDefaultImageAsync<Playlist>("playlist-default.png");
             string obudaMail = "@uni-obuda.hu";
             string studObudaMail = "@stud.uni-obuda.hu";
             string gmail = "@gmail.com";

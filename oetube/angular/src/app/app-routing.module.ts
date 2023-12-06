@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, PermissionGuard } from '@abp/ng.core';
 
 import { NgModule } from '@angular/core';
 
@@ -28,16 +29,23 @@ const routes: Routes = [
   },
   {
     path: 'upload',
+    //canActivate: [AuthGuard],
     loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
   },
   {
     path: 'playlist',
     loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule),
   },
-  { path: 'video', loadChildren: () => import('./video/video.module').then(m => m.VideoModule) },
+  { path: 'video', 
+    loadChildren: () => import('./video/video.module').then(m => m.VideoModule) 
+  },
   {
     path:'group',
     loadChildren: ()=>import('./group/group.module').then(m=>m.GroupModule) 
+  },
+  {
+    path:'user',
+    loadChildren:()=>import('./user/user.module').then(m=>m.UserModule)
   }
 ];
 

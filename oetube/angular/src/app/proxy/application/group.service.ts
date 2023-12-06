@@ -37,11 +37,29 @@ export class GroupService {
     { apiName: this.apiName,...config });
   
 
+  getDefaultImage = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: '/api/src/group/default-image',
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getExplicitMembersByIdAndInput = (id: string, input: UserQueryDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PaginationDto<UserListItemDto>>({
+      method: 'GET',
+      url: `/api/app/group/${id}/explicit-members`,
+      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
+    },
+    { apiName: this.apiName,...config });
+  
+
   getGroupMembers = (id: string, input: UserQueryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PaginationDto<UserListItemDto>>({
       method: 'GET',
       url: `/api/app/group/${id}/group-members`,
-      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, emailDomain: input.emailDomain, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -59,7 +77,7 @@ export class GroupService {
     this.restService.request<any, PaginationDto<GroupListItemDto>>({
       method: 'GET',
       url: '/api/app/group',
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
