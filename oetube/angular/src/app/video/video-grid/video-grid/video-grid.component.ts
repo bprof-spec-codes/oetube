@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
-import { ItemPerPage } from '@proxy/domain/repositories/query-args/item-per-page.enum';
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
 
