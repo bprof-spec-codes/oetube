@@ -8,7 +8,7 @@ export interface CreateUpdateGroupDto {
   description?: string;
   emailDomains: string[];
   members: string[];
-  image?: FormData;
+  image: FormData;
 }
 
 export interface GroupDto extends EntityDto<string> {

@@ -1,0 +1,52 @@
+<div>
+  <div class="d-flex flex-row justify-content-between my-5">
+    <h4 class>{{ title }}</h4>
+    <dx-button [visible]="inputModel!==undefined" (onClick)="delete()" text="delete" type="danger"></dx-button>
+  </div>
+  <form (submit)="onSubmit($event)">
+    <dx-form [formData]="model" [labelLocation]="'left'">
+      <dxi-item dataField="name" [isRequired]="true" />
+      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
+      <div *dxTemplate="let data of 'descriptionTemplate'">
+        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      </div>
+      <dxi-item dataField="emailDomains">
+        <div *dxTemplate="let data">
+          <dx-tag-box
+            [(value)]="data.component.option('formData')[data.dataField]"
+            acceptCustomValue="true"
+          >
+          </dx-tag-box>
+        </div>
+      </dxi-item>
+      <dxi-item dataField="image">
+        <div *dxTemplate="let data">
+          <app-image-uploader
+            [name]="data.dataField"
+            [(value)]="data.component.option('formData')[data.dataField]"
+            [defaultImgUrl]="defaultImgUrl"
+          ></app-image-uploader>
+        </div>
+      </dxi-item>
+      <dxi-item dataField="members">
+        <div *dxTemplate="let data">
+          <app-scroll-view-selector-popup
+            [title]="'Edit Members'"
+            [icon]="'edit'"
+            [text]="'edit'"
+            [(value)]="data.component.option('formData')[data.dataField]"
+          >
+              <app-user-explore  [options]="scrollViewOptions"
+              ></app-user-explore>
+          </app-scroll-view-selector-popup>
+        </div>
+      </dxi-item>
+      <dxi-item
+        itemType="button"
+        [buttonOptions]="submitButtonOptions"
+        onClick="onSubmit($event)"
+      ></dxi-item>
+    </dx-form>
+  </form>
+</div>
+{{ modelToJson() }}

@@ -37,6 +37,15 @@ export class PlaylistService {
     { apiName: this.apiName,...config });
   
 
+  getDefaultImage = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: '/api/src/playlist/default-image',
+    },
+    { apiName: this.apiName,...config });
+  
+
   getImage = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, Blob>({
       method: 'GET',
@@ -50,7 +59,7 @@ export class PlaylistService {
     this.restService.request<any, PaginationDto<PlaylistItemDto>>({
       method: 'GET',
       url: '/api/app/playlist',
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
     },
     { apiName: this.apiName,...config });
   
@@ -68,7 +77,17 @@ export class PlaylistService {
     this.restService.request<any, PaginationDto<VideoListItemDto>>({
       method: 'GET',
       url: `/api/app/playlist/${id}/videos`,
-      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, creatorId: input.creatorId, itemPerPage: input.itemPerPage, page: input.page, sorting: input.sorting },
+      params: { name: input.name, creationTimeMin: input.creationTimeMin, creationTimeMax: input.creationTimeMax, durationMin: input.durationMin, durationMax: input.durationMax, creatorId: input.creatorId, ["Pagination.Skip"]: input.pagination.skip, ["Pagination.Take"]: input.pagination.take, sorting: input.sorting },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  update = (id: string, input: CreateUpdatePlaylistDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PlaylistDto>({
+      method: 'PUT',
+      url: `/api/app/playlist/${id}`,
+      params: { name: input.name, description: input.description, items: input.items },
+      body: input.image,
     },
     { apiName: this.apiName,...config });
   

@@ -4,6 +4,7 @@ import {
   DxSliderModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
+import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
 
 import { CommonModule } from '@angular/common';
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
@@ -19,6 +20,12 @@ import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.c
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
 import { SidebarModule } from '../sidebar/sidebar.module';
+import { AppModule } from '../app.module';
+import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -40,7 +47,14 @@ import { SidebarModule } from '../sidebar/sidebar.module';
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
+    AuthUrlPipe,
     SidebarModule
+  ],
+  exports:[
+    DxDropDownBoxModule,
+    DxListModule,
   ],
 })
 export class VideoModule {}
+
+

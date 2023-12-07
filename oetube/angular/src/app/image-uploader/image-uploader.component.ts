@@ -1,5 +1,6 @@
-import { Component,OnInit,OnDestroy,ViewChild, Output,EventEmitter } from '@angular/core';
+import { Component,Input,AfterViewInit,OnDestroy,ViewChild, Output,EventEmitter } from '@angular/core';
 import { DxFileUploaderComponent } from 'devextreme-angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-image-uploader',
@@ -7,35 +8,47 @@ import { DxFileUploaderComponent } from 'devextreme-angular';
   styleUrls: ['./image-uploader.component.scss']
 })
 
-export class ImageUploaderComponent implements OnInit,OnDestroy{
+export class ImageUploaderComponent implements OnDestroy{
   @ViewChild('fileUploader', { static: true }) fileUploader:DxFileUploaderComponent;
 
+
   files:File[]=[]
-  imageFile:File
 
-  @Output() imageFileChanged?:EventEmitter<File>=new EventEmitter<File>()
+  @Input() name:string
+  @Input() value:FormData
+  @Output() valueChange?:EventEmitter<FormData>=new EventEmitter<FormData>()
 
+  private _defaultImgUrl:string
+  @Input() set defaultImgUrl(value:string){
+    this._defaultImgUrl=value
+    if(!this.imageUrl){
+      this.imageUrl=value
+    }
+  }
   imageUrl?:string
-  onValueChanged(e){
+
+  
+  onValueChange(e){
+    this.clear()
     if(this.files.length>0){
-      this.imageFile=this.files[0]
-      this.imageUrl=URL.createObjectURL(this.imageFile)
-      this.imageFileChanged.emit(this.imageFile)
+      this.value=new FormData()
+      this.value.append(this.name,this.files[0],this.files[0].name)
+      this.imageUrl=URL.createObjectURL(this.files[0])
+      this.valueChange.emit(this.value)
     }else{
-      this.clear()
+      this.imageUrl=this._defaultImgUrl
+      this.valueChange.emit(null)
     }
   }
   clear(){
-    this.imageFile=undefined
-    this.imageUrl=undefined
-    this.imageFileChanged.emit(null)
-    URL.revokeObjectURL(this.imageUrl)
+    if(this.imageUrl!=this._defaultImgUrl){
+      URL.revokeObjectURL(this.imageUrl)
+    }
   }
-ngOnInit(): void {
-    ;
-}
 ngOnDestroy(): void {
     this.clear()
+    URL.revokeObjectURL(this._defaultImgUrl)
+    
 }
 
 }

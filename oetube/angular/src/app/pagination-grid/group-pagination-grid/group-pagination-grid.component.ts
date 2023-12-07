@@ -1,42 +1,51 @@
-import { Component,Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GroupService, VideoService } from '@proxy/application';
-import { PaginationDto } from '@proxy/application/dtos';
-import { CreateUpdateGroupDto, GroupDto, GroupListItemDto, GroupQueryDto } from '@proxy/application/dtos/groups';
-import { LoadOptions } from 'devextreme/data';
+import { PaginationDto, QueryDto } from '@proxy/application/dtos';
+import {
+  GroupListItemDto,
+  GroupQueryDto,
+} from '@proxy/application/dtos/groups';
 import { Observable } from 'rxjs';
-import { PaginationGridComponent } from '../pagination-grid.component';
+import { CreatorPaginationGridComponent as CreatorPaginationGridComponent } from '../creator-pagination-grid.component';
+import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+import { Builder, Cloner } from 'src/app/base-types/builder';
+import { Column } from 'devextreme/ui/data_grid'
+import { ThumbnailColumnBuilder } from '../columns';
 
 @Component({
   selector: 'app-group-pagination-grid',
-  templateUrl: './group-pagination-grid.component.html',
-  styleUrls: ['./group-pagination-grid.component.scss']
+  templateUrl: '../pagination-grid.component.html',
+  styleUrls: ['../pagination-grid.component.scss'],
 })
-export class GroupPaginationGridComponent 
-extends PaginationGridComponent<GroupQueryDto,GroupDto,GroupListItemDto,CreateUpdateGroupDto>
-{
-  @Input() showName:boolean=true
-  @Input() showId:boolean=true
-  @Input() showThumbnailImage:boolean=true
-  @Input() showCreationTime:boolean=true
-  @Input() showTotalMembersCount:boolean=true
-  @Input() showIsMember:boolean=true
-  @Input() showCreator:boolean=true
-  @Input() creatorIdFilter?:string
+export class GroupPaginationGridComponent extends CreatorPaginationGridComponent<GroupListItemDto> {
 
-  constructor(public groupService:GroupService){
-    super()
+
+  @Input() thumbnail:Column=new ThumbnailColumnBuilder().build()
+  @Input() totalMembers:Column=new TotalMembersColumnBuilder().build()
+
+
+  constructor(protected currentUserService: CurrentUserService, protected groupService: GroupService) {
+    super(currentUserService)
+  }
+  buildColumns(): Column<any, any>[] {
+      return [this.thumbnail,this.id,this.name,this.totalMembers,this.creationTime,this.creator]
   }
 
-getList(): Observable<PaginationDto<GroupListItemDto>> {
-    return this.groupService.getList(this.queryArgs)
-}
-
-  handleFilter(options: LoadOptions): void {
-  
-    this.queryArgs.name = this.findFilterValue(options.filter, "contains", "name")
-    this.queryArgs.creationTimeMin = this.findFilterValue(options.filter, ">=", "creationTime")
-    this.queryArgs.creationTimeMax = this.findFilterValue(options.filter, "<", "creationTime")
-    this.queryArgs.creatorId=this.creatorIdFilter
+  getList(query: GroupQueryDto): Observable<PaginationDto<GroupListItemDto>> {
+    return this.groupService.getList(query);
   }
 }
 
+export class TotalMembersColumnBuilder extends Builder<Column>{
+  constructor(defaultAssigner?:Cloner)
+  {
+    super({
+      visible: true,
+      dataField: 'totalMembersCount',
+      dataType: 'number' ,
+      caption: 'Members',
+      allowFiltering:false,
+      allowSorting:false
+  },defaultAssigner)
+  }
+}

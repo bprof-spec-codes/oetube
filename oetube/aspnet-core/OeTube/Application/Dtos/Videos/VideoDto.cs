@@ -25,9 +25,9 @@ namespace OeTube.Application.Dtos.Videos
             destination.Description = source.Description;
             destination.Duration = source.Duration;
             destination.IndexImage = _videoUrlService.GetIndexImageUrl(source.Id);
-            destination.IsUploadCompleted = source.IsUploadCompleted;
             destination.Name = source.Name;
             destination.PlaylistId = null;
+            destination.Access = source.Access;
             destination.HlsResolutions = source.GetResolutionsBy(true).Select(r => new HlsResolutionDto()
             {
                 Width = r.Width,
@@ -55,8 +55,8 @@ namespace OeTube.Application.Dtos.Videos
         public DateTime CreationTime { get; set; }
         public TimeSpan Duration { get; set; }
         public List<Guid> AccessGroups { get; set; } = new List<Guid>();
+        public AccessType Access { get; set; }
         public Guid? PlaylistId { get; set; }
-        public bool IsUploadCompleted { get; set; }
         public CreatorDto? Creator { get; set; }
     }
 }

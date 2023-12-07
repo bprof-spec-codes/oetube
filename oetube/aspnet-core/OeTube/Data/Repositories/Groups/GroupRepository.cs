@@ -58,12 +58,17 @@ namespace OeTube.Data.Repositories.Groups
             }
             return entity;
         }
-
-        public async Task<PaginationResult<OeTubeUser>> GetChildrenAsync(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async Task<PaginationResult<OeTubeUser>> GetMembers(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             var queryable = (await GetDbContextAsync()).GetMembers(entity);
             return await CreateListAsync<OeTubeUser, UserIncluder, UserFilter, IUserQueryArgs>(
                 queryable, args, includeDetails, cancellationToken);
+        }
+        public async Task<PaginationResult<OeTubeUser>> GetChildrenAsync(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = (await GetDbContextAsync()).GetExplicitMembers(entity);
+            return await CreateListAsync<OeTubeUser, UserIncluder, UserFilter, IUserQueryArgs>
+                (queryable, args, includeDetails, cancellationToken);
         }
     }
 }

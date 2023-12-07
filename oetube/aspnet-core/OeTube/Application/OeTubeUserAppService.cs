@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Groups;
 using OeTube.Application.Dtos.OeTubeUsers;
+using OeTube.Application.Dtos.Videos;
 using OeTube.Application.Methods;
 using OeTube.Domain.Entities;
 using OeTube.Domain.Entities.Groups;
@@ -31,13 +33,14 @@ namespace OeTube.Application
         {
             return await _factory.CreateGetMethod<UserDto>().GetAsync(id);
         }
-
+  
         public async Task<PaginationDto<UserListItemDto>> GetListAsync(UserQueryDto input)
         {
             return await _factory.CreateGetListMethod<UserListItemDto>()
                                  .GetListAsync(input);
         }
 
+        [Authorize]
         public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto input)
         {
             return await _factory.CreateUpdateMethod<UpdateUserDto, UserDto>()
@@ -45,6 +48,7 @@ namespace OeTube.Application
                                  .UpdateAsync(id, input);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task UploadDefaultImageAsync(IRemoteStreamContent input)
         {
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()
@@ -56,7 +60,11 @@ namespace OeTube.Application
             return await _factory.CreateGetChildrenListMethod<Group, IGroupQueryArgs, GroupListItemDto>()
                            .GetChildrenListAsync(id, input);
         }
-
+        [HttpGet("api/src/oe-tube-user/default-image")]
+        public async Task<IRemoteStreamContent> GetDefaultImageAsync()
+        {
+            return await _factory.CreateGetDefaultFileMethod<SourceImagePath>().GetDefaultFileAsync();
+        }
         [HttpGet("api/src/ou-tube-user/{id}/image")]
         public async Task<IRemoteStreamContent> GetImageAsync(Guid id)
         {

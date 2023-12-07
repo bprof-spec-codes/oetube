@@ -1,22 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { VideoQueryDto } from '@proxy/application/dtos/videos';
-import { ConfigStateService } from '@abp/ng.core';
+import { Component } from '@angular/core';
+import { ActivatedRoute,Router } from '@angular/router';
+import { GroupDto } from '@proxy/application/dtos/groups';
+import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
+
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
-  styleUrls: ['./group.component.scss']
+  styleUrls: ['./group.component.scss'],
 })
-export class GroupComponent implements OnInit {
+export class GroupComponent {
 
-  constructor(private config:ConfigStateService) {
-  
+  currentUser:CurrentUser
+  constructor(currentUserService:CurrentUserService,private router:Router){
+    this.currentUser=currentUserService.getCurrentUser()
   }
-  currentUser=this.config.getOne("currentUser")
-
-  panels=["Explore","Create","My Groups"]
-  ngOnInit(): void {
-  ;
-    
+  onSubmitted(e:GroupDto){
+    this.router.navigate(['group/'+e.id])
   }
-
 }
+

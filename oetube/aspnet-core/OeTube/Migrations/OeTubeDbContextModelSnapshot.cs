@@ -102,6 +102,49 @@ namespace OeTube.Migrations
                     b.ToTable("Member");
                 });
 
+            modelBuilder.Entity("OeTube.Domain.Entities.OeTubeUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AboutMe")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<string>("EmailDomain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreationTime");
+
+                    b.HasIndex("EmailDomain");
+
+                    b.ToTable("OeTubeUsers");
+                });
+
             modelBuilder.Entity("OeTube.Domain.Entities.Playlists.Playlist", b =>
                 {
                     b.Property<Guid>("Id")
@@ -133,8 +176,8 @@ namespace OeTube.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -251,49 +294,6 @@ namespace OeTube.Migrations
                     b.HasKey("VideoId", "Width", "Height");
 
                     b.ToTable("VideoResolution");
-                });
-
-            modelBuilder.Entity("OeTube.Entities.OeTubeUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AboutMe")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<string>("EmailDomain")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ExtraProperties")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreationTime");
-
-                    b.HasIndex("EmailDomain");
-
-                    b.ToTable("OeTubeUsers");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -1996,6 +1996,15 @@ namespace OeTube.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OeTube.Domain.Entities.OeTubeUser", b =>
+                {
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("OeTube.Domain.Entities.OeTubeUser", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OeTube.Domain.Entities.Playlists.Playlist", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
@@ -2045,15 +2054,6 @@ namespace OeTube.Migrations
                     b.HasOne("OeTube.Domain.Entities.Videos.Video", null)
                         .WithMany("Resolutions")
                         .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OeTube.Entities.OeTubeUser", b =>
-                {
-                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("OeTube.Entities.OeTubeUser", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

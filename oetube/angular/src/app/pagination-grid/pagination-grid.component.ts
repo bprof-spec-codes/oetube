@@ -1,168 +1,71 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild,Output, EventEmitter} from '@angular/core';
-import { lastValueFrom, Observable } from 'rxjs';
+import { Component, Input, OnInit, ViewChild,Output, EventEmitter, AfterViewInit, Pipe, PipeTransform, ElementRef, TemplateRef} from '@angular/core';
+import { filter, lastValueFrom, Observable } from 'rxjs';
 import { PaginationDto, QueryDto } from '@proxy/application/dtos';
 import DataSource from 'devextreme/data/data_source';
 import { LoadOptions } from 'devextreme/data';
 import { DxDataGridComponent } from 'devextreme-angular';
-import { DxiButtonComponent, DxoEditingComponent, DxoPagerComponent, DxoPagingComponent, DxoSelectionComponent } from 'devextreme-angular/ui/nested';
+import {ConfigStateService} from '@abp/ng.core'
+import { CreationTimeColumnBuilder, FilteredColumn, IdColumnBuilder, NameColumnBuilder, ThumbnailColumnBuilder} from './columns';
+import  {CellClickEvent, Pager } from 'devextreme/ui/data_grid';
+import { Column } from 'devextreme/ui/data_grid'
+import DevExpress from 'devextreme';
+import { Type } from '@angular/compiler';
+import { Query } from 'devextreme/data/query';
+import { NotifyInit, TwoWayBinding } from 'src/app/base-types/two-way-binding';
+import { Builder, ObjectPropertyChanger } from 'src/app/base-types/builder';
+
 @Component({
-  template: '',
+  templateUrl: './pagination-grid.component.html',
+  styleUrls:['./pagination-grid.component.scss'],
+  selector:'app-pagination-grid'
 })
-export abstract class PaginationGridComponent<
-  TQueryArgs extends QueryDto,
-  TOutputDto,
+export class PaginationGridComponent<
   TOutputListDto,
-  TUpdateDto
-> implements OnInit, OnDestroy
+> implements OnInit, NotifyInit
 {
+  initialized?: EventEmitter<any>
+  dataSource: DataSource<TOutputListDto, string>
+  @ViewChild(DxDataGridComponent, {static:true}) dxDataGrid:DxDataGridComponent
   defaultItemPerPage: number = 10;
+  selectedPageSize:number=this.defaultItemPerPage
   pageSizes: Array<number> = [this.defaultItemPerPage, 20, 50, 100];
-  dataSource: DataSource<TOutputListDto, string>;
-  allowedPageSizes: Array<number>;
-  allowDelete:boolean=true
-  allowEdit:boolean=true
-
-  @ViewChild("dxGrid",{static:true}) dxGrid:DxDataGridComponent
-  @ViewChild("dxPager",{static:true}) dxPager:DxoPagerComponent
-  @ViewChild("dxPaging",{static:true}) dxPaging:DxoPagingComponent
-  @ViewChild("dxEditButton",{static:true}) dxEditButton:DxiButtonComponent 
-  @ViewChild("dxDeleteButton",{static:true}) dxDeleteButton:DxiButtonComponent 
-  @ViewChild("dxShowDetailsButton",{static:true}) dxShowDetailsButton:DxiButtonComponent 
-  @ViewChild("dxGridSelection",{static:true}) dxGridSelection:DxoSelectionComponent
-  @ViewChild("dxEditing",{static:true}) dxEditing:DxoEditingComponent
   
-  @Input() height:number
-  @Input() width:number
-  @Input() queryArgs: TQueryArgs={itemPerPage:this.defaultItemPerPage,page:0} as TQueryArgs
-  @Input() showId:boolean=true
-  @Input() selectionMode: string="multiple"
-  @Input() selectedItems:Array<string>
-  @Input() updateModel:TUpdateDto
-  @Output() updateModelChanged:EventEmitter<TUpdateDto>=new EventEmitter<TUpdateDto>()
+  @Input() preprocessResponse:(response:PaginationDto<TOutputListDto>)=>PaginationDto<TOutputListDto>
+  @Input() id=new IdColumnBuilder().build()
+  @Input() name=new NameColumnBuilder().build()
+  @Input() thumbnail=new ThumbnailColumnBuilder().build()
+  @Input() creationTime=new CreationTimeColumnBuilder().build()
+  @Input() dataGridBuilder:Builder<DxDataGridComponent>
 
-  
-  
+  @TwoWayBinding<PaginationGridComponent<TOutputListDto>>
+  ((selector)=>selector.get('dxDataGrid').get('selectedRowKeys'),
+  {
+    convert:(v:{id:string}[])=>v.map(i=>i.id),
+    convertBack:(v:{id:string}[])=>v.map(i=>{return {id:i}})
+  })
+  @Input() selectedKeys: Array<string>
+  @Output() selectedKeysChange: EventEmitter<Array<string>> = new EventEmitter<Array<string>>()
+  @Output() cellClicked:EventEmitter<CellClickEvent<TOutputListDto,string>>=new EventEmitter<CellClickEvent<TOutputListDto,string>>()
 
-  initDataGrid(){
-    this.dxGrid.dataSource=this.dataSource
-    this.dxGrid.remoteOperations=true
-    this.dxGrid.cacheEnabled=true
-    this.dxGrid.showBorders=true
-    this.dxGrid.allowColumnResizing=true
-    this.initPaging()
-    this.initPager()
-    this.initSelectedRowKeys()
-    this.subscribeSelectedRowKeyChange()
-  }
-  initPaging(){
-
-  }
-  initPager(){
-    this.dxPager.visible=true
-    this.dxPager.allowedPageSizes=this.allowedPageSizes
-    this.dxPager.displayMode="full"
-    this.dxPager.showInfo=true
-    this.dxPager.showNavigationButtons=true
-    this.dxPager.showPageSizeSelector=true
-  }
-  initSelection(){
-    this.dxGridSelection.showCheckBoxesMode="always"
-    this.dxGridSelection.selectAllMode="page"
-
-  }
-  initSelectedRowKeys(){
-    if(this.selectedItems){
-      this.dxGrid.selectedRowKeys=this.selectedItems.map(i=>{id:i})
-    }
-  }
-  @Output() selectedItemsChange:EventEmitter<Array<string>>=new EventEmitter<Array<string>>()
-  subscribeSelectedRowKeyChange(){
-    this.dxGrid.selectedRowKeysChange.subscribe((value:{id:string}[])=>{
-      this.selectedItemsChange.emit(value.map(item=>item.id))
-    })
-  }
- 
-  abstract getList(): Observable<PaginationDto<TOutputListDto>>
-  
-  getDetails(key:string):Observable<TOutputDto>{
-    return undefined
-  }
-  delete(key:string):Observable<any>{
-    return undefined
-  }
-
-  mapOutputToUpdate(dto:TOutputDto):TUpdateDto{
-    return undefined
-  }
-
-
-  update(model:TUpdateDto):Observable<TOutputDto>{
-  return undefined   
-  }
-
- 
-  setAllowedPageSizes(totalCount: number) {
-    this.allowedPageSizes = [this.pageSizes[0]];
-    for (let index = 1; index < this.pageSizes.length; index++) {
-      const element = this.pageSizes[index];
-      if (element > totalCount) {
-        break;
-      }
-      this.allowedPageSizes.push(element);
-    }
-  }
-  handleListData(data:PaginationDto<TOutputListDto>){
-  }
-
-  handlePagination(options: LoadOptions): void {
-    if (options.take == null && options.take > 0) {
-      this.queryArgs.itemPerPage = options.take;
-      if (options.skip != null && options.skip >= 0) {
-        this.queryArgs.page = Math.floor(options.skip / options.take);
-      }
-    }
-  }
-  findFilterValue(items: Array<any>, operation: string, name: string) {
-    if (items?.length >= 2) {
-      if (items[0] == name && items[1] == operation) {
-        return items[2];
-      } else {
-        for (let index = 0; index < items.length; index++) {
-          const element = items[index];
-          if (element instanceof Array) {
-            const result = this.findFilterValue(element, operation, name);
-            if (result != null) {
-              return result;
-            }
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  handleSorting(args: { selector: string; desc: boolean }): void {
-    this.queryArgs.sorting = args.selector + (args.desc ? ' desc' : ' asc');
-  }
-  abstract handleFilter(options: LoadOptions): void;
+  protected propertyChanger:ObjectPropertyChanger<DxDataGridComponent>
 
   ngOnInit(): void {
-    this.dataSource = new DataSource({
+    this.initDataGrid()
+    this.propertyChanger=new ObjectPropertyChanger<DxDataGridComponent>(this.dxDataGrid)
+    this.initialized.emit(this)
+  }
+ 
+  createDataSource() {
+   return new DataSource<TOutputListDto,string>({
       load: async options => {
-        if(this.queryArgs.itemPerPage==null){
-          this.queryArgs.itemPerPage=this.defaultItemPerPage
-        }
-        this.handlePagination(options);
-        this.handleFilter(options);
-        if (options.sort instanceof Array && options.sort.length > 0) {
-          this.handleSorting(options.sort[0] as { selector: string; desc: boolean });
-        }
-        
-        return lastValueFrom(this.getList())
+        console.log("load")
+        let query=this.loadOptionsToQuery(options)
+        return lastValueFrom(this.getList(query))
           .then(response => {
-
-            this.setAllowedPageSizes(response.totalCount);
-            this.handleListData(response)
+            if(this.preprocessResponse){
+              response=this.preprocessResponse(response)
+            }
+            //this.refreshPaging(response.totalCount);
             return {
               data: response.items,
               totalCount: response.totalCount,
@@ -172,17 +75,110 @@ export abstract class PaginationGridComponent<
             throw 'loading error';
           });
       },
-      key:["id"],
+      key: ["id"],
       paginate: true,
-      remove:async(key)=>{
-        await lastValueFrom(this.delete(key))
-      },
-      update:async(key,values)=>{
-        this.updateModel=this.mapOutputToUpdate(await lastValueFrom(this.update(this.updateModel)))
-      }
     });
-   
   }
-  ngOnDestroy(): void {;}
+  log(data){
+    console.log(data)
+  }
+  initDataGrid() {
+    this.dataGridBuilder??=new DefaultDataGridBuilder(this.dxDataGrid)
+    this.dataSource=this.createDataSource()
+    this.dxDataGrid.dataSource=this.dataSource
+    this.dxDataGrid.columns=this.buildColumns()
+  }
+  buildColumns():Column[]
+  {
+    return []
+  }
+
+
+  getList(query:QueryDto): Observable<PaginationDto<TOutputListDto>>{
+    return undefined
+  }
+
+
+  refreshPaging(totalCount: number) {
+    const allowedPageSizes=[]
+    for (let index = 0; index < this.pageSizes.length; index++) {
+      const element = this.pageSizes[index];
+     
+      allowedPageSizes.push(element);
+      if (element>totalCount) {
+        break;
+      }
+    }
+    debugger
+    let currentPageSize=this.dxDataGrid.paging.pageSize
+    if(!allowedPageSizes.includes(currentPageSize))
+    {
+      currentPageSize=allowedPageSizes[allowedPageSizes.length-1]
+    }
+    this.propertyChanger.changeProperty('pager',{allowedPageSizes:allowedPageSizes})
+    this.propertyChanger.changeProperty('paging',{pageSize:currentPageSize})
+  }
+
+  loadOptionsToQuery(options:LoadOptions):QueryDto{
+    let query:QueryDto={
+      pagination:{take:0,skip:0},
+      sorting:""
+    }
+    if (options?.take > 0) {
+      query.pagination.take = options.take;
+      if (options?.skip >= 0) {
+        query.pagination.skip =options.skip;
+      }
+    }
+    if (options.sort instanceof Array && options.sort.length > 0) {
+       let sorting=options.sort[0] as {selector:string, desc:boolean}
+       if(sorting){
+          query.sorting=sorting.selector + (sorting.desc ? ' desc' : ' asc');
+       }
+    }
+    this.dxDataGrid.columns.forEach(c=>{
+      let column=c as FilteredColumn
+      if(column.filterSetter!=undefined){
+        column.filterSetter.setFilterValue(options,query,column)
+      }
+    })
+    return query
+  }
+}
+export class DefaultDataGridBuilder extends Builder<DxDataGridComponent>{
+  constructor(prototype:DxDataGridComponent){
+    super(prototype)
+    this.map({
+      remoteOperations: true,
+      cacheEnabled: true,
+      showBorders: true,
+      allowColumnResizing: true,
+      columnAutoWidth: true,
+      columnResizingMode: "nextColumn",
+      showColumnHeaders: true,
+      hoverStateEnabled: true,
+      showRowLines:true,
+      pager:{
+        showInfo:true,
+        showNavigationButtons: true,
+        visible: true,
+        showPageSizeSelector: true,
+      },
+      filterRow:{
+        visible:true
+      },
+      selection:{
+        allowSelectAll:true,
+        mode: "multiple",
+        showCheckBoxesMode:"always",
+        selectAllMode: "page"
+      },
+      paging:{
+        pageSize:10,
+        pageIndex:0,
+        enabled:true
+      }
+    })
+  }
 }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OeTube.Application.AuthorizationCheckers;
 using OeTube.Application.Dtos;
 using OeTube.Application.Dtos.Playlists;
@@ -19,28 +20,6 @@ using Volo.Abp.DependencyInjection;
 
 namespace OeTube.Application
 {
-    public class QueryTest : IApplicationService,ITransientDependency
-    {
-        public OeTubeDbContext context;
-
-        public QueryTest(OeTubeDbContext context)
-        {
-            this.context = context;
-        }
-        public object GetMemberships()
-        {
-            return context.GetMemberships();
-        }
-        public object GetVideoAcc()
-        {
-            return context.GetVideoAccessibilities();
-        }
-        public object GetPlaylistAcc()
-        {
-            return context.GetPlaylistAccessibilities();
-        }
-
-    }
     public class PlaylistAppService : IApplicationService, ITransientDependency
     {
         private readonly PlaylistMethodFactory _factory;
@@ -66,17 +45,22 @@ namespace OeTube.Application
                                  .GetListAsync(input);
         }
 
+        [Authorize]
         public async Task<PlaylistDto> CreateAsync(CreateUpdatePlaylistDto input)
         {
             return await _factory.CreateCreateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .CreateAsync(input);
         }
+
+        [Authorize]
         public async Task<PlaylistDto> UpdateAsync(Guid id,CreateUpdatePlaylistDto input)
         {
             return await _factory.CreateUpdateMethod<CreateUpdatePlaylistDto, PlaylistDto>()
                                  .SetAuthorizationAndPolicy(_creatorAuth)
                                  .UpdateAsync(id, input);
         }
+
+        [Authorize]
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
@@ -84,6 +68,7 @@ namespace OeTube.Application
                           .DeleteAsync(id);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task UploadDefaultImageAsync(IRemoteStreamContent input)
         {
             await _factory.CreateUploadDefaultFileMethod<IDefaultImageUploadHandler>()
@@ -100,7 +85,11 @@ namespace OeTube.Application
             }
             return videos;
         }
-
+        [HttpGet("api/src/playlist/default-image")]
+        public async Task<IRemoteStreamContent> GetDefaultImageAsync()
+        {
+            return await _factory.CreateGetDefaultFileMethod<SourceImagePath>().GetDefaultFileAsync();
+        }
         [HttpGet("api/src/playlist/{id}/image")]
         public async Task<IRemoteStreamContent> GetImageAsync(Guid id)
         {
