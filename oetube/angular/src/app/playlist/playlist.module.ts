@@ -6,9 +6,8 @@ import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
 import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
 import { DxFileUploaderModule } from 'devextreme-angular';
-import { DxDataGridModule } from 'devextreme-angular';
 import { DxListModule } from 'devextreme-angular';
-import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 
 
  

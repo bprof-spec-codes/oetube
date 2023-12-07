@@ -4,7 +4,6 @@ import { UserDto } from '@proxy/application/dtos/oe-tube-users/models';
 import { PlaylistDto, PlaylistItemDto, PlaylistQueryDto } from '@proxy/application/dtos/playlists';
 import { OeTubeUserService } from '@proxy/application/oe-tube-user.service';
 import { PlaylistService } from '@proxy/application/playlist.service';
-import { ItemPerPage } from '@proxy/domain/repositories/query-args';
 import { ConfigStateService } from '@abp/ng.core';
 
 
@@ -18,8 +17,10 @@ export class PlaylistYourListsComponent implements OnInit {
   playlists : Array<PlaylistItemDto>
   playlistQueryDto : PlaylistQueryDto =
   {
-    itemPerPage:ItemPerPage.P50,
-    page:0
+    pagination : {
+      skip: 0,
+      take: 50,
+    }
   }
   userData : any = {}
   itemTemplate(itemData: any, index: number, element: any){
