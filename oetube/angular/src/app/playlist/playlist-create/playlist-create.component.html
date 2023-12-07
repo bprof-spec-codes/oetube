@@ -12,9 +12,28 @@
                         [accept]="acceptedFileTypes"
                         multiple="false"
                         [selectButtonText]="'Select image'"
-                        (onValueChanged)="onFileSelected($event)"></dx-file-uploader>
-                </dxi-item>
-                    <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>
+                        (onValueChanged)="onFileSelected($event)">
+                </dx-file-uploader>
+            </dxi-item>
+            <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>    
         </dx-form>
     </form>
+    <dx-popup
+        id="success-popup"
+        [(visible)]="isPopupVisible"
+        [hideOnOutsideClick]="true"
+        [showTitle]="true"
+        (onHidden)="navigateToPlaylists()"
+        title="Success">
+        <p>Creator: {{ successfulPlaylistCreation.CreatorName }}</p><hr/>
+        <p>Name: {{ successfulPlaylistCreation.Name }}</p><hr/>
+        <div *ngIf="successfulPlaylistCreation.Description != ''">
+            <p>Description: {{ successfulPlaylistCreation.Description }}</p><hr/>
+        </div>
+        <img id="playlist-image" src="{{ successfulPlaylistCreation.Image }}"/>
+    </dx-popup>
+    <dx-button
+        text="Open popup"
+        (onClick)="togglePopup()">
+    </dx-button>
 </main>

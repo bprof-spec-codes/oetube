@@ -8,8 +8,7 @@ import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-
 import { DxFileUploaderModule } from 'devextreme-angular';
 import { DxListModule } from 'devextreme-angular';
 import { DxButtonModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-
-
+import { DxPopupModule } from 'devextreme-angular';
  
 import {
   DxTabPanelModule,
@@ -37,7 +36,8 @@ import {
     DxDataGridModule,
     DxListModule,
     DxTemplateModule,
-    DxButtonModule
+    DxButtonModule,
+    DxPopupModule
   ]
 })
 export class PlaylistModule { }

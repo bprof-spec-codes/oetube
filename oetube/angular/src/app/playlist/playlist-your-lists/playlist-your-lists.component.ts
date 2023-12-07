@@ -42,7 +42,6 @@ export class PlaylistYourListsComponent implements OnInit {
       }
     })
     this.userData = this.config.getOne("currentUser")
-    console.log(this.userData)
   }
 
   navigateToList(event){
