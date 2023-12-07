@@ -11,7 +11,6 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { DxButtonComponent } from 'devextreme-angular';
-import { ScrollViewSelectorComponent } from '../scroll-view-selector/scroll-view-selector.component';
 import { ScrollViewProviderComponent, ScrollViewComponent } from '../scroll-view.component';
 import type { EntityDto } from '@abp/ng.core';
 
@@ -27,17 +26,13 @@ import type { EntityDto } from '@abp/ng.core';
   ],
 })
 export class ScrollViewSelectorPopupComponent<
-    TOutputListDto extends EntityDto<string> = EntityDto<string>
-  >
-  extends ScrollViewProviderComponent<TOutputListDto>
+  TOutputListDto extends EntityDto<string> = EntityDto<string>
+> extends ScrollViewProviderComponent<TOutputListDto> implements AfterViewInit{
 
-{
-
-  @ContentChild(ScrollViewSelectorComponent) provider: ScrollViewSelectorComponent<TOutputListDto>;
+  @ContentChild(ScrollViewProviderComponent<TOutputListDto>) provider: ScrollViewProviderComponent<TOutputListDto>;
   get scrollView(): ScrollViewComponent<TOutputListDto> {
-     return this.provider.scrollView 
+    return this.provider.scrollView;
   }
-  
   @Input() title: string;
   @Input() closeButtonOptions: Partial<DxButtonComponent & any> = {
     icon: 'close',
@@ -48,11 +43,12 @@ export class ScrollViewSelectorPopupComponent<
 
   @Input() value: string[];
   @Output() valueChange: EventEmitter<string[]> = new EventEmitter<string[]>();
-  @Input() icon:string
-  @Input() text:string
-  @Input() stylingMode:string
-  @Input() disabled:boolean
-  @Input() type:string
+  
+  @Input() icon: string;
+  @Input() text: string;
+  @Input() stylingMode: string;
+  @Input() disabled: boolean;
+  @Input() type: string;
 
   visible = false;
   isOpened = false;
@@ -80,5 +76,7 @@ export class ScrollViewSelectorPopupComponent<
       });
     }
   }
-
+  setOptions(): void {
+      this._options.allowSelection=true
+  }
 }

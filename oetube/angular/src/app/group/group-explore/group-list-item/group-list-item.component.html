@@ -3,7 +3,7 @@
   <div class="card-body d-flex row mx-auto">
     <div class="col my-auto card-title h4-sm justify-content-center d-flex">
         <div>
-            <a [routerLink]="['/group',item.id]" target="_blank" class="link-primary">
+            <a [routerLink]="['/group',item.id]"  class="link-primary">
               <h4 class="my-auto mr-5">{{ item.name }}</h4>
             </a>
             <span class="my-auto">{{ item.creationTime | date : 'yyyy.MM.dd' }}</span>

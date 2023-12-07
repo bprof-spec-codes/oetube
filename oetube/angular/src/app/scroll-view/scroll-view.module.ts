@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { DxButtonGroupModule, DxButtonModule, DxCheckBoxModule, DxContextMenuModule, DxDateBoxModule, DxDateRangeBoxModule, DxDraggableModule, DxDropDownButtonModule, DxListModule, DxPopoverModule, DxPopupModule, DxScrollViewModule, DxSelectBoxModule, DxSortableModule, DxTextBoxModule, DxTileViewModule, DxToolbarModule } from 'devextreme-angular';
 import { ScrollViewComponent, ScrollViewContentDirective, ScrollViewProviderComponent } from './scroll-view.component';
 import { DropDownSearchModule } from './drop-down-search/drop-down-search.module';
-import { ScrollViewSelectorComponent } from './scroll-view-selector/scroll-view-selector.component';
 import { ScrollViewSelectorPopupComponent } from './scroll-view-selector-popup/scroll-view-selector-popup.component';
 
 
 
 @NgModule({
-  declarations:[ScrollViewComponent,ScrollViewContentDirective, ScrollViewSelectorComponent, ScrollViewSelectorPopupComponent
+  declarations:[ScrollViewComponent,ScrollViewContentDirective, ScrollViewSelectorPopupComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +30,7 @@ import { ScrollViewSelectorPopupComponent } from './scroll-view-selector-popup/s
     DxPopupModule,
     DxListModule
   ], 
-  exports:[ScrollViewComponent,ScrollViewContentDirective,DropDownSearchModule,ScrollViewSelectorComponent,ScrollViewSelectorPopupComponent]
+  exports:[ScrollViewComponent,ScrollViewContentDirective,DropDownSearchModule,ScrollViewSelectorPopupComponent]
 })
 export class ScrollViewModule{
 

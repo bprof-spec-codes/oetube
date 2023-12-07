@@ -1,4 +1,4 @@
-<app-lazy-tab-panel>
-    <app-group-explore [height]="450" *appLazyTabItem="let data;title:'Explore'"></app-group-explore>
-    <app-group-create *appLazyTabItem="let data;title:'Create';auth:true"></app-group-create>
+<app-lazy-tab-panel [currentUserId]="currentUser.id" >
+    <app-group-explore *appLazyTabItem="let data;title:'Explore'"></app-group-explore>
+    <app-group-create (submitted)="onSubmitted($event)" [selectedDatas]="selectedDatas" [currentUserId]="currentUser.id" *appLazyTabItem="let data;title:'Create';auth:true"></app-group-create>
 </app-lazy-tab-panel>

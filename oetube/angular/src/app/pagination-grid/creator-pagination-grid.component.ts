@@ -20,11 +20,11 @@ import { Builder, Cloner } from 'src/app/base-types/builder';
        super()
       }
       isAuthenticated(){
-        return this.currentUserService.get().isAuthenticated
+        return this.currentUserService.getCurrentUser().isAuthenticated
       }
       creatorFilters=[
         {id:'All', value:()=>undefined},
-        {id:'MySelf',value:()=>this.currentUserService.get()?.id}
+        {id:'MySelf',value:()=>this.currentUserService.getCurrentUser()?.id}
       ]
       selectedCreatorFilter=this.creatorFilters[0]
       creatorFilterValue:string
