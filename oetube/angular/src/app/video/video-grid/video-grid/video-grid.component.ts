@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
-import { ItemPerPage } from '@proxy/domain/repositories/query-args/item-per-page.enum';
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
 import { VideoService } from '@proxy/application';
 
@@ -39,7 +38,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({name:searchPhrase,pagination:{take:100,skip:0}})
+      .getList({ name: searchPhrase, pagination: { take: 100, skip: 0 } })
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;
