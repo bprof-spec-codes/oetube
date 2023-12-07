@@ -64,9 +64,7 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
           const [header,value]=currentUserService.getAuthorizationHeaderValue()
           xhr.setRequestHeader(header,value)
         }
-      }})
-    }
-  
+
 
   ngAfterViewInit() {
     this.subscriptions();
