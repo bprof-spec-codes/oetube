@@ -48,7 +48,7 @@ export class PlaylistYourListsComponent implements OnInit {
     let itemData : any = event.itemData
     console.log(itemData)
     //the route may vary according to the creator of the playlist content component
-    this.router.navigate(['playlist/contents/' + itemData.id])
+    this.router.navigate(['playlist/view/' + itemData.id])
   }
 
   deletePlaylist(event){
