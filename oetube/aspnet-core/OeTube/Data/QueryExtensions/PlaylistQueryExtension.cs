@@ -36,6 +36,9 @@ namespace OeTube.Data.QueryExtensions
         public static IQueryable<Playlist> GetAvaliablePlaylists(this OeTubeDbContext context, Guid? requesterId, IQueryable<Playlist>? playlists = null)
         {
             playlists??= context.Set<Playlist>();
+            var creator = from playlist in playlists
+                          where playlist.CreatorId == requesterId
+                          select playlist;
 
             var result = from playlist in playlists
                          join videoItem in context.Set<VideoItem>()
@@ -44,7 +47,7 @@ namespace OeTube.Data.QueryExtensions
                          on videoItem.VideoId equals video.Id
                          select playlist;
 
-            return result.Distinct();
+            return creator.Union(result).Distinct();
         }
     }
 }
