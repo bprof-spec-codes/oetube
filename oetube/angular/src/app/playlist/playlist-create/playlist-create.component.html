@@ -28,7 +28,7 @@
         [hideOnOutsideClick]="true"
         [showTitle]="true"
         (onHidden)="navigateToPlaylists()"
-        height="50vh"
+        height="70vh"
         width="50vw"
         title="Success">
         <p>Creator: {{ successfulPlaylistCreation.CreatorName }}</p><hr/>
@@ -38,8 +38,4 @@
         </div>
         <img id="playlist-image" src="{{ successfulPlaylistCreation.Image }}"/>
     </dx-popup>
-    <dx-button
-        text="Open popup"
-        (onClick)="togglePopup()">
-    </dx-button>
 </main>

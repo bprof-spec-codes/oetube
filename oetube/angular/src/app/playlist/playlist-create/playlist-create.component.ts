@@ -3,7 +3,6 @@ import { CreateUpdatePlaylistDto, PlaylistDto } from '@proxy/application/dtos/pl
 import { PlaylistService } from '@proxy/application/playlist.service';
 import { Router } from '@angular/router';
 import { VideoService } from '@proxy/application';
-import { VideoQueryDto } from '@proxy/application/dtos/videos';
 
 @Component({
   selector: 'app-playlist-create',
@@ -58,18 +57,14 @@ export class PlaylistCreateComponent{
         this.successfulPlaylistCreation.Description = success.description
         this.successfulPlaylistCreation.Image = success.image
 
-        
 
-        this.isPopupVisible = !this.isPopupVisible
+
+        this.togglePopup()
       }
     })
   }
 
   navigateToPlaylists(){
     this.router.navigate(['playlist/playlists'])
-  }
-
-  onFileSelected(event){
-    this.playlistModel.image = event.value;
   }
 }
