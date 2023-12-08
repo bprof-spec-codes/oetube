@@ -1,10 +1,23 @@
+<ng-container *ngIf="allowSelection; else elseTemplate">
+  <ng-content *ngTemplateOutlet="content"></ng-content>
+</ng-container>
+<ng-template #elseTemplate>
+  <a [routerLink]="'/video/watch/' + video.id">
+    <ng-content *ngTemplateOutlet="content"></ng-content>
+  </a>
+</ng-template>
 
-    <div class="pic-container" (click)="onClick($event)">
-        <img class="rounded my-1 w-100" [src]="video.indexImage | auth" draggable="false"/>
-        <div class="bottom-right">{{ video.duration }}</div>
-      </div>
-      <div class="text-truncate"  [title]="video.name">
-        <strong>
-            {{ video.name }}
-        </strong>
+<ng-template #content>
+  <div class="pic-container" (click)="onClick($event)">
+    <img class="rounded my-1 w-100" [src]="video.indexImage | auth" draggable="false" />
+    <div class="bottom-right">
+      {{ video.duration }}
     </div>
+  </div>
+
+    <div class="text-truncate" [title]="video.name">
+      <strong>
+        {{ video.name }}
+      </strong>
+    </div>
+</ng-template>

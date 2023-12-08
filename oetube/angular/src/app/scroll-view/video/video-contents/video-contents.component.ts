@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewChild } from '@angular/core';
+import { Component, forwardRef,Input, ViewChild } from '@angular/core';
 import { TemplateRefCollectionComponent } from 'src/app/template-ref-collection/template-ref-collection.component';
 import {ScrollViewContent, ScrollViewContentsComponent } from '../../scroll-view-contents/scroll-view-contents.component';
 
@@ -15,4 +15,5 @@ export class VideoContentsComponent extends TemplateRefCollectionComponent<Scrol
     {key:"tile",hint:"Tile",icon:"rowfield",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"},
     {key:"list",hint:"List",icon:"fields",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"}
   ]
+  @Input() allowSelection:boolean
 }
