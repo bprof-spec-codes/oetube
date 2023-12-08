@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 import { PaginationGridComponent } from '../pagination-grid.component';
 import { GroupPaginationGridComponent } from './group-pagination-grid.component';
 import {ConfigStateService} from '@abp/ng.core'
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 
 @Component({
   selector: 'app-access-group-pagination-grid',

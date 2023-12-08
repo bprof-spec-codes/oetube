@@ -1,12 +1,11 @@
 import { Component,Input,OnInit,OnDestroy,EventEmitter } from '@angular/core';
 import { VideoService } from '@proxy/application';
 import { VideoIndexImagesDto } from '@proxy/application/dtos/videos';
-import { AuthUrlPipe } from 'src/app/services/auth-url-pipe/auth-url.pipe';
 import { RestService, Rest } from '@abp/ng.core';
 import { HttpRequest } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable,lastValueFrom } from 'rxjs';
-import { UrlService } from 'src/app/services/url-service/url.service';
+import { UrlService } from 'src/app/auth/url-service/url.service';
 @Component({
   selector: 'app-video-frame-selector',
   templateUrl: './video-frame-selector.component.html',

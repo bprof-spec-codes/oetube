@@ -20,8 +20,7 @@ import type { EntityDto } from '@abp/ng.core';
   styleUrls: ['./scroll-view-selector-popup.component.scss'],
 })
 export class ScrollViewSelectorPopupComponent<
-  TOutputListDto extends EntityDto<string> = EntityDto<string>
->  implements AfterContentInit{
+  TOutputListDto extends EntityDto<string> = EntityDto<string>>{
 
   @ContentChild(ScrollViewComponent<TOutputListDto>) scrollView: ScrollViewComponent<TOutputListDto>;
 
@@ -45,9 +44,12 @@ export class ScrollViewSelectorPopupComponent<
   visible = false;
   isOpened = false;
   show() {
-    if (!this.isOpened) {
+      if (!this.isOpened) {
       this.isOpened = true;
       this.scrollView.dataSource.reload()
+    }
+    else{
+      this.scrollView.dataSource.refresh()
     }
     this.visible = true;
   }
@@ -57,11 +59,6 @@ export class ScrollViewSelectorPopupComponent<
     this.valueChange.emit(this.value);
     this.scrollView.dataSource.clearCachedData()
     this.visible = false;
-  }
-
-  ngAfterContentInit(): void {
-    this.scrollView.initialLoad=false
-    this.scrollView.dataSource.allowSelection=true   
   }
 
   mapButton(source: Partial<DxButtonComponent>, destination: DxButtonComponent) {
@@ -75,8 +72,5 @@ export class ScrollViewSelectorPopupComponent<
         destination.applyOptions();
       });
     }
-  }
-  setOptions(): void {
-
   }
 }

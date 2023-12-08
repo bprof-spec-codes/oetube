@@ -12,4 +12,6 @@ import { Observable } from 'rxjs';
 })
 export class VideoComponent{
 
+
+  testValue:string[]=[]
 }

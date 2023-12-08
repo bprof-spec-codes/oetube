@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { PlaylistService, VideoService } from '@proxy/application';
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 import { DataSourceProviderDirective, ScrollViewDataSourceComponent } from '../../scroll-view-data-source/scroll-view-data-source.component';
 
 @Component({

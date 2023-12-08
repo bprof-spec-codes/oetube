@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute,Router } from '@angular/router';
 import { GroupDto } from '@proxy/application/dtos/groups';
-import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
+import { CurrentUser, CurrentUserService } from '../auth/current-user/current-user.service';
 
 @Component({
   selector: 'app-group',

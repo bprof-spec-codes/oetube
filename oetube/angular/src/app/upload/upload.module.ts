@@ -10,7 +10,7 @@ import { PaginationGridModule } from '../pagination-grid/pagination-grid.module'
 import { ScrollViewModule } from '../scroll-view/scroll-view.module';
 import { GroupModule } from '../group/group.module';
 import { VideoFrameSelectorComponent } from './video-frame-selector/video-frame-selector.component';
-import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
+import { AuthModule } from '../auth/auth.module';
 @NgModule({
   declarations: [
     UploadComponent,
@@ -33,7 +33,7 @@ import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
     DxProgressBarModule,
     PaginationGridModule,
     DxPopupModule,
-    AuthUrlPipe,
+    AuthModule,
     DxTileViewModule,
   ],
   exports:[

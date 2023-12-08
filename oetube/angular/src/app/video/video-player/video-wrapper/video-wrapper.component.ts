@@ -14,7 +14,7 @@ import Hls from 'hls.js';
 import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
+import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 @Component({
   selector: 'app-video-wrapper',
   templateUrl: './video-wrapper.component.html',

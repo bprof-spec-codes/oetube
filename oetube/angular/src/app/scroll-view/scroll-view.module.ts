@@ -48,6 +48,8 @@ import { UserListItemComponent } from './user/user-contents/user-list-item/user-
 import { GroupListItemComponent } from './group/group-contents/group-list-item/group-list-item.component';
 import { GroupTileItemComponent } from './group/group-contents/group-tile-item/group-tile-item.component';
 import { DropDownSearchComponent } from './drop-down-search/drop-down-search.component';
+import { VideoTileItemComponent } from './video/video-contents/video-tile-item/video-tile-item.component';
+import { AuthModule } from '../auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,7 @@ import { DropDownSearchComponent } from './drop-down-search/drop-down-search.com
     VideoDataSourceComponent,
     PlaylistVideoDataSourceComponent,
     VideoListItemComponent,
+    VideoTileItemComponent,
 
     PlaylistDataSourceComponent,
     PlaylistContentsComponent,
@@ -102,6 +105,7 @@ import { DropDownSearchComponent } from './drop-down-search/drop-down-search.com
     RouterModule,
     DxPopupModule,
     DxListModule,
+    AuthModule
   ],
   exports: [
     DropDownSearchModule,

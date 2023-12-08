@@ -7,10 +7,10 @@ import {
 } from '@proxy/application/dtos/groups';
 import { Observable } from 'rxjs';
 import { CreatorPaginationGridComponent as CreatorPaginationGridComponent } from '../creator-pagination-grid.component';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { Builder, Cloner } from 'src/app/base-types/builder';
 import { Column } from 'devextreme/ui/data_grid'
 import { ThumbnailColumnBuilder } from '../columns';
+import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 
 @Component({
   selector: 'app-group-pagination-grid',

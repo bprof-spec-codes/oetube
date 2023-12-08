@@ -11,7 +11,6 @@ import {
 import { UserListItemDto } from '@proxy/application/dtos/oe-tube-users';
 import { DxButtonComponent } from 'devextreme-angular';
 import { ValueChangedEvent } from 'devextreme/ui/calendar';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { Router, provideRouter } from '@angular/router';
 import { GroupModule } from '../group.module';
 @Component({

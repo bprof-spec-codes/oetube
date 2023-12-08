@@ -3,8 +3,8 @@ import { PaginationDto, QueryDto } from '@proxy/application/dtos';
 import { LoadOptions } from 'devextreme/data';
 import { PaginationGridComponent } from './pagination-grid.component';
 import { Column } from 'devextreme/ui/data_grid';
-import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { Builder, Cloner } from 'src/app/base-types/builder';
+import { CurrentUserService } from '../auth/current-user/current-user.service';
 
 
 @Component({

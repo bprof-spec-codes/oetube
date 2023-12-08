@@ -3,9 +3,9 @@ import {ActivatedRoute,Router } from '@angular/router'
 import { Title } from '@angular/platform-browser';
 import { GroupDto } from '@proxy/application/dtos/groups';
 import { GroupService } from '@proxy/application';
-import { CurrentUser, CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { UserListItemDto } from '@proxy/application/dtos/oe-tube-users';
 import { GroupItem } from 'devextreme/ui/form';
+import { CurrentUser, CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.component.html',

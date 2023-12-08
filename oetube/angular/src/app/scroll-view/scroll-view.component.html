@@ -101,7 +101,7 @@
         class="px-2 card-body w-25"
         showScrollbar="always"
         scrollByThumb="true"
-        bounceEnabled="false"
+        [bounceEnabled]="false"
         reachBottomText="Loading"
         (onScroll)="onScroll($event)"
         [height]="height"
@@ -116,7 +116,7 @@
             group="datas"
             clone="true"
             dragTemplate="dragTemplate"
-            (onDragStart)="onDragStart($event, dataSource.cachedData)"
+            (onDragStart)="onDragStart($event)"
           >
             <div *dxTemplate="let data of 'dragTemplate'">
               <div class="dragged-item">

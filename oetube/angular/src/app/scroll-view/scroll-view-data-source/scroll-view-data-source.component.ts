@@ -36,7 +36,6 @@ export class ScrollViewDataSourceComponent<TOutputListDto extends EntityDto<stri
   @Output() filteredKeysChange:EventEmitter<string[]>=new EventEmitter()
 
   @Input() allowSelection:boolean
-  @Output() allowSelectionChange:EventEmitter<boolean>=new EventEmitter()
 
   @Input() selectionContextId:string
   @Input() getInitialSelectionMethod:(id:string,args:QueryDto)=>Observable<PaginationDto<TOutputListDto>>
@@ -126,14 +125,16 @@ get query():QueryDto{
 
   deselectItem(item:TOutputListDto){
     if(this.allowSelection){
+      debugger
       const index=this.selectedDatas.indexOf(item)
       if(index!=-1){
         this.selectedDatas.splice(index,1)
-        this.selectedDatas.unshift(item)
+            }     
+           console.log(item)
+        this.cachedData.unshift(item)
         this.selectedDatasChange.emit(this.selectedDatas)
       }
     }
-  }
 
   selectItem(item:TOutputListDto){
     if(this.allowSelection){

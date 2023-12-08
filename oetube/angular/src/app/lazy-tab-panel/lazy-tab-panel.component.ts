@@ -1,6 +1,5 @@
 import { Component,Directive,ContentChildren,QueryList,Input, AfterContentInit,TemplateRef,EventEmitter,Output } from '@angular/core';
 import { DxTabPanelComponent } from 'devextreme-angular';
-import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
 @Directive({
   selector: "[appLazyTabItem]"
 })

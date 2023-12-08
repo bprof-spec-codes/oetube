@@ -28,7 +28,15 @@
                 [text]="'edit'"
                 [disabled]="uploadModel.access !== item"
               >
-                  <app-group-explore></app-group-explore>
+              <app-scroll-view>
+                <app-drop-down-search>
+                  <app-group-search></app-group-search>
+                </app-drop-down-search>
+                <app-access-group-data-source></app-access-group-data-source>
+                <app-scroll-view-contents>
+                  <app-group-contents></app-group-contents>
+                </app-scroll-view-contents>
+              </app-scroll-view>
               </app-scroll-view-selector-popup>
             </div>
           </div>

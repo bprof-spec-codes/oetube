@@ -20,7 +20,8 @@ import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.c
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
 import { AppModule } from '../app.module';
-import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
+import { ScrollViewModule } from '../scroll-view/scroll-view.module';
+import { AuthModule } from '../auth/auth.module';
 
 
 
@@ -46,7 +47,8 @@ import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
-    AuthUrlPipe,
+    AuthModule,
+    ScrollViewModule
   ],
   exports:[
     DxDropDownBoxModule,

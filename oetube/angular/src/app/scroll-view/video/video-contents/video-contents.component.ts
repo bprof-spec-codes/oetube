@@ -12,7 +12,7 @@ import {ScrollViewContent, ScrollViewContentsComponent } from '../../scroll-view
 })
 export class VideoContentsComponent extends TemplateRefCollectionComponent<ScrollViewContent> {
   inputItems:ScrollViewContent[]=[
-    {key:"tile",hint:"Tile",icon:"fields",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"},
+    {key:"tile",hint:"Tile",icon:"rowfield",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"},
     {key:"list",hint:"List",icon:"fields",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"}
   ]
 }

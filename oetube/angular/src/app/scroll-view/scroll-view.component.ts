@@ -81,8 +81,8 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   async ngAfterViewInit() {
-    this.changeDetector.detach()
     debugger
+    this.changeDetector.detach()
     if(this.dropDownSearch){
         this.dropDownSearch.filtersChange.subscribe(f => this.onFiltersChange(f));
         this.dropDownSearch.sortingModeChange.subscribe(s => this.onSortingChange(s));
@@ -90,11 +90,9 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
 
     if (this.dataSourceProvider) {
       this.dataSource = this.dataSourceProvider.scrollViewDataSourceComponent;
-      console.log(this.dataSource.cachedData)
       if (this.initialLoad) {
         await this.dataSource.reload();
       }
-      console.log(this.dataSource.cachedData)
 
       this.dataSource.beginLoad.subscribe(() => {
         this.instance.lockWidgetUpdate();
@@ -103,12 +101,8 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
         this.instance.unlockWidgetUpdate();
       });
     }
-
-  
-    this.changeDetector.reattach()
+      this.changeDetector.reattach()
     this.changeDetector.detectChanges()
-    debugger
-
   }
   removeFilter(key: string) {
     this.dropDownSearch.removeFilter(key);
@@ -148,19 +142,21 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   async onScroll(e: ScrollEvent) {
     this.reachedBottom = e.reachedBottom;
     this.reachedTop = e.reachedTop;
-    console.log(e)
     if (this.reachedBottom) {
       await this.dataSource.loadNext();
     }
   }
 
-  onDragStart(e: DragStartEvent, sourceArray?: any[]) {
+  onDragStart(e: DragStartEvent) {
+    console.log(this)
     if (!this.dataSource.allowSelection) {
       e.cancel = true;
     }
+    e.itemData=this
   }
 
   onSelectedDataDelete(e: ItemDeletedEvent) {
+    debugger
     if (this.selectedDataDisplay == e.itemData) {
       this.selectedDataDisplay = undefined;
     }
@@ -177,7 +173,10 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
     this.selectedDataDisplayVisible = true;
   }
   onDataAdd(e: AddEvent) {
-    this.dataSource.selectItem(e.fromData);
+    const _this:ScrollViewComponent=e.itemData
+
+
+    _this.dataSource.selectItem(e.fromData);
   }
 }
 
