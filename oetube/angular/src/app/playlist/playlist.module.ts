@@ -9,6 +9,7 @@ import { DxFileUploaderModule } from 'devextreme-angular';
 import { DxListModule } from 'devextreme-angular';
 import { DxButtonModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { DxPopupModule } from 'devextreme-angular';
+import { ImageUploaderModule } from '../image-uploader/image-uploader.module';
  
 import {
   DxTabPanelModule,
@@ -37,7 +38,8 @@ import {
     DxListModule,
     DxTemplateModule,
     DxButtonModule,
-    DxPopupModule
+    DxPopupModule,
+    ImageUploaderModule
   ]
 })
 export class PlaylistModule { }

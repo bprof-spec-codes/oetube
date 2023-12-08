@@ -8,14 +8,18 @@
                 <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
             </div>
             <dxi-item dataField="image">
-                <dx-file-uploader dialogTrigger="#upload" #fileUploader uploadMode="useForm"
-                        [accept]="acceptedFileTypes"
-                        multiple="false"
-                        [selectButtonText]="'Select image'"
-                        (onValueChanged)="onFileSelected($event)">
-                </dx-file-uploader>
-            </dxi-item>
-            <dxi-item itemType="button" [buttonOptions]="submitButtonOptions" onClick="onSubmit($event)"></dxi-item>    
+                <div *dxTemplate="let data">
+                  <app-image-uploader
+                    [name]="data.dataField"
+                    [(value)]="data.component.option('formData')[data.dataField]"
+                  ></app-image-uploader>
+                </div>
+              </dxi-item>
+              <dxi-item
+                itemType="button"
+                [buttonOptions]="submitButtonOptions"
+                onClick="onSubmit($event)"
+            ></dxi-item>
         </dx-form>
     </form>
     <dx-popup

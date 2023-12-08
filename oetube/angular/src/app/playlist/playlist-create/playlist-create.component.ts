@@ -1,11 +1,9 @@
-import { Component, Input, TemplateRef, } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, } from '@angular/core';
 import { CreateUpdatePlaylistDto, PlaylistDto } from '@proxy/application/dtos/playlists';
-import { CreatorDto } from '@proxy/application/dtos/oe-tube-users'
 import { PlaylistService } from '@proxy/application/playlist.service';
-import { UserDto } from '@proxy/application/dtos/oe-tube-users';
-import { NestedOptionHost } from 'devextreme-angular';
-import { error } from 'console';
 import { Router } from '@angular/router';
+import { VideoService } from '@proxy/application';
+import { VideoQueryDto } from '@proxy/application/dtos/videos';
 
 @Component({
   selector: 'app-playlist-create',
@@ -13,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./playlist-create.component.scss'],
 
 })
-export class PlaylistCreateComponent {
+export class PlaylistCreateComponent{
   submitButtonOptions={
     text:"Create",
     useSubmitBehavior: true,
@@ -34,12 +32,15 @@ export class PlaylistCreateComponent {
     Image : ''
   }
 
+  videosToAdd : any = {}
+
   acceptedFileTypes: string = '.jpg, .jpeg, .png, .gif'
 
   isPopupVisible = false
 
   constructor(private playlistService : PlaylistService,
-              private router : Router,) {
+              private router : Router,
+              private videoService : VideoService) {
   }
 
   togglePopup(){
@@ -56,6 +57,8 @@ export class PlaylistCreateComponent {
         this.successfulPlaylistCreation.Name = success.name
         this.successfulPlaylistCreation.Description = success.description
         this.successfulPlaylistCreation.Image = success.image
+
+        
 
         this.isPopupVisible = !this.isPopupVisible
       }
