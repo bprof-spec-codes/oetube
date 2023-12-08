@@ -1,0 +1,16 @@
+<div class="component-title">
+    <h4><img [src]="testPlaylist.image" class="playlist-image">{{testPlaylist.name}}</h4>
+    <p class="description">{{testPlaylist.description}}</p>
+    <dx-data-grid
+        [dataSource]="testPlaylist.items"
+        keyExpr="name">
+    </dx-data-grid>
+</div>
+<div class="component-title">
+    <h4><img [src]="playlist.image" class="playlist-image">{{playlist.name}}</h4>
+    <p class="description">{{playlist.description}}</p>
+    <dx-data-grid
+        [dataSource]="playlist.items"
+        keyExpr="name">
+    </dx-data-grid>
+</div>
