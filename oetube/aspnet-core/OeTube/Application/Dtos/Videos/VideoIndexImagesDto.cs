@@ -3,11 +3,12 @@ using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.FilePaths.VideoFiles;
 using OeTube.Domain.Infrastructure.FileContainers;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
 
 namespace OeTube.Application.Dtos.Videos
 {
-    public class VideoIndexImagesMapper : IObjectMapper<Video, VideoIndexImagesDto>
+    public class VideoIndexImagesMapper : IObjectMapper<Video, VideoIndexImagesDto>,ITransientDependency
     {
         private readonly VideoUrlService _urlService;
         private readonly IFileContainer _fileContainer;
@@ -51,6 +52,6 @@ namespace OeTube.Application.Dtos.Videos
     public class VideoIndexImagesDto : EntityDto<Guid>
     {
         public List<string> IndexImages { get; set; } = new List<string>();
-        public string Selected = string.Empty;
+        public string Selected { get; set; } = string.Empty;
     }
 }

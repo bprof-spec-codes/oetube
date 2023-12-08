@@ -14,15 +14,11 @@ import {
 } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 
-
-
-
-//https://www.thisdot.co/blog/getting-authenticated-images-in-angular
  @Injectable( {providedIn: 'root'
 }) @Pipe({ name: 'auth', pure: false ,standalone:true})
 export class AuthUrlPipe implements PipeTransform, OnDestroy {
   private subscription = new Subscription();
-  public transformValue = new BehaviorSubject<string>('');
+  private transformValue = new BehaviorSubject<string>('');
   private latestValue!: string | SafeUrl;
   constructor(
     private httpClient: HttpClient,

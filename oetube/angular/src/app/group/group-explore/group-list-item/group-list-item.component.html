@@ -14,7 +14,7 @@
     <div class="col justify-content-end d-flex" *ngIf="item.creator">
         <div class="align-text-center">
             <p class="align-text-center"><strong>Creator</strong></p>
-            <img [src]="item.creator.thumbnailImage" />
+            <img draggable="false" [src]="item.creator.thumbnailImage" />
             <p class="mx-auto">{{ item.creator.name }}</p>
         </div>
     </div>
