@@ -28,7 +28,7 @@
                 [text]="'edit'"
                 [disabled]="uploadModel.access !== item"
               >
-                  <app-group-explore></app-group-explore>
+                <app-group-explore></app-group-explore>
               </app-scroll-view-selector-popup>
             </div>
           </div>
@@ -56,5 +56,13 @@
       <em> {{ log?.message }} </em>
     </p>
   </div>
+  <dx-popup [visible]="isLoadingCompleted" [width]="550" [height]="200" [showTitle]="false">
+    <div class="d-flex align-items-center">
+      <h4>The file is succesfully uploaded!</h4>
+      <br />
+      <dx-button text="OK" (onClick)="donePopup()" style="height: 50px; width: 100px"> </dx-button>
+    </div>
+  </dx-popup>
+
   {{ modelToJson() }}
 </div>
