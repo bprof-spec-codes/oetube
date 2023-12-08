@@ -55,16 +55,16 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
     private videoService: VideoService,
     private volumeService: VolumeService,
     private videoTimeService: VideoTimeService,
-    private currentUserService:CurrentUserService
+    currentUserService:CurrentUserService
   ) {
     this.hls=new Hls({
       xhrSetup(xhr, url) {
-        xhr.withCredentials=true
-        const [header,value]=currentUserService.getAuthorizationHeaderValue()
-        xhr.setRequestHeader(header,value)
-      }})
-    }
-  
+        if(currentUserService.getCurrentUser().isAuthenticated){
+          xhr.withCredentials=true
+          const [header,value]=currentUserService.getAuthorizationHeaderValue()
+          xhr.setRequestHeader(header,value)
+        }
+
 
   ngAfterViewInit() {
     this.subscriptions();
