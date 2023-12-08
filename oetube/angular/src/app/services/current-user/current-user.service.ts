@@ -5,7 +5,6 @@ import {oAuthStorage } from '@abp/ng.oauth'
 import { Pipe, PipeTransform } from '@angular/core';
 
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -20,6 +19,7 @@ export class CurrentUserService {
     return this.config.getOne('currentUser');
   }
   constructor(private config: ConfigStateService) {
+
 }
 
 }

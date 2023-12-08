@@ -11,7 +11,6 @@ import {
 import { UserListItemDto } from '@proxy/application/dtos/oe-tube-users';
 import { DxButtonComponent } from 'devextreme-angular';
 import { ValueChangedEvent } from 'devextreme/ui/calendar';
-import { ScrollViewOptionKeys, ScrollViewOptions } from 'src/app/scroll-view/scroll-view.component';
 import { CurrentUserService } from 'src/app/services/current-user/current-user.service';
 import { Router, provideRouter } from '@angular/router';
 import { GroupModule } from '../group.module';
@@ -19,25 +18,11 @@ import { GroupModule } from '../group.module';
   templateUrl: './group-editor.component.html',
   styleUrls: ['./group-editor.component.scss'],
 })
-export class GroupEditorComponent implements OnInit {
+export class GroupEditorComponent  {
   @Input() submitButtonOptions: Partial<DxButtonComponent>;
   @Input() title: string;
-  @Input() currentUserId: string;
-  
-  scrollViewOptions;
-
-  filteredKeys: string[];
   inputModel: GroupDto;
-  selectedDatas: UserListItemDto[]=[];
   @Output() submitted=new EventEmitter<GroupDto>()
-
-  ngOnInit(): void {
-    this.scrollViewOptions={
-      filteredKeys:[this.currentUserId],
-      selectedDatas:this.selectedDatas
-    }
-  }
-
   model: CreateUpdateGroupDto;
   defaultImgUrl: string;
 
@@ -72,10 +57,8 @@ export class GroupCreateComponent extends GroupEditorComponent implements OnInit
     super(groupService);
   }
   ngOnInit(): void {
-    super.ngOnInit();
     this.groupService.getDefaultImage().subscribe(r => {
       this.defaultImgUrl = URL.createObjectURL(r);
-      console.log(this.defaultImgUrl);
     });
   }
 
@@ -111,7 +94,6 @@ export class GroupUpdateComponent extends GroupEditorComponent implements OnInit
     super(groupService);
   }
   ngOnInit(): void {
-    super.ngOnInit();
     this.model = {
       name: this.inputModel.name,
       emailDomains: this.inputModel.emailDomains,

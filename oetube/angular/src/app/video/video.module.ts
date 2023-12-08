@@ -46,7 +46,7 @@ import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
     DxButtonModule,
     DxTextBoxModule,
     DxLoadIndicatorModule,
-    AuthUrlPipe
+    AuthUrlPipe,
   ],
   exports:[
     DxDropDownBoxModule,

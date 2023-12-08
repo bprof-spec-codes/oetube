@@ -36,6 +36,7 @@ namespace OeTube.Data.QueryExtensions
                    where membership.Group!.Id == @group.Id
                    select membership.User;
         }
+
         public static IQueryable<Membership> GetMemberships(this OeTubeDbContext context)
         {
             var creators=from @group in context.Set<Group>()
@@ -47,6 +48,7 @@ namespace OeTube.Data.QueryExtensions
                        Group = @group,
                        User = user
                    };
+
             var members= from member in context.Set<Member>()
                          join user in context.Set<OeTubeUser>()
                          on member.UserId equals user.Id
@@ -57,6 +59,7 @@ namespace OeTube.Data.QueryExtensions
                              Group = @group,
                              User = user
                          };
+
             var domainMembers= from emailDomain in context.Set<EmailDomain>()
                     join user in context.Set<OeTubeUser>()
                     on emailDomain.Domain equals user.EmailDomain
@@ -67,6 +70,7 @@ namespace OeTube.Data.QueryExtensions
                         Group = @group,
                         User = user
                     };
+
 
             return creators.Union(members).Union(domainMembers).Distinct();
         }

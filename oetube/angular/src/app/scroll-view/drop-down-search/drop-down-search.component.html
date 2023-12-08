@@ -1,6 +1,6 @@
-<div *ngIf="hasItem" class="d-flex flex-row">
+<div *ngIf="this.items.length>0" class="d-flex flex-row">
   <dx-drop-down-button
-    [items]="searchItems"
+    [items]="items"
     useSelectMode="true"
     displayExpr="display"
     stylingMode="contained"
@@ -11,10 +11,12 @@
     (onSelectionChanged)="onSelectionChanged($event)"
   >
   </dx-drop-down-button>
-  <ng-content> </ng-content>
-
+  <div class="w-100 mx-1">
+    <ng-container *ngTemplateOutlet="selectedItem.appTemplate;context: {$implicit:selectedItem}"></ng-container>
+  </div>
   <dx-button [icon]="iconSearch" class="mx-1 my-auto" (onClick)="onSearchClick()"> </dx-button>
   <dx-button-group class="my-auto" keyExpr="hint" selectionMode="single"  [selectedItems]="selectedSortBtn"  [items]="sortBtns" (onItemClick)="onSortBtnClick($event)">
   </dx-button-group>
-
 </div>
+
+

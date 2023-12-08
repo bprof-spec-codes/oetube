@@ -49,6 +49,7 @@ namespace OeTube.Application.Methods.GetListMethods
         }
         public virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync(TQueryArgs input)
         {
+
             if (Repository is IQueryAvaliableRepository<TEntity, TQueryArgs>)
             {
                 var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;

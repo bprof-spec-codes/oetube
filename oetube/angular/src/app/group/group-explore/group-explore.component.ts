@@ -3,28 +3,21 @@ import { GroupService } from '@proxy/application';
 import { PaginationDto } from '@proxy/application/dtos';
 import { GroupListItemDto, GroupQueryDto } from '@proxy/application/dtos/groups';
 import { Observable } from 'rxjs';
-import { ActionButton, ScrollViewComponent, ScrollViewProviderComponent } from 'src/app/scroll-view/scroll-view.component';
+import { SearchItem } from 'src/app/scroll-view/drop-down-search/search-item';
 
 
 @Component({
   selector: 'app-group-explore',
   templateUrl: './group-explore.component.html',
   styleUrls: ['./group-explore.component.scss'],
-  providers:[{
-    provide:ScrollViewProviderComponent,useExisting:forwardRef(()=>GroupExploreComponent)
-  }]
 })
-export class GroupExploreComponent extends ScrollViewProviderComponent<GroupListItemDto>  implements AfterViewInit{
-  @ViewChild(ScrollViewComponent) provider:ScrollViewComponent<GroupListItemDto>
-  
-  get scrollView(): ScrollViewComponent<GroupListItemDto> {
-    return this.provider
-  }
-  constructor(public groupService:GroupService){
-    super()
-  }
-  setOptions(): void {
-      this._options.getList=(args)=>this.groupService.getList(args)
-  }
-  }
+export class GroupExploreComponent{
+  inputItems:SearchItem[]=[
+    new SearchItem().init({key:"name",display:"Name"}),
+    new SearchItem().init({key:"creationTime",display:"CreationTime"})
+ ]
+
+
+
+}
 

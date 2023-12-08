@@ -12,12 +12,11 @@ import { PaginationGridModule } from '../pagination-grid/pagination-grid.module'
 import { ScrollViewModule } from '../scroll-view/scroll-view.module';
 import { DropDownSearchModule } from '../scroll-view/drop-down-search/drop-down-search.module';
 import { GroupExploreComponent } from './group-explore/group-explore.component';
-import { GroupTileItemComponent } from './group-explore/group-tile-item/group-tile-item.component';
-import { GroupListItemComponent } from './group-explore/group-list-item/group-list-item.component';
 import { LazyTabPanelModule } from '../lazy-tab-panel/lazy-tab-panel.module';
 import { UserModule } from '../user/user.module';
 import { GroupDetailsComponent } from './group-details/group-details.component';
 import { RouterModule,RouterLink } from '@angular/router'
+import { TemplateRefCollectionModule } from '../template-ref-collection/template-ref-collection.module';
 @NgModule({
   declarations: [
     GroupComponent,
@@ -25,8 +24,6 @@ import { RouterModule,RouterLink } from '@angular/router'
     GroupCreateComponent,
     GroupUpdateComponent,
     GroupExploreComponent,
-    GroupTileItemComponent,
-    GroupListItemComponent,
     GroupDetailsComponent,
   ],
   imports: [
@@ -57,9 +54,8 @@ import { RouterModule,RouterLink } from '@angular/router'
     DxoPagingModule,
     DxDataGridModule, 
     DxScrollViewModule,
-    ScrollViewModule,
-    UserModule
+    ScrollViewModule,TemplateRefCollectionModule
   ],
-  exports:[GroupExploreComponent,GroupListItemComponent,GroupTileItemComponent,GroupDetailsComponent]
+  exports:[GroupExploreComponent,GroupDetailsComponent]
 })
 export class GroupModule {}

@@ -39,7 +39,7 @@ namespace OeTube.Application.Methods.GetMethods
         public virtual async Task<IRemoteStreamContent> GetFileAsync(TKey id, TInputFilePath input)
         {
             await CheckPolicyAsync();
-            var entity = await GetByIdAsync(id, false);
+            var entity = await GetByIdAsync(id,includeDetails: false);
             await CheckRightsAsync(entity);
             string name = GetFullFileName(id, input);
             var content = await GetFileMethodAsync(input);

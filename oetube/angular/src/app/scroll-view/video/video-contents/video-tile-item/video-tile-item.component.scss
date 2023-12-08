@@ -1,0 +1,14 @@
+.pic-container {
+    text-align: center;
+    color: white;
+    width: 200px;
+    position: relative;
+  }
+  .bottom-right {
+    position: absolute;
+    bottom: 8px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0px 8px;
+  }
+  

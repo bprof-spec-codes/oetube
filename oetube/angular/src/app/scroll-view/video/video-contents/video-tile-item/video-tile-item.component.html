@@ -1,0 +1,23 @@
+<ng-container *ngIf="!preventAnchorClick; else elseTemplate">
+    <a  class="text-decoration-none" [routerLink]="'/video/watch/' + video.id" draggable="false" >
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+</a>
+</ng-container>
+<ng-template #elseTemplate>
+    <div id="context">
+        <ng-container *ngTemplateOutlet="content"></ng-container>
+    </div>
+</ng-template>
+
+    
+<ng-template #content>
+    <div class="pic-container" (click)="onClick($event)">
+        <img class="rounded my-1 w-100" [src]="video.indexImage | auth" draggable="false"/>
+        <div class="bottom-right">{{ video.duration }}</div>
+      </div>
+      <div class="text-truncate"  [title]="video.name">
+        <strong>
+            {{ video.name }}
+        </strong>
+    </div>
+</ng-template>

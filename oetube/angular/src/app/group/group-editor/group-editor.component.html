@@ -36,8 +36,11 @@
             [text]="'edit'"
             [(value)]="data.component.option('formData')[data.dataField]"
           >
-              <app-user-explore  [options]="scrollViewOptions"
-              ></app-user-explore>
+            <app-scroll-view [initialLoad]="false">
+                <app-group-search></app-group-search>
+                <app-member-source [groupId]="inputModel?.id"></app-member-source>
+                <app-user-contents></app-user-contents>
+            </app-scroll-view>
           </app-scroll-view-selector-popup>
         </div>
       </dxi-item>
