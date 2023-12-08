@@ -152,6 +152,7 @@ namespace OeTube;
             context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
         }
         ConfigureAuthentication(context);
+        ConfigureMicrosoftAuth(context.Services, configuration);
         ConfigureBundles();
         ConfigureMultiTenancy();
         ConfigureUrls(configuration);
@@ -170,6 +171,16 @@ namespace OeTube;
         ConfigureRequestSizeLimit();
         ConfigureImageHandling();
         ConfigureCaching();
+    }
+
+    private void ConfigureMicrosoftAuth(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+        {
+            microsoftOptions.ClientId = configuration["Authentication:Microsoft:ClientId"];
+            microsoftOptions.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"];
+        });
+
     }
 
     private void ConfigureImageHandling()

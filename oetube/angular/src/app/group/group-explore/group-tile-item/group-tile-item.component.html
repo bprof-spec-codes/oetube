@@ -6,8 +6,9 @@
       [src]="item.thumbnailImage"
       [alt]="item.name"
       class="rounded-star my-auto img-responsive"
+      draggable="false"
     />
-    <a [routerLink]="['/group',item.id]" target="_blank" class="link">
+    <a [routerLink]="['/group',item.id]" class="link">
       <strong class="my-auto text-wrap mx-auto">{{ item.name }}</strong>
     </a>
   

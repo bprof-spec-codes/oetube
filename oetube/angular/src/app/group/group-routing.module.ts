@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { GroupCreateComponent } from './group-create/group-create.component';
+import { RouterModule, Routes,provideRouter } from '@angular/router';
 import { GroupDetailsComponent } from './group-details/group-details.component';
 import { GroupComponent } from './group.component';
 
@@ -12,5 +11,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+  providers:[provideRouter(routes)]
 })
 export class GroupRoutingModule {}

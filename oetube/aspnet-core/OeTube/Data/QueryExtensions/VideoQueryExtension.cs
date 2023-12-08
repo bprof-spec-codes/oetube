@@ -24,11 +24,8 @@ namespace OeTube.Data.QueryExtensions
                                where video.Access == AccessType.Public
                                select video;
 
-            var privateAccess = from video in videos
-                                where video.Access == AccessType.Private
-                                join user in context.Set<OeTubeUser>()
-                                on video.CreatorId equals user.Id
-                                where user.Id == requesterId
+            var creatorAccess = from video in videos
+                                where video.CreatorId == requesterId
                                 select video;
 
 
@@ -42,7 +39,7 @@ namespace OeTube.Data.QueryExtensions
                               select video;
 
 
-            return publicAccess.Union(privateAccess).Union(groupAccess).Where(v=>v.IsUploadCompleted).Distinct();
+            return publicAccess.Union(creatorAccess).Union(groupAccess).Where(v=>v.IsUploadCompleted).Distinct();
         }
 
         public static bool HasAccess(this OeTubeDbContext context, Guid? requesterId, Video video)
@@ -53,6 +50,7 @@ namespace OeTube.Data.QueryExtensions
             }
             else
             {
+                
                 if (video.Access == AccessType.Public || requesterId == video.CreatorId)
                 {
                     return true;

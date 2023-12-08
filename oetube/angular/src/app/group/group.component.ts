@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
+import { GroupDto } from '@proxy/application/dtos/groups';
+import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
 
 @Component({
   selector: 'app-group',
@@ -8,17 +10,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class GroupComponent {
 
-items:TabItem[]=[
-  {title:"explore",loaded:false,visible:true,template:"explore"},
-  {title:"create",loaded:false,visible:true,template:"create"}
-]
-selectedItem:TabItem
-
-onSelectedItemChange(item:TabItem){
-  if(!item.loaded){
-    item.loaded=true
+  currentUser:CurrentUser
+  constructor(currentUserService:CurrentUserService,private router:Router){
+    this.currentUser=currentUserService.getCurrentUser()
+  }
+  onSubmitted(e:GroupDto){
+    this.router.navigate(['group/'+e.id])
   }
 }
-}
 
-type TabItem={title:string,visible:boolean,loaded:boolean,template:string}

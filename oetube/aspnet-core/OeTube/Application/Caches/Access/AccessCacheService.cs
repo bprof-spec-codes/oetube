@@ -59,6 +59,8 @@ namespace OeTube.Application.Caches.Access
 
         public async Task<bool> GetOrAddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
+            var t = ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+            var r = t.HttpContext.Request;
             return await GetOrAddAsync(entity.Id,
                                        entity,
                                        CreateKey(entity),

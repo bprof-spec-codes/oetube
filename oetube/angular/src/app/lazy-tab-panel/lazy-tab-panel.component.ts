@@ -1,6 +1,6 @@
-import { Component,Directive,ContentChildren,QueryList,Input, AfterContentInit,TemplateRef } from '@angular/core';
+import { Component,Directive,ContentChildren,QueryList,Input, AfterContentInit,TemplateRef,EventEmitter,Output } from '@angular/core';
 import { DxTabPanelComponent } from 'devextreme-angular';
-import { CurrentUserService } from '../services/current-user/current-user.service';
+import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
 @Directive({
   selector: "[appLazyTabItem]"
 })
@@ -16,12 +16,25 @@ export class LazyTabItemDirective{
   get title():string{
     return this._appLazyTabItemTitle
   }
-  private _appLazyTabItemAuth:boolean=false
+  private _appLazyTabItemAuthRequired:boolean=false
 @Input() set appLazyTabItemAuth(value:boolean){
-  this._appLazyTabItemAuth=value
+  if(!this._appLazyTabItemOnlyCreator){
+    this._appLazyTabItemAuthRequired=value
+  }
 }
-get auth():boolean{
-  return this._appLazyTabItemAuth
+get authRequired():boolean{
+  return this._appLazyTabItemAuthRequired
+}
+
+private _appLazyTabItemOnlyCreator:boolean=false
+@Input() set appLazyTabItemOnlyCreator(value:boolean){
+  this._appLazyTabItemOnlyCreator=value
+  if(value){
+    this._appLazyTabItemAuthRequired=true
+  }
+}
+get onlyCreator():boolean{
+  return this._appLazyTabItemOnlyCreator
 }
   isLoaded:boolean=false
   
@@ -38,23 +51,36 @@ get auth():boolean{
 })
 export class LazyTabPanelComponent implements AfterContentInit {
   @ContentChildren(LazyTabItemDirective) tabItemsQuery:QueryList<LazyTabItemDirective>
+  @Input() creatorId?:string
+  @Input() currentUserId?:string
 
-  selectedItem:LazyTabItemDirective
+  @Input() selectedIndex:number
+  @Output() selectedIndexChange:EventEmitter<number>=new EventEmitter<number>()
   tabItems:LazyTabItemDirective[]=[]
-  constructor(protected currentUserService: CurrentUserService){
+
+ 
+  itemFilter(directive:LazyTabItemDirective){
+     const authResult=(!directive.authRequired|| this.currentUserId)
+      if(!authResult){
+        return false
+      }
+      return this.creatorId==null||!directive.onlyCreator||this.currentUserId==this.creatorId
   }
+  
   ngAfterContentInit(): void {
-      const currentUser=this.currentUserService.get()
-      this.tabItems=this.tabItemsQuery.filter(i=>!i.auth||currentUser.isAuthenticated)
+      this.tabItems=this.tabItemsQuery.filter(i=>this.itemFilter(i))
       if(this.tabItems.length>0){
         this.tabItems[0].isLoaded=true
-        this.selectedItem=this.tabItems[0]
+        this.selectedIndex=0
       }
   }
-  onSelectedItemChange(item:LazyTabItemDirective){
-    if(!item.isLoaded){
-      item.isLoaded=true
+  onSelectedIndexChange(e:number){
+
+    if(!this.tabItems[e].isLoaded){
+      this.tabItems[e].isLoaded=true
     }
+    this.selectedIndexChange.emit(e)
+
   }
 }
 

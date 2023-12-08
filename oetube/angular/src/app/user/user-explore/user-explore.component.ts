@@ -9,7 +9,7 @@ import { ActionButton, ScrollViewComponent, ScrollViewOptions, ScrollViewProvide
   styleUrls: ['./user-explore.component.scss'],
   providers:[{provide:ScrollViewProviderComponent,useExisting:forwardRef(()=>UserExploreComponent)}]
 })
-export class UserExploreComponent extends ScrollViewProviderComponent<UserListItemDto> {
+export class UserExploreComponent extends ScrollViewProviderComponent<UserListItemDto> implements AfterViewInit {
   @ViewChild(ScrollViewComponent) provider:ScrollViewComponent<UserListItemDto>
   get scrollView(): ScrollViewComponent<UserListItemDto> {
      return this.provider 
@@ -17,7 +17,7 @@ export class UserExploreComponent extends ScrollViewProviderComponent<UserListIt
   constructor(public userService:OeTubeUserService){
     super()
   }
-  initThis(): void {
-    this.getList=(args)=>this.userService.getList(args)
+  setOptions(): void {
+      this._options.getList=(args)=>this.userService.getList(args)
   }
 }

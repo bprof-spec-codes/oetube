@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupRoutingModule } from './group-routing.module';
-import { GroupCreateComponent } from './group-create/group-create.component';
+import { GroupCreateComponent, GroupEditorComponent, GroupUpdateComponent } from './group-editor/group-editor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DxButtonModule,DxCheckBoxModule,DxDataGridModule, DxDateRangeBoxModule, DxDraggableModule, DxFileUploaderModule, DxFormModule, DxListModule, DxLookupModule, DxPopupModule, DxScrollViewModule, DxSelectBoxModule, DxTabPanelComponent, DxTabPanelModule, DxTagBoxModule, DxTextAreaModule, DxTextBoxModule, DxTileViewModule, DxValidatorModule} from 'devextreme-angular';
 import { ImageUploaderModule } from '../image-uploader/image-uploader.module';
@@ -21,7 +21,9 @@ import { RouterModule,RouterLink } from '@angular/router'
 @NgModule({
   declarations: [
     GroupComponent,
+    GroupEditorComponent,
     GroupCreateComponent,
+    GroupUpdateComponent,
     GroupExploreComponent,
     GroupTileItemComponent,
     GroupListItemComponent,

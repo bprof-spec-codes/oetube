@@ -11,7 +11,11 @@ import { FFService } from './services/FF.service';
 import { StartVideoUploadDto, VideoUploadStateDto } from '@proxy/application/dtos/videos';
 import { delay, firstValueFrom } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DxButtonComponent, DxFileUploaderComponent, DxRadioGroupComponent } from 'devextreme-angular';
+import {
+  DxButtonComponent,
+  DxFileUploaderComponent,
+  DxRadioGroupComponent,
+} from 'devextreme-angular';
 import { AccessType } from '@proxy/domain/entities/videos';
 import { GroupService } from '@proxy/application';
 import { time } from 'console';
@@ -21,6 +25,12 @@ import { time } from 'console';
   styleUrls: ['./upload.component.scss'],
 })
 export class UploadComponent implements OnInit {
+  isLoadingCompleted: boolean = false;
+
+  donePopup(): void {
+    this.isLoadingCompleted = false;
+  }
+
   @ViewChild('fileUploader', { static: true }) fileUploader: DxFileUploaderComponent;
   @ViewChild('accessRadioGroup', { static: true }) accessRadioGroup: DxRadioGroupComponent;
   progress: number;
@@ -35,7 +45,7 @@ export class UploadComponent implements OnInit {
   numberOfTasks: number;
   numberOfCompletedTasks: number;
 
-  showButtonOptions:Partial<DxButtonComponent& any>
+  showButtonOptions: Partial<DxButtonComponent & any>;
   accessTypeEnum = AccessType;
   accessOptions = Object.values(AccessType).filter(x => typeof AccessType[x] != 'number');
 
@@ -96,6 +106,7 @@ export class UploadComponent implements OnInit {
       const resized = new FormData();
       resized.append('content', resizedFile, resizedFile.name);
       this.numberOfCompletedTasks++;
+      this.isLoadingCompleted = true;
 
       state = await firstValueFrom(
         this.videoService.continueUpload(state.id, { content: resized })

@@ -4,15 +4,17 @@ import { CommonModule } from '@angular/common';
 import { UploadRoutingModule } from './upload-routing.module';
 import { UploadComponent } from './upload.component';
 import { FormsModule,ReactiveFormsModule} from '@angular/forms';
-import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule, DxFormModule, DxPopupModule } from 'devextreme-angular';
+import { DxFileUploaderModule, DxTextBoxModule,DxButtonModule,DxSelectBoxModule,DxTextAreaModule,DxProgressBarModule, DxFormModule, DxPopupModule, DxTileViewModule } from 'devextreme-angular';
 import { DxRadioGroupModule } from "devextreme-angular";
 import { PaginationGridModule } from '../pagination-grid/pagination-grid.module';
 import { ScrollViewModule } from '../scroll-view/scroll-view.module';
 import { GroupModule } from '../group/group.module';
-
+import { VideoFrameSelectorComponent } from './video-frame-selector/video-frame-selector.component';
+import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
 @NgModule({
   declarations: [
     UploadComponent,
+    VideoFrameSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,12 @@ import { GroupModule } from '../group/group.module';
     ScrollViewModule,
     DxProgressBarModule,
     PaginationGridModule,
-    DxPopupModule
+    DxPopupModule,
+    AuthUrlPipe,
+    DxTileViewModule,
+  ],
+  exports:[
+    VideoFrameSelectorComponent
   ]
 })
 export class UploadModule { }
