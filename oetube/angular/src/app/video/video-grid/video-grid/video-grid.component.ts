@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
 import { VideoListItemDto } from '@proxy/application/dtos/videos';
-import { VideoService } from '@proxy/application';
+import { VideoService, PlaylistService } from '@proxy/application';
 
 @Component({
   selector: 'app-video-grid',
@@ -17,10 +17,14 @@ export class VideoGridComponent implements OnInit {
   @Input() multicolumn?: boolean;
 
   @Input() currentVideoId?: string;
+  @Input() currentPlaylistId?: string;
 
   public rowClasses: string[] = [];
 
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private readonly playlistService: PlaylistService
+  ) {}
 
   ngOnInit(): void {
     this.refreshVideos();
@@ -39,9 +43,15 @@ export class VideoGridComponent implements OnInit {
     this.videos = undefined;
     this.isLoading = true;
 
-    this.videoService
-      .getList({ name: searchPhrase, pagination: { take: 100, skip: 0 } })
-      .subscribe(data => (this.videos = data.items));
+    if (this.currentPlaylistId) {
+      this.playlistService
+        .getVideos(this.currentPlaylistId, { name: searchPhrase, pagination: { take: 100, skip: 0 } })
+        .subscribe(data => (this.videos = data.items));
+    } else {
+      this.videoService
+        .getList({ name: searchPhrase, pagination: { take: 100, skip: 0 } })
+        .subscribe(data => (this.videos = data.items));
+    }
 
     this.isLoading = false;
   }

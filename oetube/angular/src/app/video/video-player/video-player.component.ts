@@ -21,7 +21,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   public videoUrl: string;
 
   public playlist?: PlaylistDto;
-  public playlistVideos?: VideoListItemDto[];
 
   public video?: VideoDto;
   public resolutionIndex: number = 0;
@@ -40,12 +39,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         if (this.video.playlistId) {
           this.playlistService.get(this.video.playlistId).subscribe(data => {
             this.playlist = data
-            this.playlistService.getVideos(
-              this.playlist.id,
-              { pagination: { take: 100, skip: 0 } }
-            ).subscribe(data => {
-              this.playlistVideos = data.items
-            })
           })
         }
       });
