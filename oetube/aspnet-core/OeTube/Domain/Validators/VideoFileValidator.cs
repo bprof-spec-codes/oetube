@@ -50,7 +50,6 @@ namespace OeTube.Domain.Validators
             ValidateCodec(resizedVideoStream.Codec);
             ValidateDuration(video, resizedInfo.Duration);
             ValidateResizedVideoSize(sourceInfo, resizedInfo);
-            ValidateAudioStreams(sourceInfo, resizedInfo.AudioStreams);
         }
 
         private void ValidateSize(long size)
@@ -114,18 +113,7 @@ namespace OeTube.Domain.Validators
             }
         }
 
-        private void ValidateAudioStreams(VideoInfo sourceInfo, IReadOnlyList<AudioStreamInfo> audioStreams)
-        {
-            if (sourceInfo.AudioStreams.Count != audioStreams.Count)
-            {
-                throw new ArgumentException(null, nameof(audioStreams));
-            }
-            for (int i = 0; i < audioStreams.Count; i++)
-            {
-                ValidateAudio(sourceInfo.AudioStreams[i], audioStreams[i]);
-            }
-        }
-
+   
         private void ValidateAudio(AudioStreamInfo sourceAudioStream, AudioStreamInfo resizedAudioStream)
         {
             var bitRateEpsilon = 100;
