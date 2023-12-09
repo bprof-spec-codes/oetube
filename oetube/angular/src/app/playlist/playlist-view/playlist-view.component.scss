@@ -8,3 +8,40 @@
 .description{
     font-size: 1rem;
 }
+
+.video{
+    padding: 10px;
+}
+
+.video:hover{
+    background-color: #e9e9e9;
+}
+
+
+
+::ng-deep #tasks {
+    max-height: 540px;
+  }
+  
+  ::ng-deep #tasks .dx-treelist-rowsview td {
+    vertical-align: middle;
+  }
+  
+  ::ng-deep .img,
+  ::ng-deep .name {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  ::ng-deep .img {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 25px;
+    border: 1px solid lightgray;
+    background-color: #fff;
+  }
+  

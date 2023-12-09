@@ -5,7 +5,7 @@ import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
 import { PlaylistViewComponent } from './playlist-view/playlist-view.component';
-import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule, DxTreeListModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -20,7 +20,8 @@ import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } 
     DxTabPanelModule,
     DxDataGridModule,
     DxTemplateModule,
-    DxButtonModule
+    DxButtonModule,
+    DxTreeListModule
   ]
 })
 export class PlaylistModule { }
