@@ -14,19 +14,25 @@
           ></app-control-bar>
         </div>
       </div>
-      <div *ngIf="video !== undefined">
+      <div *ngIf="video">
         <h4 class="pt-3 pb-1">{{ video.name }}</h4>
         <h6>{{ video.creatorId ?? 'Unknown' }}</h6>
         <p class="pt-1">{{ video.description }}</p>
       </div>
     </div>
-    <div class="col-3 rounded col-videos">
-      <div class="w-100 text-center fs-4 fw-bolder py-3">Playlist name holder</div>
+    <div [ngClass]="{
+      'col-3':true, 'rounded':true, 'col-videos':true,
+      'col-videos__playlist':playlistId
+    }">
+      <div
+        *ngIf="playlistId"
+        class="w-100 text-center fs-4 fw-bolder py-3"
+      >{{ playlist.name }}</div>
       <app-video-grid
         [multicolumn]="true"
-        [currentVideoId]="video.id"
-        *ngIf="!video.playlistId">
-      </app-video-grid>
+        [currentVideoId]="id"
+        [currentPlaylistId]="playlistId"
+      ></app-video-grid>
     </div>
   </div>
 

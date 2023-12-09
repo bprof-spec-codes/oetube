@@ -20,6 +20,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public videoUrl: string;
 
+  playlistId?: string;
   public playlist?: PlaylistDto;
 
   public video?: VideoDto;
@@ -34,14 +35,15 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
+      this.playlistId = params['playlist']
       this.videoAppService.get(this.id).subscribe(data => {
         this.video = data;
-        if (this.video.playlistId) {
-          this.playlistService.get(this.video.playlistId).subscribe(data => {
-            this.playlist = data
-          })
-        }
       });
+      if (this.playlistId) {
+        this.playlistService.get(this.playlistId).subscribe(data => {
+          this.playlist = data
+        })
+      }
     });
   }
 
