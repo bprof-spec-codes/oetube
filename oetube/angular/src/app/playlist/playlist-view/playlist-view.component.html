@@ -23,11 +23,10 @@
   [wordWrapEnabled]="true"
   [showBorders]="true"
 >
-  <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
+  <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-column-chooser [enabled]="false"></dxo-column-chooser>
 
-  <!--<dxi-column dataField="name" [width]="300"></dxi-column>-->
   <dxi-column
     dataField="name"
     caption="Name"
@@ -41,26 +40,20 @@
     caption="% Completed"
     [visible]="false"
   ></dxi-column>
-  <dxi-column dataField="creationTime" caption="creationTime" [visible]="true"></dxi-column>
+  <dxi-column dataField="creationTime" caption="creationTime" [visible]="true" cellTemplate="datetemplate"></dxi-column>
   <div *dxTemplate="let options of 'imagetemplate'">
-    <a href="">
+    <a *ngIf="options.data.id" [routerLink]="'/video/watch/' + options.data.id">
         <div class="video">
-            <div class="img" *ngIf="options.data.indexImage" style.background-image="url('{{options.data.indexImage}}')"></div>
+            <img class="img" *ngIf="options.data.indexImage" [src]="options.data.indexImage | auth">
             <span *ngIf="options.data.name" class="name">{{options.data.name}}</span>
         </div>
     </a>
   </div>
 
-  <div *dxTemplate="let options of 'employeeTemplate'">
-    <div
-      class="img"
-      *ngIf="options.data.name"
-      style.background-image="url('{{
-        options.data.image
-      }}')"
-    ></div>
-    <span *ngIf="options.data.Task_Assigned_Employee" class="name">{{
-      options.data.name
-    }}</span>
+  <div *dxTemplate="let options of 'datetemplate'">
+    <div >
+      <span *ngIf="options.data.creationTime" >{{options.data.creationTime | date:'yyyy.MM.dd'}}</span>
+    </div>
   </div>
+
 </dx-tree-list>
