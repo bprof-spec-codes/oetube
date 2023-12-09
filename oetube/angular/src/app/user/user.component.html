@@ -1,3 +1,5 @@
-<app-lazy-tab-panel>
-    <app-user-explore *appLazyTabItem="let data;title:'Explore'"></app-user-explore>
+<app-lazy-tab-panel [inputItems]="inputItems">
+    <div *appTemplate="'explore'">
+        <app-user-explore></app-user-explore>
+    </div>
 </app-lazy-tab-panel>

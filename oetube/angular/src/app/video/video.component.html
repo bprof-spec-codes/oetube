@@ -1,26 +1,3 @@
 <div class="my-5">
   <app-video-grid> </app-video-grid>
-
-
-
-
-  <app-scroll-view-selector-popup
-  [title]="'Edit Playlist'"
-  [icon]="'edit'"
-  [text]="'edit'"
-  [(value)]="testValue"
->
-  <app-scroll-view [initialLoad]="false">
-    <app-drop-down-search>
-      <app-video-search></app-video-search>
-    </app-drop-down-search>
-    <app-playlist-video-data-source ></app-playlist-video-data-source>
-    <app-scroll-view-contents>
-      <app-video-contents [allowSelection]="false"></app-video-contents>
-    </app-scroll-view-contents>
-  </app-scroll-view>
-</app-scroll-view-selector-popup>
-
-
-
 </div>

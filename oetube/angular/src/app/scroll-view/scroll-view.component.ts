@@ -81,7 +81,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   async ngAfterViewInit() {
-    debugger
     this.changeDetector.detach()
     if(this.dropDownSearch){
         this.dropDownSearch.filtersChange.subscribe(f => this.onFiltersChange(f));
@@ -93,6 +92,7 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
       if (this.initialLoad) {
         await this.dataSource.reload();
       }
+     
 
       this.dataSource.beginLoad.subscribe(() => {
         this.instance.lockWidgetUpdate();
@@ -138,7 +138,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
 
   reachedTop: boolean = true;
   reachedBottom: boolean;
-
   async onScroll(e: ScrollEvent) {
     this.reachedBottom = e.reachedBottom;
     this.reachedTop = e.reachedTop;

@@ -7,12 +7,20 @@ import { LoadOptions } from 'devextreme/data';
 import DataSource from 'devextreme/data/data_source';
 import { DataGridPredefinedColumnButton } from 'devextreme/ui/data_grid';
 import { Observable, lastValueFrom } from 'rxjs';
+import { NgModule } from '@angular/core';
+import { DxTabsModule } from 'devextreme-angular';
+import { TabbedItem } from 'devextreme/ui/form';
+import { LazyTabItem } from '../lazy-tab-panel/lazy-tab-panel.component';
+
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
 })
-export class PlaylistComponent
-{
 
+export class PlaylistComponent {
+  inputItems:LazyTabItem[]=[
+    {key:"explore",title:"Explore",onlyCreator:false,isLoaded:true,authRequired:true,visible:true},
+    {key:"create",title:"Create",onlyCreator:false,isLoaded:true,authRequired:true,visible:true},
+  ]
 }

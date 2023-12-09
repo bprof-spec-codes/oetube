@@ -1,0 +1,17 @@
+<main class="component-title">
+    <dx-list
+        [dataSource]="playlists"
+        keyExpr="id"
+        displayExpr="name"
+        selectionMode="single"
+        searchMode="contains"
+        [allowItemDeleting]="true"
+        (onItemClick)="navigateToList($event)"
+        (onItemDeleted)="deletePlaylist($event)"
+        [itemTemplate]="itemTemplate"
+        >
+        <dxo-item-dragging 
+            [allowReordering]="true">
+    </dxo-item-dragging>
+    </dx-list>
+</main>

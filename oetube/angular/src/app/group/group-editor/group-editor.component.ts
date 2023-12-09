@@ -84,7 +84,6 @@ export class GroupUpdateComponent extends GroupEditorComponent implements OnInit
   };
   @Input() title: string = 'Edit your group';
   @Input() inputModel: GroupDto;
-  @Input() selectedDatas: UserListItemDto[];
   
   
 

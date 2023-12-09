@@ -15,6 +15,7 @@ export class CurrentUserService {
   getAuthorizationHeaderValue():[header:string,value:string]{
     return ["Authorization","bearer "+this.getAccessToken()]
   }
+
   getCurrentUser(): CurrentUser {
     return this.config.getOne('currentUser');
   }

@@ -5,7 +5,7 @@ import {
   DxTextBoxModule,
 } from 'devextreme-angular';
 import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
-
+import {RouterModule} from "@angular/router"
 import { CommonModule } from '@angular/common';
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
 import { NgModule } from '@angular/core';
@@ -19,9 +19,10 @@ import { VideoRoutingModule } from './video-routing.module';
 import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.component';
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
-import { AppModule } from '../app.module';
+import { SidebarModule } from '../sidebar/sidebar.module';
 import { ScrollViewModule } from '../scroll-view/scroll-view.module';
 import { AuthModule } from '../auth/auth.module';
+import { LazyTabPanelModule } from '../lazy-tab-panel/lazy-tab-panel.module';
 
 
 
@@ -48,7 +49,10 @@ import { AuthModule } from '../auth/auth.module';
     DxTextBoxModule,
     DxLoadIndicatorModule,
     AuthModule,
-    ScrollViewModule
+    RouterModule,
+    LazyTabPanelModule,
+    ScrollViewModule,
+    SidebarModule
   ],
   exports:[
     DxDropDownBoxModule,

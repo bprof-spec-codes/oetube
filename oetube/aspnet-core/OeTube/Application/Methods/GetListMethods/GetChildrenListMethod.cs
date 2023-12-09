@@ -38,7 +38,13 @@ namespace OeTube.Application.Methods.GetListMethods
             {
                 await manyChecker.CheckRightsManyAsync(pagination);
             }
-            var dtos = new PaginationDto<TChildOutputListItemDto>();
+            var dtos = new PaginationDto<TChildOutputListItemDto>()
+            {
+                Items = new List<TChildOutputListItemDto>(),
+                Skip = pagination.Skip,
+                Take = pagination.Take,
+                TotalCount = pagination.TotalCount
+            };
             foreach (var item in pagination)
             {
                 var dto = await MapAsync<TChildEntity, TChildOutputListItemDto>(item);

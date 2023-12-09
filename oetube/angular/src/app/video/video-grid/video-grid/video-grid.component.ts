@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 
@@ -14,20 +14,18 @@ export class VideoGridComponent implements OnInit {
   public videos: VideoListItemDto[];
   public isLoading: boolean;
 
-  @Input() IsOneCol?: boolean
+  @Input() IsOneCol?: boolean;
 
-  public rowClasses: string[] = []
+  public rowClasses: string[] = [];
 
   constructor(private readonly videoService: VideoService) {}
 
   ngOnInit(): void {
     this.refreshVideos();
 
-    this.rowClasses = !this.IsOneCol ? [
-      'row', 'gx-5', 'gy-4', 'row-cols-1', 'row-cols-md-3', 'row-cols-lg-4'
-    ] : [
-      'row', 'row-cols-1'
-    ]
+    this.rowClasses = !this.IsOneCol
+      ? ['row', 'gx-5', 'gy-4', 'row-cols-1', 'row-cols-md-3', 'row-cols-lg-4']
+      : ['row', 'row-cols-1'];
   }
 
   onSearch(searchPhrase: string) {

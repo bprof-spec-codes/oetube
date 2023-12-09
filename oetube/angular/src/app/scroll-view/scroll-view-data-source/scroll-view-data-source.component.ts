@@ -192,11 +192,12 @@ get query():QueryDto{
 
 
   async loadNext(){
+    if(this.cachedData.length>=this.totalCount){
+      return
+    }
    await this.startLoading(async ()=>{
-      if(this.cachedData.length<this.totalCount){
         this._query.pagination.skip+=this._query.pagination.take
         await this.dataSource.load()
-      }
     },"loadNext")
   }
 

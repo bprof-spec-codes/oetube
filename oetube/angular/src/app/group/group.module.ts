@@ -54,7 +54,7 @@ import { TemplateRefCollectionModule } from '../template-ref-collection/template
     DxoPagingModule,
     DxDataGridModule, 
     DxScrollViewModule,
-    ScrollViewModule,TemplateRefCollectionModule
+    ScrollViewModule,TemplateRefCollectionModule,
   ],
   exports:[GroupExploreComponent,GroupDetailsComponent]
 })
