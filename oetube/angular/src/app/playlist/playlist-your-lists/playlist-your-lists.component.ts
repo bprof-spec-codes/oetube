@@ -23,10 +23,10 @@ export class PlaylistYourListsComponent implements OnInit {
     }
   }
   userData : any = {}
-  itemTemplate(itemData: any, index: number, element: any){
-    let ownerClass = itemData.creator.id === this.userData.id.toString() ? 'owned-playlist' : ''
-    element.innerHTML = `<div class="${ownerClass}">${itemData.name}</div>`;
-  }
+  //itemTemplate(itemData: any, index: number, element: any){
+   // let ownerClass = itemData.creator.id === this.userData.id.toString() ? 'owned-playlist' : ''
+    //element.innerHTML = `<div class="${ownerClass}">${itemData.name}</div>`;
+  //}
   
   constructor(private playlistService : PlaylistService,
               private userService : OeTubeUserService,
@@ -35,6 +35,7 @@ export class PlaylistYourListsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger
     this.playlistService.getList(this.playlistQueryDto).subscribe({
       next: success => {
         console.log(success)

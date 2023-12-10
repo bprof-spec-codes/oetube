@@ -28,11 +28,6 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
   {
-    path: 'upload',
-    //canActivate: [AuthGuard],
-    loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
-  },
-  {
     path: 'playlist',
     loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule),
   },

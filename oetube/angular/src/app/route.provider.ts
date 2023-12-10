@@ -13,15 +13,9 @@ function configureRoutes(routesService: RoutesService) {
       {
 
         path: '/',
-        name: '::Menu:Home',
+        name: 'Video',
         //iconClass: 'fas fa-home',
         order: 1,
-        layout: eLayoutType.application,
-      },
-      {
-        path: '/upload',
-        name: 'Upload',
-        order: 2,
         layout: eLayoutType.application,
       },
       {

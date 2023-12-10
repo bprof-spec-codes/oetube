@@ -1,6 +1,6 @@
 <app-lazy-tab-panel [inputItems]="inputItems" [(selectedIndex)]="selectedIndex"   [creatorId]="model?.creator?.id">
     <div *appTemplate="'details'">
-        :()
+        group details works
     </div>
     <div *appTemplate="'edit'">
         <app-group-update (submitted)="onSubmitted($event)" (deleted)="onDeleted()" [inputModel]="model"></app-group-update>

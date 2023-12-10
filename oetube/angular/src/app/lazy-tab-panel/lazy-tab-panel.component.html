@@ -1,4 +1,4 @@
-<dx-tab-panel [(selectedItem)]="selectedItem"  (selectedItemChange)="onSelectionChange($event)" [(items)]="items" itemTemplate="itemTemplate">
+<dx-tab-panel itemOrientation="vertical" [(selectedItem)]="selectedItem"  (selectedItemChange)="onSelectionChange($event)" [(items)]="items" itemTemplate="itemTemplate">
   <div *dxTemplate="let data of 'itemTemplate'">
       <div *ngIf="data.isLoaded">
           <ng-container

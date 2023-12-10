@@ -1,12 +1,4 @@
-import {
-  DxButtonModule,
-  DxLoadIndicatorModule,
-  DxSliderModule,
-  DxTextBoxModule,
-} from 'devextreme-angular';
-import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
-import {RouterModule} from "@angular/router"
-import { CommonModule } from '@angular/common';
+
 import { ControlBarComponent } from './video-player/control-bar/control-bar.component';
 import { NgModule } from '@angular/core';
 import { PlayControlComponent } from './video-player/play-control/play-control.component';
@@ -20,13 +12,15 @@ import { VideoSeekerComponent } from './video-player/video-seeker/video-seeker.c
 import { VideoWrapperComponent } from './video-player/video-wrapper/video-wrapper.component';
 import { VolumeControlComponent } from './video-player/volume-control/volume-control.component';
 import { SidebarModule } from '../sidebar/sidebar.module';
-import { ScrollViewModule } from '../scroll-view/scroll-view.module';
-import { AuthModule } from '../auth/auth.module';
-import { LazyTabPanelModule } from '../lazy-tab-panel/lazy-tab-panel.module';
-
-
-
-
+import { VideoDataSourceComponent } from './video-explore/video-data-source/video-data-source.component';
+import { VideoContentsComponent } from './video-explore/video-contents/video-contents.component';
+import { VideoSearchComponent } from './video-explore/video-search/video-search.component';
+import { VideoTileItemComponent } from './video-explore/video-contents/video-tile-item/video-tile-item.component';
+import { VideoListItemComponent } from './video-explore/video-contents/video-list-item/video-list-item.component';
+import { CollectorModule } from '../collector.module';
+import { GroupModule } from '../group/group.module';
+import { PlaylistVideoDataSourceComponent } from './video-explore/playlist-video-data-source/playlist-video-data-source.component';
+import { VideoUploadComponent } from './video-upload/video-upload.component';
 
 @NgModule({
   declarations: [
@@ -40,23 +34,27 @@ import { LazyTabPanelModule } from '../lazy-tab-panel/lazy-tab-panel.module';
     ControlBarComponent,
     VideoGridComponent,
     SearchBarComponent,
+    VideoDataSourceComponent,
+    VideoContentsComponent,
+    VideoSearchComponent,
+    VideoTileItemComponent,
+    VideoListItemComponent,
+    VideoUploadComponent,
+    PlaylistVideoDataSourceComponent
   ],
   imports: [
-    CommonModule,
     VideoRoutingModule,
-    DxSliderModule,
-    DxButtonModule,
-    DxTextBoxModule,
-    DxLoadIndicatorModule,
-    AuthModule,
-    RouterModule,
-    LazyTabPanelModule,
-    ScrollViewModule,
+    GroupModule,
+    CollectorModule,
     SidebarModule
   ],
   exports:[
-    DxDropDownBoxModule,
-    DxListModule,
+    VideoDataSourceComponent,
+    VideoContentsComponent,
+    VideoSearchComponent,
+    PlaylistVideoDataSourceComponent,
+    VideoTileItemComponent,
+    VideoListItemComponent,
   ],
 })
 export class VideoModule {}

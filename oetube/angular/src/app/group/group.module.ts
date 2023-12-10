@@ -1,22 +1,21 @@
-
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GroupRoutingModule } from './group-routing.module';
-import { GroupCreateComponent, GroupEditorComponent, GroupUpdateComponent } from './group-editor/group-editor.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DxButtonModule,DxCheckBoxModule,DxDataGridModule, DxDateRangeBoxModule, DxDraggableModule, DxFileUploaderModule, DxFormModule, DxListModule, DxLookupModule, DxPopupModule, DxScrollViewModule, DxSelectBoxModule, DxTabPanelComponent, DxTabPanelModule, DxTagBoxModule, DxTextAreaModule, DxTextBoxModule, DxTileViewModule, DxValidatorModule} from 'devextreme-angular';
-import { ImageUploaderModule } from '../image-uploader/image-uploader.module';
+import {
+  GroupCreateComponent,
+  GroupEditorComponent,
+  GroupUpdateComponent,
+} from './group-editor/group-editor.component';
 import { GroupComponent } from './group.component';
-import { DxoPagerModule, DxoPagingModule } from 'devextreme-angular/ui/nested';
-import { PaginationGridModule } from '../pagination-grid/pagination-grid.module';
-import { ScrollViewModule } from '../scroll-view/scroll-view.module';
-import { DropDownSearchModule } from '../scroll-view/drop-down-search/drop-down-search.module';
 import { GroupExploreComponent } from './group-explore/group-explore.component';
-import { LazyTabPanelModule } from '../lazy-tab-panel/lazy-tab-panel.module';
 import { UserModule } from '../user/user.module';
 import { GroupDetailsComponent } from './group-details/group-details.component';
-import { RouterModule,RouterLink } from '@angular/router'
-import { TemplateRefCollectionModule } from '../template-ref-collection/template-ref-collection.module';
+import { GroupSearchComponent } from './group-explore/group-search/group-search.component';
+import { GroupDataSourceComponent } from './group-explore/group-data-source/group-data-source.component';
+import { AccessGroupDataSourceComponent } from './group-explore/access-group-data-source/access-group-data-source.component';
+import { GroupTileItemComponent } from './group-explore/group-contents/group-tile-item/group-tile-item.component';
+import { GroupListItemComponent } from './group-explore/group-contents/group-list-item/group-list-item.component';
+import { GroupContentsComponent } from './group-explore/group-contents/group-contents.component';
+import { CollectorModule } from '../collector.module';
 @NgModule({
   declarations: [
     GroupComponent,
@@ -25,37 +24,27 @@ import { TemplateRefCollectionModule } from '../template-ref-collection/template
     GroupUpdateComponent,
     GroupExploreComponent,
     GroupDetailsComponent,
+    GroupSearchComponent,
+    GroupDetailsComponent,
+    GroupDataSourceComponent,
+    AccessGroupDataSourceComponent,
+    GroupContentsComponent,
+    GroupTileItemComponent,
+    GroupListItemComponent,
   ],
   imports: [
-    LazyTabPanelModule,
-    DxPopupModule,
-    DxDraggableModule,
-    CommonModule,
+    CollectorModule,
     GroupRoutingModule,
-    FormsModule,
-    DxFormModule,
-    ReactiveFormsModule,
-    DxTextBoxModule,
-    DxValidatorModule,
-    DxTextAreaModule,
-    DxButtonModule,
-    DxTagBoxModule,
-    PaginationGridModule,
-    DropDownSearchModule,
-    DxDateRangeBoxModule,
-    DxFileUploaderModule,
-    ImageUploaderModule,
-    DxTabPanelModule,
-    DxListModule,
-    DxSelectBoxModule,
-    DxoPagerModule,
-    RouterModule,
-    DxCheckBoxModule,
-    DxoPagingModule,
-    DxDataGridModule, 
-    DxScrollViewModule,
-    ScrollViewModule,TemplateRefCollectionModule,
+    UserModule
   ],
-  exports:[GroupExploreComponent,GroupDetailsComponent]
+  exports: [
+    GroupSearchComponent,
+    GroupDetailsComponent,
+    GroupDataSourceComponent,
+    AccessGroupDataSourceComponent,
+    GroupTileItemComponent,
+    GroupContentsComponent,
+    GroupListItemComponent,
+  ],
 })
 export class GroupModule {}

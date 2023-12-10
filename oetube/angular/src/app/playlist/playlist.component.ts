@@ -20,7 +20,7 @@ import { LazyTabItem } from '../lazy-tab-panel/lazy-tab-panel.component';
 
 export class PlaylistComponent {
   inputItems:LazyTabItem[]=[
-    {key:"explore",title:"Explore",onlyCreator:false,isLoaded:true,authRequired:true,visible:true},
+    {key:"explore",title:"Explore",onlyCreator:false,isLoaded:true,authRequired:false,visible:true},
     {key:"create",title:"Create",onlyCreator:false,isLoaded:true,authRequired:true,visible:true},
   ]
 }
