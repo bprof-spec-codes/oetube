@@ -6,4 +6,11 @@
   width: 95vw;
   height: 95vh;
   margin: 2em 2em 0 2em;
+
+  .col-videos {
+    
+    &__playlist {
+      background: #DDDDDD;
+    }
+  }
 }

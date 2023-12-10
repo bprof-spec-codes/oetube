@@ -14,6 +14,10 @@ const routes: Routes = [
     path: 'watch/:id',
     component: VideoPlayerComponent,
   },
+  {
+    path: 'watch/:id/:playlist',
+    component: VideoPlayerComponent,
+  }
 ];
 
 @NgModule({
