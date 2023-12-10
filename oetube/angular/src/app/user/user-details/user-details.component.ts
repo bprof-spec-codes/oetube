@@ -10,8 +10,12 @@ import { UserDto } from '@proxy/application/dtos/oe-tube-users';
 })
 export class UserDetailsComponent implements OnInit {  inputItems:LazyTabItem[]=[
   {key:"details",title:"Details",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
-  {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:true}
+  {key:"videos",title:"Videos",authRequired:false,onlyCreator:false,isLoaded:false,visible:true},
+  {key:"playlists",title:"Playlists",authRequired:false,onlyCreator:false,isLoaded:false,visible:true},
+  {key:"groups",title:"Groups",authRequired:false,onlyCreator:false,isLoaded:false,visible:true},
+  {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:true},
 ]
+  height:number=415
   model:UserDto
   id:string
   constructor(private userService:OeTubeUserService, private route:ActivatedRoute){

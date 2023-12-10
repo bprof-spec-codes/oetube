@@ -1,8 +1,56 @@
-<app-lazy-tab-panel [creatorId]="id" [inputItems]="inputItems">
-    <div *appTemplate="'details'">
-        <p>user-view works!</p>
+<div class="d-flex flex-row" *ngIf="model">
+<div class="dx-card d-flex flex-column justify-content-center w-25 align-top p-3" [style.height.px]="600">
+        <div class="mx-auto">
+            <img class="user-image" [src]="model.image">
+        </div>
+        <div class="text-wrap h-auto h-100 text-center mb-5">
+            <h6>{{model.name}}</h6>
+        </div>
+            <dx-scroll-view [height]="400">
+                <span class="text-justify">
+                    {{model.aboutMe}}
+                </span>
+            </dx-scroll-view>
+</div>
+
+
+<app-lazy-tab-panel class="w-75" [creatorId]="id" [inputItems]="inputItems">
+    <div *appTemplate="'videos'">
+        <app-scroll-view [height]="height">
+            <app-drop-down-search>
+                <app-video-search></app-video-search>
+            </app-drop-down-search>
+            <app-video-data-source [creatorId]="id"></app-video-data-source>
+            <app-scroll-view-contents>
+                <app-video-contents></app-video-contents>
+            </app-scroll-view-contents>
+        </app-scroll-view>
+    </div>
+    <div *appTemplate="'playlists'">
+        <app-scroll-view [height]="height">
+            <app-drop-down-search>
+                <app-playlist-search></app-playlist-search>
+            </app-drop-down-search>
+            <app-playlist-data-source [creatorId]="id"></app-playlist-data-source>
+            <app-scroll-view-contents>
+                <app-playlist-contents></app-playlist-contents>
+            </app-scroll-view-contents>
+        </app-scroll-view>
+    </div>
+    <div *appTemplate="'groups'">
+        <app-scroll-view [height]="height">
+            <app-drop-down-search>
+                <app-group-search></app-group-search>
+            </app-drop-down-search>
+            <app-group-data-source [creatorId]="id"></app-group-data-source>
+            <app-scroll-view-contents>
+                <app-group-contents></app-group-contents>
+            </app-scroll-view-contents>
+        </app-scroll-view>
     </div>
     <div *appTemplate="'edit'">
-        <app-user-update></app-user-update>
+        <app-user-update [inputModel]="model"></app-user-update>
     </div>
+
 </app-lazy-tab-panel>
+</div>

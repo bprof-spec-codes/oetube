@@ -205,7 +205,6 @@ get query():QueryDto{
   private createDataSource() {
     return new DataSource<TOutputListDto, string>({
       load: async options => {
-        debugger
           const response = await lastValueFrom(this.getMethod(this.query));
           response.items.forEach(i => {
             if (

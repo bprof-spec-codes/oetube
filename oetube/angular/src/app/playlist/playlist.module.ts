@@ -15,6 +15,8 @@ import { PlaylistSearchComponent } from './playlist-explore/playlist-search/play
 import { PlaylistDataSourceComponent } from './playlist-explore/playlist-data-source/playlist-data-source.component';
 import { PlaylistListItemComponent } from './playlist-explore/playlist-contents/playlist-list-item/playlist-list-item.component';
 import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
+import { PlaylistScrollViewModule } from './playlist-scroll-view.module';
+import { VideoScrollViewModule } from '../video/video-scroll-view.module';
 
 @NgModule({
   declarations: [
@@ -23,17 +25,13 @@ import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-
     PlaylistCreateComponent,
     PlaylistViewComponent,
     PlaylistEditorComponent,
-    PlaylistContentsComponent,
-    PlaylistSearchComponent,
-    PlaylistDataSourceComponent,
     PlaylistExploreComponent,
-    PlaylistListItemComponent,
   ],
   imports: [
     PlaylistRoutingModule,
     CollectorModule,
-    VideoModule
-  ],
-  exports: [PlaylistContentsComponent, PlaylistSearchComponent, PlaylistDataSourceComponent],
+    VideoScrollViewModule,
+    PlaylistScrollViewModule
+  ]
 })
 export class PlaylistModule {}

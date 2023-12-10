@@ -1,4 +1,7 @@
 import { RoutesService, eLayoutType } from '@abp/ng.core';
+import { CurrentUserComponent, eThemeBasicComponents } from '@abp/ng.theme.basic';
+import { eThemeSharedRouteNames } from '@abp/ng.theme.shared';
+import { eThemeSharedComponents } from '@abp/ng.theme.shared/extensions';
 
 import { APP_INITIALIZER } from '@angular/core';
 
@@ -11,7 +14,6 @@ function configureRoutes(routesService: RoutesService) {
     routesService.add(
       [
       {
-
         path: '/',
         name: 'Video',
         //iconClass: 'fas fa-home',

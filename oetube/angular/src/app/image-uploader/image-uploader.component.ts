@@ -11,15 +11,15 @@ import { Observable } from 'rxjs';
 export class ImageUploaderComponent implements OnDestroy{
   @ViewChild('fileUploader', { static: true }) fileUploader:DxFileUploaderComponent;
 
-
+  @Input() height=220
   files:File[]=[]
-
   @Input() name:string
   @Input() value:FormData
   @Output() valueChange?:EventEmitter<FormData>=new EventEmitter<FormData>()
 
   private _defaultImgUrl:string
   @Input() set defaultImgUrl(value:string){
+    debugger
     this._defaultImgUrl=value
     if(!this.imageUrl){
       this.imageUrl=value
