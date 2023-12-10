@@ -14,8 +14,9 @@ namespace OeTube.Domain.Repositories
         IHasAccessRepository<Playlist, Guid>,
         IQueryAvaliableRepository<Playlist, IPlaylistQueryArgs>
     {
+        Task<int> GetAvaliableItemsCountAsync(Guid? requesterId, Playlist playlist, CancellationToken cancellationToken = default);
         Task<TimeSpan> GetAvaliableTotalDurationAsync(Guid? requesterId, Playlist playlist);
-
+        Task<int> GetItemsCountAsync(Playlist playlist, CancellationToken cancellationToken = default);
         Task<TimeSpan> GetTotalDurationAsync(Playlist playlist);
     }
 }

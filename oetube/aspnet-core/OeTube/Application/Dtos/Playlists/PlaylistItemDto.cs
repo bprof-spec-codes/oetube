@@ -30,6 +30,7 @@ namespace OeTube.Application.Dtos.Playlists
             destination.ThumbnailImage = _urlService.GetThumbnailImageUrl(source.Id);
             destination.Creator = await _creatorMapper.MapAsync(source.CreatorId);
             destination.TotalDuration = await _cacheService.GetOrAddTotalDurationAsync(source);
+            destination.ItemsCount = await _cacheService.GetOrAddItemsCountAsync(source);
             return destination;
         }
     }
@@ -42,5 +43,6 @@ namespace OeTube.Application.Dtos.Playlists
         public string? ThumbnailImage { get; set; }
         public CreatorDto? Creator { get; set; }
         public TimeSpan TotalDuration { get; set; }
+        public int ItemsCount { get; set; }
     }
 }
