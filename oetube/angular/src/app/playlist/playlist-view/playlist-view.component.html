@@ -6,62 +6,68 @@
         keyExpr="name">
     </dx-data-grid>
 </div>-->
+
 <app-lazy-tab-panel [creatorId]="model?.creator?.id" [inputItems]="inputItems">
   <div *appTemplate="'details'">
-    <div class="component-title" *ngIf="playlist">
-      <h4><img [src]="playlist.image" class="playlist-image">{{playlist.name}}</h4>
-      <p class="description">{{playlist.description}}</p>
+    <div class="component-title" *ngIf="model">
+      <h4><img [src]="model.image" class="playlist-image" />{{ model.name }}</h4>
+      <p class="description">{{ model.description }}</p>
       <!--<dx-data-grid
           [dataSource]="playlist.items"
           keyExpr="name">
       </dx-data-grid>-->
-  </div>
-  
-  <dx-tree-list
-    id="videos"
-    [dataSource]="videos"
-    keyExpr="name"
-    [columnAutoWidth]="true"
-    [wordWrapEnabled]="true"
-    [showBorders]="true"
-  >
-    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
-    <dxo-header-filter [visible]="true"></dxo-header-filter>
-    <dxo-column-chooser [enabled]="false"></dxo-column-chooser>
-  
-    <dxi-column
-      dataField="name"
-      caption="Name"
-      [minWidth]="200"
-      cssClass="employee"
-      cellTemplate="imagetemplate"
-    ></dxi-column>
-    <dxi-column dataField="duration" caption="duration" [minWidth]="100"></dxi-column>
-    <dxi-column
-      dataField="Task_Completion"
-      caption="% Completed"
-      [visible]="false"
-    ></dxi-column>
-    <dxi-column dataField="creationTime" caption="creationTime" [visible]="true" cellTemplate="datetemplate"></dxi-column>
-    <div *dxTemplate="let options of 'imagetemplate'">
-      <a *ngIf="options.data.id" [routerLink]="'/video/watch/' + options.data.id">
+
+    <dx-tree-list *ngIf="videos.length>0"
+      id="videos"
+      [dataSource]="videos"
+      keyExpr="name"
+      [columnAutoWidth]="true"
+      [wordWrapEnabled]="true"
+      [showBorders]="true"
+    >
+      <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-column-chooser [enabled]="false"></dxo-column-chooser>
+
+      <dxi-column
+        dataField="name"
+        caption="Name"
+        [minWidth]="200"
+        cssClass="employee"
+        cellTemplate="imagetemplate"
+      ></dxi-column>
+      <dxi-column dataField="duration" caption="duration" [minWidth]="100"></dxi-column>
+      <dxi-column dataField="Task_Completion" caption="% Completed" [visible]="false"></dxi-column>
+      <dxi-column
+        dataField="creationTime"
+        caption="creationTime"
+        [visible]="true"
+        cellTemplate="datetemplate"
+      ></dxi-column>
+      <div *dxTemplate="let options of 'imagetemplate'">
+        <a *ngIf="options.data.id" [routerLink]="'/video/watch/' + options.data.id">
           <div class="video">
-              <img class="img" *ngIf="options.data.indexImage" [src]="options.data.indexImage | auth">
-              <span *ngIf="options.data.name" class="name">{{options.data.name}}</span>
+            <img
+              class="img"
+              *ngIf="options.data.indexImage"
+              [src]="options.data.indexImage | auth"
+            />
+            <span *ngIf="options.data.name" class="name">{{ options.data.name }}</span>
           </div>
-      </a>
-    </div>
-  
-    <div *dxTemplate="let options of 'datetemplate'">
-      <div >
-        <span *ngIf="options.data.creationTime" >{{options.data.creationTime | date:'yyyy.MM.dd'}}</span>
+        </a>
       </div>
-    </div>
-  
-  </dx-tree-list>
-  
+
+      <div *dxTemplate="let options of 'datetemplate'">
+        <div>
+          <span *ngIf="options.data.creationTime">{{
+            options.data.creationTime | date : 'yyyy.MM.dd'
+          }}</span>
+        </div>
+      </div>
+    </dx-tree-list>
   </div>
+</div>
   <div *appTemplate="'edit'">
-      <app-playlist-update [model]="model"></app-playlist-update>
+    <app-playlist-update [model]="model"></app-playlist-update>
   </div>
 </app-lazy-tab-panel>
