@@ -41,8 +41,8 @@ import { VideoFrameSelectorComponent } from './video-update/video-frame-selector
     VideoGridComponent,
     SearchBarComponent,
     VideoDetailsComponent,
-    PlaylistPlayerComponent,
     VideoFrameSelectorComponent,
+    PlaylistPlayerComponent,
     VideoUploadComponent,
     VideoUpdateComponent
   ],
