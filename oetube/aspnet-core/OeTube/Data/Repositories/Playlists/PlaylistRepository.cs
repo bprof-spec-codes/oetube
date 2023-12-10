@@ -25,7 +25,7 @@ namespace OeTube.Data.Repositories.Playlists
         {
             if (videos.Any())
             {
-                var totalSeconds = videos.Sum(v => v.Duration.TotalSeconds);
+                var totalSeconds = videos.Select(v=>v.Duration).ToList().Sum(v => v.TotalSeconds);
                 return TimeSpan.FromSeconds(totalSeconds);
             }
             else

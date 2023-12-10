@@ -4,13 +4,16 @@ import { CommonModule } from '@angular/common';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
-import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } from 'devextreme-angular';
+import { PlaylistViewComponent } from './playlist-view/playlist-view.component';
+import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule, DxTreeListModule } from 'devextreme-angular';
+import { AuthUrlPipe } from '../services/auth-url-pipe/auth-url.pipe';
 
 
 @NgModule({
   declarations: [
     PlaylistComponent,
-    PlaylistCreateComponent
+    PlaylistCreateComponent,
+    PlaylistViewComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +21,9 @@ import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule } 
     DxTabPanelModule,
     DxDataGridModule,
     DxTemplateModule,
-    DxButtonModule
+    DxButtonModule,
+    DxTreeListModule,
+    AuthUrlPipe
   ]
 })
 export class PlaylistModule { }
