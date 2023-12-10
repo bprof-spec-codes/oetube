@@ -67,7 +67,7 @@ export class ScrollViewDataSourceComponent<TOutputListDto extends EntityDto<stri
   }
 
   private defaultPagination:Pagination={take:30,skip:0}
-  
+  private paginationMax:Pagination={take:(2<<31)-1,skip:0}  
   _query: QueryDto={
     pagination:{
       take:this.defaultPagination.take,
@@ -158,7 +158,7 @@ get query():QueryDto{
       }
       this.clearDatas()
       if(this.allowSelection&&this.selectionContextId&&this.getInitialSelectionMethod){
-          const response=await lastValueFrom(this.getInitialSelectionMethod(this.selectionContextId,{pagination:{skip:0,take:2<<32}}))
+          const response=await lastValueFrom(this.getInitialSelectionMethod(this.selectionContextId,{pagination:this.paginationMax}))
           this.selectedDatas.push(...response.items)
           this.selectedDatasChange.emit(this.selectedDatas)
       }
@@ -205,6 +205,7 @@ get query():QueryDto{
   private createDataSource() {
     return new DataSource<TOutputListDto, string>({
       load: async options => {
+        debugger
           const response = await lastValueFrom(this.getMethod(this.query));
           response.items.forEach(i => {
             if (

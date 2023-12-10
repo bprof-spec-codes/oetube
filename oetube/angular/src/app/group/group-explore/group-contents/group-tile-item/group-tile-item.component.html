@@ -1,0 +1,32 @@
+
+  <div [id]="'context_'+item.id" class="card" [style.width.px]="300">
+    <a class="text-decoration-none" [routerLink]="contextNavigation?[]:['/group',item.id]">
+    <div class="card-body h-auto d-flex flex-row justify-content-between">
+      <img
+        [style.width.px]="90"
+        [style.height.px]="90"
+        [src]="item.thumbnailImage"
+        [alt]="item.name"
+        class="rounded-star my-auto img-responsive"
+        draggable="false"
+      />
+        <strong class="my-auto text-wrap mx-auto">{{ item.name }}</strong>
+        <span class="mx-3">{{ item.totalMembersCount }} <i class="dx-icon-user"></i></span>
+    </div>
+  </a>
+    <div class="d-flex card-footer justify-content-evenly">
+      <small class="my-auto text-muted">{{ item.creationTime | date : 'yyyy.MM.dd' }}</small>
+      <div class="d-block text-truncate">
+        <a class="text-decoration-none" [routerLink]="contextNavigation&&item.creator?[]:['/user',item.creator.id]"><small><strong> {{ item.creator?.name }} </strong></small></a>
+      </div>
+    </div>
+  </div>
+
+
+  <dx-context-menu *ngIf="contextNavigation" [target]="'#context_'+item.id" [items]="contextItems">
+    <div *dxTemplate="let i of 'item'">
+      <a [routerLink]=i.link  target="_blank" class="text-decoration-none" >
+        {{i.text}}
+      </a>
+    </div>
+  </dx-context-menu>

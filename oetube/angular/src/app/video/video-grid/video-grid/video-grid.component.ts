@@ -38,7 +38,7 @@ export class VideoGridComponent implements OnInit {
     this.isLoading = true;
 
     this.videoService
-      .getList({name:searchPhrase,pagination:{take:100,skip:0}})
+      .getList({ name: searchPhrase, pagination: { take: 100, skip: 0 } })
       .subscribe(data => (this.videos = data.items));
 
     this.isLoading = false;

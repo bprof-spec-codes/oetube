@@ -87,7 +87,6 @@ export class TemplateRefCollectionComponent<C extends TemplateItemContext = Temp
     });
   }
   ngAfterViewInit(): void {
-    debugger
     this.collectItems(this.contentTemplateQuery);
     this.collectItems(this.viewTemplateQuery);
     console.log(this.contentTemplateQuery)
