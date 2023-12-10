@@ -1,8 +1,29 @@
+<div class="d-flex flex-row" *ngIf="model">
+    <div class="dx-card d-flex flex-column justify-content-center w-25 align-top p-3" [style.height.px]="600">
+
+    <!--<div class="dx-card d-flex flex-column justify-content-center w-25 align-top p-3" [style.height.px]="600">
+            <div class="mx-auto">
+                <img class="user-image" [src]="model.image">
+            </div>
+            <div class="text-wrap h-auto h-100 text-center mb-5">
+                <h6>{{model.name}}</h6>
+            </div>
+                <dx-scroll-view [height]="400">
+                    <span class="text-justify">
+                        {{model.aboutMe}}
+                    </span>
+                </dx-scroll-view>
+    </div> -->
+</div>
+
+
 <app-lazy-tab-panel [inputItems]="inputItems" [(selectedIndex)]="selectedIndex"   [creatorId]="model?.creator?.id">
-    <div *appTemplate="'details'">
+    <div *appTemplate="'members'">
         group details works
     </div>
     <div *appTemplate="'edit'">
         <app-group-update (submitted)="onSubmitted($event)" (deleted)="onDeleted()" [inputModel]="model"></app-group-update>
     </div>
 </app-lazy-tab-panel>
+
+</div>

@@ -17,7 +17,7 @@ export class GroupDetailsComponent implements OnInit {
 
 
   inputItems:LazyTabItem[]=[
-    {key:"details",title:"Details",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
+    {key:"members",title:"Members",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
     {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:false}
   ]
 
