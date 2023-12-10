@@ -1,0 +1,69 @@
+<div class="component-title" *ngIf="model">
+    <div class="d-flex flex-row justify-content-between my-5">
+        <h4 class>Edit your video</h4>
+        <dx-button
+          [visible]="inputModel !== undefined"
+          (onClick)="delete()"
+          text="delete"
+          type="danger"
+        ></dx-button>
+      </div>
+  <form (submit)="onSubmit($event)">
+    <dx-form [formData]="model">
+      <dxi-item dataField="name" [isRequired]="true" />
+      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
+      <div *dxTemplate="let data of 'descriptionTemplate'">
+        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      </div>
+      <dxi-item dataField="access">
+        <dxo-label text="Access"></dxo-label>
+        <dx-radio-group
+          [dataSource]="accessOptions"
+          [(value)]="model.access"
+          layout="horizontal"
+          [itemTemplate]="'itemTemplate'"
+        >
+          <div *dxTemplate="let item of 'itemTemplate'" class="d-flex flex-row align-items-center">
+            <span class="dx-button-text group-option-text">
+              {{ accessTypeEnum[item] }}
+            </span>
+            <div *ngIf="item === accessTypeEnum.Group; else notGroup">
+              <app-scroll-view-selector-popup
+                [title]="'Edit Access Groups'"
+                [(value)]="model.accessGroups"
+                [icon]="'edit'"
+                type="default"
+                [text]="'edit'"
+                [disabled]="model.access !== item"
+              >
+                <app-scroll-view [initalLoad]="false">
+                  <app-drop-down-search>
+                    <app-group-search></app-group-search>
+                  </app-drop-down-search>
+                  <app-access-group-data-source
+                    [videoId]="inputModel?.id"
+                  ></app-access-group-data-source>
+                  <app-scroll-view-contents>
+                    <app-group-contents [contextNavigation]="true"></app-group-contents>
+                  </app-scroll-view-contents>
+                </app-scroll-view>
+              </app-scroll-view-selector-popup>
+            </div>
+          </div>
+        </dx-radio-group>
+      </dxi-item>
+      <dxi-item dataField="indexImage">
+        <div *dxTemplate="let data">
+            <app-video-frame-selector  [videoId]="inputModel.id" [(value)]="data.component.option('formData')[data.dataField]">
+        </app-video-frame-selector>
+        </div>
+   
+      </dxi-item>
+      <dxi-item
+        itemType="button"
+        [buttonOptions]="submitButtonOptions"
+        onClick="onSubmit($event)"
+      ></dxi-item>
+    </dx-form>
+  </form>
+</div>

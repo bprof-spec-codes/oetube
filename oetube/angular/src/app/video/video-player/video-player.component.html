@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="video">
   <div class="row w-100 h-100">
     <div class="col-9 col-video">
       <div class="video-app">
@@ -20,12 +20,11 @@
         <p class="pt-1">{{ video.description }}</p>
       </div>
     </div>
-    <div [ngClass]="{
+    <div *ngIf="playlistId" [ngClass]="{
       'col-3':true, 'rounded':true, 'col-videos':true,
       'col-videos__playlist':playlistId
     }">
       <div
-        *ngIf="playlistId"
         class="w-100 text-center fs-4 fw-bolder py-3"
       >{{ playlist.name }}</div>
       <app-video-grid
@@ -35,6 +34,4 @@
       ></app-video-grid>
     </div>
   </div>
-
-  <div></div>
 </div>

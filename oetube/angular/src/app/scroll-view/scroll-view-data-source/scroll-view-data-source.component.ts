@@ -67,7 +67,7 @@ export class ScrollViewDataSourceComponent<TOutputListDto extends EntityDto<stri
   }
 
   private defaultPagination:Pagination={take:30,skip:0}
-  private paginationMax:Pagination={take:(2<<31)-1,skip:0}  
+  private paginationMax:Pagination={take:(2**31)-1,skip:0}  
   _query: QueryDto={
     pagination:{
       take:this.defaultPagination.take,

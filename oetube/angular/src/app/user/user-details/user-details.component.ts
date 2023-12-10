@@ -8,7 +8,8 @@ import { UserDto } from '@proxy/application/dtos/oe-tube-users';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.scss']
 })
-export class UserDetailsComponent implements OnInit {  inputItems:LazyTabItem[]=[
+export class UserDetailsComponent implements OnInit {  
+  inputItems:LazyTabItem[]=[
   {key:"details",title:"Details",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
   {key:"videos",title:"Videos",authRequired:false,onlyCreator:false,isLoaded:false,visible:true},
   {key:"playlists",title:"Playlists",authRequired:false,onlyCreator:false,isLoaded:false,visible:true},

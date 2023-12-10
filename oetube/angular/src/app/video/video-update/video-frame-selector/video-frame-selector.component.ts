@@ -18,15 +18,17 @@ export class VideoFrameSelectorComponent implements OnInit,OnDestroy {
   @Input() height:number=180
   @Input() videoId:string
   dto:VideoIndexImagesDto
-  value?:number
+  @Input() value?:number
   valueChange:EventEmitter<number>=new EventEmitter()
   selected:string
   indexImages:string[]=[]
   styledImages:string[]=[]
   constructor(private urlService:UrlService, private videoService:VideoService) 
   {
+    debugger
   }
   async ngOnInit() {
+    debugger
     if(this.videoId){
       this.dto=await lastValueFrom(this.videoService.getIndexImages(this.videoId))
       this.selected=await lastValueFrom(this.urlService.getResourceUrl(this.dto.selected))

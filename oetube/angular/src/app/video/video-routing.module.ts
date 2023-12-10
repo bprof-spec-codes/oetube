@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { VideoComponent } from './video.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
+import { VideoDetailsComponent } from './video-details/video-details.component';
 
 const routes: Routes = [
   {
@@ -11,12 +12,12 @@ const routes: Routes = [
     component: VideoComponent,
   },
   {
-    path: 'watch/:id',
-    component: VideoPlayerComponent,
+    path: ':id',
+    component: VideoDetailsComponent,
   },
   {
-    path: 'watch/:id/:playlist',
-    component: VideoPlayerComponent,
+    path: ':id/:playlist',
+    component: VideoDetailsComponent,
   }
 ];
 

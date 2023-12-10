@@ -45,7 +45,7 @@
         cellTemplate="datetemplate"
       ></dxi-column>
       <div *dxTemplate="let options of 'imagetemplate'">
-        <a *ngIf="options.data.id" [routerLink]="'/video/watch/' + options.data.id">
+        <a *ngIf="options.data.id" [routerLink]="['/video',options.data.id,model.id]">
           <div class="video">
             <img
               class="img"
