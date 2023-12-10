@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using OeTube.Data.QueryExtensions;
 using OeTube.Data.Repositories.Users;
 using OeTube.Data.Repositories.Videos;
@@ -73,19 +74,30 @@ namespace OeTube.Data.Repositories.Playlists
         {
             return (await GetDbContextAsync()).HasAccess(requesterId, entity);
         }
-
+      
         public async Task<Playlist> UpdateChildrenAsync(Playlist entity, IEnumerable<Video> childEntities, bool autoSave = false, CancellationToken cancellationToken = default)
         {
             var videoItemsSet = await GetDbSetAsync<VideoItem>();
+
+
             childEntities = childEntities.Where(e => e.CreatorId == entity.CreatorId);
             videoItemsSet.RemoveRange(entity.Items);
-            await videoItemsSet.AddRangeAsync(childEntities.Select((i, idx) => new VideoItem(entity.Id, idx, i.Id)), cancellationToken);
+            var items = childEntities.Select((i, idx) => new VideoItem(entity.Id, idx, i.Id)).ToList();
+            await videoItemsSet.AddRangeAsync(items, cancellationToken);
 
             if (autoSave)
             {
                 await SaveChangesAsync(cancellationToken);
             }
             return entity;
+        }
+        public async Task<int> GetAvaliableItemsCountAsync(Guid? requesterId,Playlist playlist,CancellationToken cancellationToken = default)
+        {
+            return await (await GetDbContextAsync()).GetAvaliableVideos(requesterId, playlist).CountAsync(cancellationToken);
+        }
+        public async Task<int> GetItemsCountAsync(Playlist playlist,CancellationToken cancellationToken=default)
+        {
+            return await (await GetDbSetAsync<VideoItem>()).Where(i => i.PlaylistId == playlist.Id).CountAsync(cancellationToken);
         }
     }
 }

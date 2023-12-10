@@ -37,12 +37,12 @@ namespace OeTube.Data.QueryExtensions
         {
             playlists??= context.Set<Playlist>();
             var creator = from playlist in playlists
-                          where playlist.CreatorId == requesterId
+                          where playlist.CreatorId!=null&& playlist.CreatorId == requesterId
                           select playlist;
 
             var result = from playlist in playlists
                          join videoItem in context.Set<VideoItem>()
-                         on playlist.Id equals videoItem.VideoId
+                         on playlist.Id equals videoItem.PlaylistId
                          join video in context.GetAvaliableVideos(requesterId)
                          on videoItem.VideoId equals video.Id
                          select playlist;
