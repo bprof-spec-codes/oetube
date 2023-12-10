@@ -1,16 +1,43 @@
-import {  NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxButtonGroupModule, DxButtonModule, DxCheckBoxModule, DxContextMenuModule, DxDateBoxModule, DxDateRangeBoxModule, DxDraggableModule, DxDropDownButtonModule, DxListModule, DxPopoverModule, DxPopupModule, DxScrollViewModule, DxSelectBoxModule, DxSortableModule, DxTextBoxModule, DxTileViewModule, DxToolbarModule } from 'devextreme-angular';
-import { ScrollViewComponent, ScrollViewContentDirective, ScrollViewProviderComponent } from './scroll-view.component';
+import {
+  DxButtonGroupModule,
+  DxButtonModule,
+  DxCheckBoxModule,
+  DxContextMenuModule,
+  DxDateBoxModule,
+  DxDateRangeBoxModule,
+  DxDraggableModule,
+  DxDropDownButtonModule,
+  DxListModule,
+  DxLoadPanelModule,
+  DxPopoverModule,
+  DxPopupModule,
+  DxScrollViewModule,
+  DxSelectBoxModule,
+  DxSortableModule,
+  DxTextBoxModule,
+  DxTileViewModule,
+  DxToolbarModule,
+} from 'devextreme-angular';
+import { ScrollViewComponent } from './scroll-view.component';
 import { DropDownSearchModule } from './drop-down-search/drop-down-search.module';
 import { ScrollViewSelectorPopupComponent } from './scroll-view-selector-popup/scroll-view-selector-popup.component';
-
-
+import { TemplateRefCollectionModule } from '../template-ref-collection/template-ref-collection.module';
+import { DateSearchItemComponent } from './drop-down-search/date-search-item/date-search-item.component';
+import { ScrollViewDataSourceComponent } from './scroll-view-data-source/scroll-view-data-source.component';
+import { ScrollViewContentsComponent } from './scroll-view-contents/scroll-view-contents.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations:[ScrollViewComponent,ScrollViewContentDirective, ScrollViewSelectorPopupComponent
+  declarations: [
+    ScrollViewDataSourceComponent,
+    ScrollViewContentsComponent,
+    ScrollViewComponent,
+    ScrollViewSelectorPopupComponent,
   ],
   imports: [
+    TemplateRefCollectionModule,
     CommonModule,
     DxScrollViewModule,
     DxDraggableModule,
@@ -19,6 +46,7 @@ import { ScrollViewSelectorPopupComponent } from './scroll-view-selector-popup/s
     DxToolbarModule,
     DxTextBoxModule,
     DxSelectBoxModule,
+    DxLoadPanelModule,
     DxButtonModule,
     DxDateRangeBoxModule,
     DxDropDownButtonModule,
@@ -27,12 +55,17 @@ import { ScrollViewSelectorPopupComponent } from './scroll-view-selector-popup/s
     DxPopoverModule,
     DxTileViewModule,
     DxSortableModule,
+    RouterModule,
     DxPopupModule,
-    DxListModule
-  ], 
-  exports:[ScrollViewComponent,ScrollViewContentDirective,DropDownSearchModule,ScrollViewSelectorPopupComponent]
+    DxListModule,
+  ],
+  exports: [
+    DropDownSearchModule,
+    ScrollViewComponent,
+    ScrollViewSelectorPopupComponent,
+    ScrollViewDataSourceComponent,
+    ScrollViewContentsComponent,
+    TemplateRefCollectionModule
+  ],
 })
-export class ScrollViewModule{
-
- 
- }
+export class ScrollViewModule {}

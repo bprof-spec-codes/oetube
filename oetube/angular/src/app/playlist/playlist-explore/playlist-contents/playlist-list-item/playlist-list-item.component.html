@@ -1,0 +1,38 @@
+<div class="d-flex flex-column shadow p-3 m-2 mb-2 bg-body border rounded item-card p-2">
+  <div class="d-flex mb-2 justify-content-between w-100">
+    <div
+      class="my-auto mx-auto creator-image-container d-block text-truncate text-wrap p-1 text-center"
+    >
+      <div *ngIf="item.creator">
+        <a [routerLink]="['/user',item.creator.id]" class="text-decoration-none">
+        <img class="my-auto" [src]="item.creator.thumbnailImage" />
+        <span class="text-muted mx-auto">
+          {{ item.creator.name }}
+        </span>
+      </a>
+    </div>
+    </div>
+  </div>
+  <a [routerLink]="['/playlist',item.id]" class="h-100 text-decoration-none">
+  <div class="image-container w-100 d-flex justify-content-center">
+    <img class="mx-auto border" [src]="item.thumbnailImage" />
+  </div>
+  <div class="p1"></div>
+  <div class="dx-button-text title d-block text-truncate text-wrap h-100 p-1 text-center">
+    <strong class="title">{{ item.name }} </strong>
+  </div>
+  </a>
+  <div class="d-flex justify-content-evenly w-100 align-bottom">
+    <div>
+      <i class="dx-icon-clock"></i>
+      {{ item.totalDuration | time }}
+    </div>
+    <div class="my-auto mx-auto">
+      {{ item.creationTime | date : 'yyyy.MM.dd' }}
+    </div>
+    <div class="">
+      <i class="dx-icon-video"></i>
+      {{ item.itemsCount }}
+    </div>
+  </div>
+</div>

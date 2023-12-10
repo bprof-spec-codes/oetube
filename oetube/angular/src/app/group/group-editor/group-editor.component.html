@@ -1,7 +1,12 @@
 <div>
   <div class="d-flex flex-row justify-content-between my-5">
     <h4 class>{{ title }}</h4>
-    <dx-button [visible]="inputModel!==undefined" (onClick)="delete()" text="delete" type="danger"></dx-button>
+    <dx-button
+      [visible]="inputModel !== undefined"
+      (onClick)="delete()"
+      text="delete"
+      type="danger"
+    ></dx-button>
   </div>
   <form (submit)="onSubmit($event)">
     <dx-form [formData]="model" [labelLocation]="'left'">
@@ -36,8 +41,15 @@
             [text]="'edit'"
             [(value)]="data.component.option('formData')[data.dataField]"
           >
-              <app-user-explore  [options]="scrollViewOptions"
-              ></app-user-explore>
+            <app-scroll-view [initialLoad]="false">
+              <app-drop-down-search>
+                <app-group-search></app-group-search>
+              </app-drop-down-search>
+              <app-member-data-source [groupId]="inputModel?.id"></app-member-data-source>
+              <app-scroll-view-contents>
+                <app-user-contents [contextNavigation]="true"></app-user-contents>
+              </app-scroll-view-contents>
+            </app-scroll-view>
           </app-scroll-view-selector-popup>
         </div>
       </dxi-item>

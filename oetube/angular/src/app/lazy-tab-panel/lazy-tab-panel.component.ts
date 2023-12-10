@@ -1,86 +1,69 @@
-import { Component,Directive,ContentChildren,QueryList,Input, AfterContentInit,TemplateRef,EventEmitter,Output } from '@angular/core';
-import { DxTabPanelComponent } from 'devextreme-angular';
-import { CurrentUser, CurrentUserService } from '../services/current-user/current-user.service';
-@Directive({
-  selector: "[appLazyTabItem]"
-})
-export class LazyTabItemDirective{
-  private _appLazyTabItem:any[]
-  @Input() set appLazyTabItem(value:any[]){
-    this._appLazyTabItem=value
-  }
-  private _appLazyTabItemTitle:string=""
-  @Input() set appLazyTabItemTitle(value:string){
-    this._appLazyTabItemTitle=value
-  }
-  get title():string{
-    return this._appLazyTabItemTitle
-  }
-  private _appLazyTabItemAuthRequired:boolean=false
-@Input() set appLazyTabItemAuth(value:boolean){
-  if(!this._appLazyTabItemOnlyCreator){
-    this._appLazyTabItemAuthRequired=value
-  }
-}
-get authRequired():boolean{
-  return this._appLazyTabItemAuthRequired
-}
+import { Component,ChangeDetectorRef,AfterViewInit,Input,OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { DxiItemComponent } from 'devextreme-angular/ui/nested';
+import { CurrentUser, CurrentUserService } from 'src/app/auth/current-user/current-user.service';
+import { TemplateRefCollectionComponent } from 'src/app/template-ref-collection/template-ref-collection.component';
 
-private _appLazyTabItemOnlyCreator:boolean=false
-@Input() set appLazyTabItemOnlyCreator(value:boolean){
-  this._appLazyTabItemOnlyCreator=value
-  if(value){
-    this._appLazyTabItemAuthRequired=true
-  }
+export type LazyTabItem={
+  key:string
+  title:string
+  authRequired:boolean
+  onlyCreator:boolean
+  isLoaded:boolean
+  visible:boolean
 }
-get onlyCreator():boolean{
-  return this._appLazyTabItemOnlyCreator
-}
-  isLoaded:boolean=false
-  
-  constructor(public tabItemTemplate:TemplateRef<any>){
-  }
-
-}
-
 
 @Component({
   selector: 'app-lazy-tab-panel',
   templateUrl: './lazy-tab-panel.component.html',
   styleUrls: ['./lazy-tab-panel.component.scss']
 })
-export class LazyTabPanelComponent implements AfterContentInit {
-  @ContentChildren(LazyTabItemDirective) tabItemsQuery:QueryList<LazyTabItemDirective>
-  @Input() creatorId?:string
-  @Input() currentUserId?:string
-
-  @Input() selectedIndex:number
-  @Output() selectedIndexChange:EventEmitter<number>=new EventEmitter<number>()
-  tabItems:LazyTabItemDirective[]=[]
-
- 
-  itemFilter(directive:LazyTabItemDirective){
-     const authResult=(!directive.authRequired|| this.currentUserId)
-      if(!authResult){
-        return false
-      }
-      return this.creatorId==null||!directive.onlyCreator||this.currentUserId==this.creatorId
-  }
+export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTabItem> implements AfterViewInit, OnChanges{
   
-  ngAfterContentInit(): void {
-      this.tabItems=this.tabItemsQuery.filter(i=>this.itemFilter(i))
-      if(this.tabItems.length>0){
-        this.tabItems[0].isLoaded=true
-        this.selectedIndex=0
-      }
-  }
-  onSelectedIndexChange(e:number){
-
-    if(!this.tabItems[e].isLoaded){
-      this.tabItems[e].isLoaded=true
+  private _creatorId:string
+  @Input() set  creatorId(v:string){
+    if(v!=this.creatorId){
+      v=this.creatorId;
+      this.filterItems()
     }
-    this.selectedIndexChange.emit(e)
+  }
+  get creatorId(){
+    return this._creatorId
+  }
+  @Output() creatorIdChange:EventEmitter<string>=new EventEmitter<string>()
+  constructor(private changeDetector:ChangeDetectorRef,public currentUserService:CurrentUserService){
+    super()
+  }
+  filteredItems=[]
 
+
+  filterItems(){
+    const currentUserId=this.currentUserService.getCurrentUser().id
+    
+    this.items.forEach((v,i)=>{
+      const authResult=(!v.authRequired || currentUserId!=undefined)
+      if(!authResult){
+        v.visible=false
+      }
+      else{
+        v.visible=this.creatorId==null||!v.onlyCreator||currentUserId==this.creatorId
+      }
+    })
+    
+ }
+ ngOnChanges(changes: SimpleChanges): void {
+  this.filterItems()
+ }
+  ngAfterViewInit(): void {
+      super.ngAfterViewInit()
+      this.filterItems()
+      this.changeDetector.detectChanges()
+    }
+  onSelectionChange(e){
+    console.log(e)
+    if(this.selectedItem){
+      if(!this.selectedItem.isLoaded){
+        this.selectedItem.isLoaded=true
+      }
+    }
   }
 }
-

@@ -59,10 +59,6 @@ namespace OeTube.Data.QueryExtensions
                 {
                     return false;
                 }
-                if (video.AccessGroups.Count == 0)
-                {
-                    return false;
-                }
 
                 var groups = context.GetJoinedGroups(requesterId);
 

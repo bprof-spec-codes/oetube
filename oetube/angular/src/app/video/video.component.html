@@ -1,3 +1,11 @@
-<div class="my-5">
-  <app-video-grid> </app-video-grid>
-</div>
+
+<app-lazy-tab-panel [inputItems]="inputItems">
+  <div *appTemplate="'explore'">
+    <div class="my-5">
+      <app-video-grid> </app-video-grid>
+    </div>
+  </div>
+  <div *appTemplate="'upload'">
+      <app-video-upload></app-video-upload>
+  </div>
+</app-lazy-tab-panel>

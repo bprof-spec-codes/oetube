@@ -27,6 +27,7 @@ export interface PlaylistItemDto extends EntityDto<string> {
   thumbnailImage?: string;
   creator: CreatorDto;
   totalDuration?: string;
+  itemsCount:number
 }
 
 export interface PlaylistQueryDto extends QueryDto {

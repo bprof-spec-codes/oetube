@@ -1,0 +1,15 @@
+<dx-range-selector
+  [style]="searchItem.style"
+  [classList]="searchItem.class"
+  [(value)]="searchItem.bindingValue"
+  (onEnterKey)="searchItem.onEnterKey()"
+  [indent]="[10,10]"
+  [selectedRangeColor]="color"
+>
+<dxo-behavior [allowSlidersSwap]="true"></dxo-behavior>
+<dxo-scale [startValue]="exRangeMin" [endValue]="exRangeMax" [tickInterval]="300"></dxo-scale>
+<dxo-slider-marker [color]="color" [customizeText]="customizeText">
+</dxo-slider-marker>
+<dxo-slider-handle [color]="color"></dxo-slider-handle>
+
+</dx-range-selector>

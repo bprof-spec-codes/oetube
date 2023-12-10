@@ -3,6 +3,11 @@
   id="main-navbar"
   style="min-height: 4rem"
 >
+
+<div class="d-flex flex-row">
+
+</div>
+
   <div class="container">
     <abp-logo *abpReplaceableTemplate="{ componentKey: service.logoComponentKey }"></abp-logo>
     <button
@@ -45,6 +50,6 @@
 <!-- [@slideFromBottom]="outlet.isActivated && outlet.activatedRoute?.routeConfig?.path" TODO: throws ExpressionChangedAfterItHasBeenCheck when animation is active. It should be fixed -->
 <div class="container">
   <abp-page-alert-container></abp-page-alert-container>
-
+  
   <router-outlet #outlet="outlet"></router-outlet>
 </div>

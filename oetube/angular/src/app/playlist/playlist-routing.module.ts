@@ -8,7 +8,7 @@ import { PlaylistViewComponent } from './playlist-view/playlist-view.component';
 const routes: Routes = [
   { path: '', component: PlaylistComponent },
   { path: 'create', component: PlaylistCreateComponent },,
-  { path: 'view/:id', component: PlaylistViewComponent}
+  { path: ':id', component: PlaylistViewComponent}
 ];
 
 @NgModule({

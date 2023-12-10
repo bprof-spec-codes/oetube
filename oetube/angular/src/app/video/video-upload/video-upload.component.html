@@ -1,0 +1,92 @@
+<div class="component-title">
+  <h4>Upload your video</h4>
+  <form (submit)="onSubmit($event)">
+    <dx-form [formData]="uploadModel">
+      <dxi-item dataField="name" [isRequired]="true" />
+      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
+      <div *dxTemplate="let data of 'descriptionTemplate'">
+        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      </div>
+      <dxi-item dataField="access">
+        <dxo-label text="Access"></dxo-label>
+        <dx-radio-group
+          [dataSource]="accessOptions"
+          [(value)]="uploadModel.access"
+          layout="horizontal"
+          [itemTemplate]="'itemTemplate'"
+        >
+          <div *dxTemplate="let item of 'itemTemplate'" class="d-flex flex-row align-items-center">
+            <span class="dx-button-text group-option-text">
+              {{ accessTypeEnum[item] }}
+            </span>
+            <div *ngIf="item === accessTypeEnum.Group; else notGroup">
+              <app-scroll-view-selector-popup
+                [title]="'Edit Access Groups'"
+                [(value)]="uploadModel.accessGroups"
+                [icon]="'edit'"
+                type="default"
+                [text]="'edit'"
+                [disabled]="uploadModel.access !== item"
+              >
+              <app-scroll-view>
+                <app-drop-down-search>
+                  <app-group-search></app-group-search>
+                </app-drop-down-search>
+                <app-access-group-data-source></app-access-group-data-source>
+                <app-scroll-view-contents>
+                  <app-group-contents [contextNavigation]="true"></app-group-contents>
+                </app-scroll-view-contents>
+              </app-scroll-view>
+              </app-scroll-view-selector-popup>
+            </div>
+          </div>
+        </dx-radio-group>
+        <dx-file-uploader
+          dialogTrigger="#upload"
+          #fileUploader
+          uploadMode="useForm"
+          [allowedFileExtensions]="['.mp4']"
+          [accept]="'video/mp4'"
+          multiple="false"
+        ></dx-file-uploader>
+      </dxi-item>
+      <dxi-item
+        itemType="button"
+        [buttonOptions]="submitButtonOptions"
+        onClick="onSubmit($event)"
+      ></dxi-item>
+    </dx-form>
+  </form>
+
+  <dx-popup *ngIf="taskIntervals.length>0" visible="true" [height]="'auto'" [showTitle]="false">
+    <ng-container *ngIf="isUploadingCompleted; else elseTemplate">
+      <div class="w-100">
+        <h5 class="text-center mx-auto">The file is succesfully uploaded! You have to wait for some time until the video is fully completed.</h5>
+        <div class="mt-2 mx-auto w-25">
+          <dx-button class="w-100" (onClick)="refresh()" text="Ok"> </dx-button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <dx-linear-gauge  id="gauge" [value]="progress*100" >
+        <dxo-range-container>
+          <dxi-range *ngFor="let i of taskIntervals" [startValue]="i.min" [endValue]="i.max" [color]="i.color">
+          </dxi-range>
+        </dxo-range-container>
+        <dxo-scale [startValue]="0" [endValue]="100" [tickInterval]="taskIntervals[0].max">
+          <dxo-label [visible]="false"></dxo-label>
+        </dxo-scale>
+        <dxo-title text="Uploading">
+          <dxo-font [size]="28"></dxo-font>
+        </dxo-title>
+      </dx-linear-gauge>
+        <h5 class="text-center">
+          {{progress*100 | number: '1.0-0'}} %
+        </h5>
+    
+    </ng-template>
+    </dx-popup>
+
+  {{ modelToJson() }}
+</div>
+

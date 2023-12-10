@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreationTimeSearchItemDirective, DropDownSearchComponent, NameSearchItemDirective, SearchItemDirective } from './drop-down-search.component';
+import { DropDownSearchComponent } from './drop-down-search.component';
 
 import {
   DxButtonComponent,
@@ -8,13 +8,18 @@ import {
   DxButtonModule,
   DxDateRangeBoxModule,
   DxDropDownButtonModule,
+  DxRangeSelectorModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
+import { TemplateRefCollectionModule } from 'src/app/template-ref-collection/template-ref-collection.module';
+import { TextSearchItemComponent } from './text-search-item/text-search-item.component';
+import { DateSearchItemComponent } from './date-search-item/date-search-item.component';
+import { DurationSearchItemComponent } from './duration-search-item/duration-search-item.component';
 
 @NgModule({
   declarations: [
-    SearchItemDirective, NameSearchItemDirective,
-    DropDownSearchComponent, CreationTimeSearchItemDirective
+   TextSearchItemComponent,
+    DropDownSearchComponent, TextSearchItemComponent, DateSearchItemComponent, DurationSearchItemComponent
   ],
   imports: [
     CommonModule,
@@ -22,11 +27,12 @@ import {
     DxDateRangeBoxModule,
     DxDropDownButtonModule,
     DxButtonModule,
-    DxButtonGroupModule
+    DxButtonGroupModule,
+    DxRangeSelectorModule,
+    TemplateRefCollectionModule
   ],
   exports: [
-    DropDownSearchComponent,
-    SearchItemDirective, NameSearchItemDirective,CreationTimeSearchItemDirective
+    DropDownSearchComponent,TextSearchItemComponent,DateSearchItemComponent,DurationSearchItemComponent
   ],
 })
 export class DropDownSearchModule {}

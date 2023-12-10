@@ -7,10 +7,10 @@
   (onClick)="show()"
 >
 </dx-button>
-<dx-popup height="750" [(visible)]="visible" contentTemplate="content">
+<dx-popup height="700" [(visible)]="visible">
   <dxi-toolbar-item [text]="title" location="center"> </dxi-toolbar-item>
   <dxi-toolbar-item widget="dxButton" [options]="closeButtonOptions" location="after">
   </dxi-toolbar-item>
-  <ng-content selector="app-scroll-view-provider"> </ng-content>
+  <ng-content selector="app-scroll-view"> </ng-content>
 </dx-popup>
 

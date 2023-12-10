@@ -1,0 +1,21 @@
+
+  <a [routerLink]="contextNavigation?[]:['/video/watch/', item.id]">
+<div [id]="'context_'+item.id" class="pic-container">
+  <img class="rounded my-1 w-100" [src]="item.indexImage | auth" draggable="false" />
+  <div class="bottom-right">
+    {{ item.duration | time}}
+  </div>
+</div>
+  <div class="text-truncate">
+    <strong>
+      {{ item.name }}
+    </strong>
+  </div>
+  </a>
+<dx-context-menu *ngIf="contextNavigation" [target]="'#context_'+item.id" [items]="contextItems">
+  <div *dxTemplate="let i of 'item'">
+    <a [routerLink]="['/video/watch/', item.id]"  target="_blank" class="text-decoration-none" >
+      Open in new tab {{ item.name }}
+    </a>
+  </div>
+</dx-context-menu>

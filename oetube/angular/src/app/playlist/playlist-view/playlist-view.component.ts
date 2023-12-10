@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PlaylistService } from '@proxy/application';
 import { PlaylistDto } from '@proxy/application/dtos/playlists';
 import { VideoListItemDto, VideoQueryDto } from '@proxy/application/dtos/videos';
 import { AccessType } from '@proxy/domain/entities/videos';
+import { lastValueFrom } from 'rxjs';
+import { LazyTabItem } from 'src/app/lazy-tab-panel/lazy-tab-panel.component';
 
 @Component({
   selector: 'app-playlist-view',
@@ -11,36 +13,29 @@ import { AccessType } from '@proxy/domain/entities/videos';
   styleUrls: ['./playlist-view.component.scss']
 })
 export class PlaylistViewComponent implements OnInit {
+  inputItems:LazyTabItem[]=[
+    {key:"details",title:"Details",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
+    {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:true}
+  ]
+  id:string
+  model:PlaylistDto
 
-  route: ActivatedRoute
 
-  service: PlaylistService
-  playlist: PlaylistDto
+
   videoQuery: VideoQueryDto = {
-    pagination:{skip:0,take:2<<32}
+    pagination:{skip:0,take:(2**31)-1}
   }
+  
   videos: VideoListItemDto[] = []
-
-  constructor(service: PlaylistService, route: ActivatedRoute){
-    this.service = service
-    this.route = route
+  constructor(private service:PlaylistService,private route:ActivatedRoute){
   }
-
-  ngOnInit(): void {
-    let id = ""
-    this.route.params.subscribe(param => {
-      id = param['id']
-
-      //Playlist lekérése
-      this.service.get(id).subscribe(x => {
-        this.playlist = x
-
-        //Playlisthez tartozó videók lekérése
-        this.service.getVideos(id, this.videoQuery).subscribe(resp=> {
-          resp.items.forEach(z=> {
-            z.duration = z.duration.split('.')[0]
-            this.videos.push(z)
-          })
+ async ngOnInit() {
+    this.route.paramMap.subscribe((params:ParamMap)=>{
+      this.id=params.get('id')
+      this.service.get(this.id).subscribe(r=>{
+        this.model=r
+        this.service.getVideos(this.id,this.videoQuery).subscribe(r=>{
+          this.videos.push(...r.items)
         })
       })
     })

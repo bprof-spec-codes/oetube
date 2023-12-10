@@ -11,28 +11,19 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { DxButtonComponent } from 'devextreme-angular';
-import { ScrollViewProviderComponent, ScrollViewComponent } from '../scroll-view.component';
+import { ScrollViewComponent } from '../scroll-view.component';
 import type { EntityDto } from '@abp/ng.core';
 
 @Component({
   selector: 'app-scroll-view-selector-popup',
   templateUrl: './scroll-view-selector-popup.component.html',
   styleUrls: ['./scroll-view-selector-popup.component.scss'],
-  providers: [
-    {
-      provide: ScrollViewProviderComponent,
-      useExisting: forwardRef(() => ScrollViewSelectorPopupComponent),
-    },
-  ],
 })
 export class ScrollViewSelectorPopupComponent<
-  TOutputListDto extends EntityDto<string> = EntityDto<string>
-> extends ScrollViewProviderComponent<TOutputListDto> implements AfterViewInit{
+  TOutputListDto extends EntityDto<string> = EntityDto<string>>{
 
-  @ContentChild(ScrollViewProviderComponent<TOutputListDto>) provider: ScrollViewProviderComponent<TOutputListDto>;
-  get scrollView(): ScrollViewComponent<TOutputListDto> {
-    return this.provider.scrollView;
-  }
+  @ContentChild(ScrollViewComponent<TOutputListDto>) scrollView: ScrollViewComponent<TOutputListDto>;
+
   @Input() title: string;
   @Input() closeButtonOptions: Partial<DxButtonComponent & any> = {
     icon: 'close',
@@ -53,17 +44,23 @@ export class ScrollViewSelectorPopupComponent<
   visible = false;
   isOpened = false;
   show() {
-    if (!this.isOpened) {
+      if (!this.isOpened) {
       this.isOpened = true;
+      this.scrollView.dataSource.reload()
+    }
+    else{
+      this.scrollView.dataSource.refresh()
     }
     this.visible = true;
   }
 
   close() {
-    this.value = this.scrollView.selectedDatas.map(s => s.id);
+    this.value = this.scrollView.dataSource.selectedDatas.map(s => s.id);
     this.valueChange.emit(this.value);
+    this.scrollView.dataSource.clearCachedData()
     this.visible = false;
   }
+
   mapButton(source: Partial<DxButtonComponent>, destination: DxButtonComponent) {
     if (source) {
       Object.keys(source).forEach(k => {
@@ -75,8 +72,5 @@ export class ScrollViewSelectorPopupComponent<
         destination.applyOptions();
       });
     }
-  }
-  setOptions(): void {
-      this._options.allowSelection=true
   }
 }

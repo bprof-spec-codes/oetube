@@ -15,8 +15,17 @@ namespace OeTube.Application.Caches
         public PlaylistCacheService(IAbpLazyServiceProvider serviceProvider, ICurrentUser currentUser, ISourceCacheFactory sourceCacheFactory, IPlaylistRepository repository) : base(serviceProvider, currentUser, sourceCacheFactory, repository)
         {
             ConfigureTotalDuration();
+            ConfigureItemsCount();
         }
-
+        protected virtual void ConfigureItemsCount()
+        {
+            RequesterDtoCache.ConfigureProperty<PlaylistItemDto, int>
+                (p => p.ItemsCount, async (key, entity, userId) => await Repository.GetAvaliableItemsCountAsync(userId, entity!));
+        }
+        public async Task<int> GetOrAddItemsCountAsync(Playlist entity)
+        {
+            return await RequesterDtoCache.GetOrAddAsync<PlaylistItemDto, int>(entity.Id, entity, p => p.ItemsCount);
+        }
         protected virtual void ConfigureTotalDuration()
         {
             RequesterDtoCache.ConfigureProperty<PlaylistDto, TimeSpan>

@@ -1,0 +1,33 @@
+.item-card-image{
+    height: 200px;
+    width: 450px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    background-position: center;
+    padding:10px;
+    box-shadow: 2px 0px 18px -3px rgba(0,0,0,0.75) inset;
+}
+.item-card{
+    height: 320px;
+    width: 300px;
+}
+.title{
+    font-size:1vw
+}
+
+.image-container img{
+    width: auto;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5%;
+}
+.creator-image-container{
+    height: 40px;
+}
+.creator-image-container img{
+    width: auto;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 5%;
+}

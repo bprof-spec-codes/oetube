@@ -2,6 +2,7 @@ import {eLayoutType, SubscriptionService} from '@abp/ng.core';
 import { collapseWithMargin, slideFromBottom } from '@abp/ng.theme.shared';
 import {AfterViewInit, Component} from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
+import { SidebarComponent } from '../../../../../../src/app/sidebar/sidebar.component';
 
 
 @Component({

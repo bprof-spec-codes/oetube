@@ -1,10 +1,9 @@
-<dx-tab-panel [selectedIndex]="selectedIndex" (selectedIndexChange)="onSelectedIndexChange($event)" [items]="tabItems" itemTemplate="itemTemplate">
-    <div *dxTemplate="let data of 'itemTemplate'">
-        <div *ngIf="data.isLoaded">
-            <ng-container
-            *ngTemplateOutlet="data.tabItemTemplate;">
-          </ng-container>
-        </div>
-    </div>
-  </dx-tab-panel>
-  
+<dx-tab-panel itemOrientation="vertical" [(selectedItem)]="selectedItem"  (selectedItemChange)="onSelectionChange($event)" [(items)]="items" itemTemplate="itemTemplate">
+  <div *dxTemplate="let data of 'itemTemplate'">
+      <div *ngIf="data.isLoaded">
+          <ng-container
+          *ngTemplateOutlet="data.appTemplate;">
+        </ng-container>
+      </div>
+  </div>
+</dx-tab-panel>
