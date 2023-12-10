@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute,Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { GroupDto } from '@proxy/application/dtos/groups';
 import { GroupService } from '@proxy/application';
@@ -11,43 +11,60 @@ import { AppTemplate } from 'src/app/template-ref-collection/template-ref-collec
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.component.html',
-  styleUrls: ['./group-details.component.scss']
+  styleUrls: ['./group-details.component.scss'],
 })
 export class GroupDetailsComponent implements OnInit {
+  inputItems: LazyTabItem[] = [
+    {
+      key: 'members',
+      title: 'Members',
+      authRequired: false,
+      onlyCreator: false,
+      isLoaded: true,
+      visible: true,
+    },
+    {
+      key: 'edit',
+      title: 'Edit',
+      authRequired: true,
+      onlyCreator: true,
+      isLoaded: false,
+      visible: false,
+    },
+  ];
 
+  height: number = 415;
+  id: string;
+  model: GroupDto;
+  currentUser: CurrentUser;
+  selectedIndex: number;
 
-  inputItems:LazyTabItem[]=[
-    {key:"members",title:"Members",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
-    {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:false}
-  ]
-
-  id:string
-  model:GroupDto
-  currentUser:CurrentUser
-  selectedIndex:number
-
-  constructor(private groupService:GroupService,private activatedRoute:ActivatedRoute,private title:Title,currentUserService:CurrentUserService,private router:Router){
-    this.currentUser=currentUserService.getCurrentUser()
+  constructor(
+    private groupService: GroupService,
+    private activatedRoute: ActivatedRoute,
+    private title: Title,
+    currentUserService: CurrentUserService,
+    private router: Router
+  ) {
+    this.currentUser = currentUserService.getCurrentUser();
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(v=>{
-      this.id=v.id
-      this.groupService.get(this.id).subscribe(r=>{
-        this.model=r
-      })
-
-    })
-    if(this.id==undefined){
-      return
+    this.activatedRoute.params.subscribe(v => {
+      this.id = v.id;
+      this.groupService.get(this.id).subscribe(r => {
+        this.model = r;
+      });
+    });
+    if (this.id == undefined) {
+      return;
     }
   }
-  onDeleted(){
-    this.router.navigate(["/group"])
+  onDeleted() {
+    this.router.navigate(['/group']);
   }
-  onSubmitted(v:GroupDto){
-    this.selectedIndex=0
-    this.model=v
+  onSubmitted(v: GroupDto) {
+    this.selectedIndex = 0;
+    this.model = v;
   }
-
 }

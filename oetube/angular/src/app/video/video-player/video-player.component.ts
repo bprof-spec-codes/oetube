@@ -24,6 +24,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   public playlist?: PlaylistDto;
 
   @Input() video?: VideoDto;
+
   public resolutionIndex: number = 0;
 
   constructor(
