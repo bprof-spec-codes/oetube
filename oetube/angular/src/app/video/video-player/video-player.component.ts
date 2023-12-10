@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
@@ -23,12 +23,12 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   playlistId?: string;
   public playlist?: PlaylistDto;
 
-  public video?: VideoDto;
+  @Input() video?: VideoDto;
+
   public resolutionIndex: number = 0;
 
   constructor(
     private route: ActivatedRoute,
-    private videoAppService: VideoAppService,
     private playlistService: PlaylistService
   ) {}
 
@@ -36,9 +36,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.playlistId = params['playlist']
-      this.videoAppService.get(this.id).subscribe(data => {
-        this.video = data;
-      });
       if (this.playlistId) {
         this.playlistService.get(this.playlistId).subscribe(data => {
           this.playlist = data

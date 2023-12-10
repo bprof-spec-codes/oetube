@@ -1,0 +1,13 @@
+
+<app-lazy-tab-panel [inputItems]="inputItems"  [creatorId]="model?.creator?.id">
+    <div *appTemplate="'watch'">
+        <div [style.height.px]="1000">
+
+        <app-video-player [video]="model"></app-video-player>
+        </div>
+    </div>
+    <div *appTemplate="'edit'">
+        <app-video-update  [inputModel]="model"></app-video-update>
+    </div>
+</app-lazy-tab-panel>
+

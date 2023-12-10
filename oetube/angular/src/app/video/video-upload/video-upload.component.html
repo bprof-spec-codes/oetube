@@ -28,7 +28,7 @@
                 [text]="'edit'"
                 [disabled]="uploadModel.access !== item"
               >
-              <app-scroll-view>
+              <app-scroll-view [initialLoad]="false">
                 <app-drop-down-search>
                   <app-group-search></app-group-search>
                 </app-drop-down-search>

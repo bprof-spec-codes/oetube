@@ -26,6 +26,8 @@ import {
   DxTemplateModule,
   DxTextAreaModule,
   DxTextBoxModule,
+  DxTileViewComponent,
+  DxTileViewModule,
   DxTreeListModule,
   DxValidatorModule,
 } from 'devextreme-angular';
@@ -34,7 +36,7 @@ import { ScrollViewModule } from './scroll-view/scroll-view.module';
 import { RouterModule } from '@angular/router';
 import { LazyTabPanelModule } from './lazy-tab-panel/lazy-tab-panel.module';
 import { ImageUploaderModule } from './image-uploader/image-uploader.module';
-import { DxoPagerModule, DxoPagingModule } from 'devextreme-angular/ui/nested';
+import { DxiItemModule, DxoPagerModule, DxoPagingModule } from 'devextreme-angular/ui/nested';
 import { TemplateRefCollectionModule } from './template-ref-collection/template-ref-collection.module';
 import { SharedModule } from './shared/shared.module';
 import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
@@ -49,12 +51,12 @@ import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
     ImageUploaderModule,
     TemplateRefCollectionModule,
     ScrollViewModule,
-    
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
     DxFormModule,
-
+    DxTileViewModule,
+    DxiItemModule,
     DxDropDownBoxModule,
     DxListModule,
     DxTextAreaModule,
@@ -124,7 +126,8 @@ import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
     DxoPagingModule,
     DxDataGridModule,
     DxScrollViewModule,
-
+    DxTileViewModule,
+    DxiItemModule,
 
   ],
 })

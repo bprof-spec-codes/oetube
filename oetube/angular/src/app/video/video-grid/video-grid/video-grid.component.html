@@ -34,7 +34,8 @@
 
         <a
           *ngIf="video.id !== currentVideoId; else name"
-          [routerLink]="'/video/watch/' + video.id"
+          [routerLink]="['/video', video.id,currentPlaylistId??'']"
+
           class="h5 my-1 stretched-link text-decoration-none text-reset"
           >{{ video.name }}</a
         >

@@ -23,6 +23,10 @@ import { PlaylistVideoDataSourceComponent } from './video-explore/playlist-video
 import { VideoUploadComponent } from './video-upload/video-upload.component';
 import { VideoScrollViewModule } from './video-scroll-view.module';
 import { GroupScrollViewModule } from '../group/group-scroll-view.module';
+import { VideoDetailsComponent } from './video-details/video-details.component';
+import { PlaylistPlayerComponent } from './playlist-player/playlist-player.component';
+import { VideoUpdateComponent } from './video-update/video-update.component';
+import { VideoFrameSelectorComponent } from './video-update/video-frame-selector/video-frame-selector.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import { GroupScrollViewModule } from '../group/group-scroll-view.module';
     ControlBarComponent,
     VideoGridComponent,
     SearchBarComponent,
+    VideoDetailsComponent,
+    PlaylistPlayerComponent,
+    VideoFrameSelectorComponent,
     VideoUploadComponent,
+    VideoUpdateComponent
   ],
   imports: [
     VideoRoutingModule,
