@@ -89,26 +89,17 @@ namespace OeTube.Data.Repositories
                 return new PaginationResult<TListEntity>();
             }
 
-            string defaultSorting = "id asc";
             var pagination = args?.Pagination ?? new Pagination()
             {
                 Skip = 0,
                 Take = 10
             };
-            try
+
+            if (!string.IsNullOrEmpty(args?.Sorting))
             {
-
-                if (!string.IsNullOrEmpty(args?.Sorting))
-                {
-                    queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(true, args.Sorting);
-                }
-                queryable = queryable.Skip(pagination.Skip).Take(pagination.Take);
+                queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(true, args.Sorting);
             }
-            catch(Exception ex) { 
-
-                queryable = queryable.OrderByIf<TListEntity, IQueryable<TListEntity>>(true,defaultSorting);
-                queryable = queryable.PageBy(pagination.Skip, pagination.Take);
-            }
+            queryable = queryable.Skip(pagination.Skip).Take(pagination.Take);
 
 
 

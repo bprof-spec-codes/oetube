@@ -74,7 +74,7 @@ namespace OeTube.Data.SeedContributors
         [UnitOfWork]
         public async Task<Group> SeedGroupAsync(string name, Abp.IdentityUser user)
         {
-            IGroupQueryArgs args = new GroupQueryArgs() { Name = name};
+            IGroupQueryArgs args = new GroupQueryArgs() { Name = name,Sorting=$"{nameof(Group.Name)} asc"};
             Group? group;
             var result = await _groupRepository.GetListAsync(args, includeDetails: true);
             if (result.Items.Count > 0)
