@@ -1,0 +1,23 @@
+<form class="dx-card p-5 h-100" (submit)="onSubmit($event)" *ngIf="model">
+    <dx-form [formData]="model" [labelLocation]="'left'">
+      <dxi-item dataField="name" [isRequired]="true" />
+      <dxi-item dataField="aboutMe" [template]="'descriptionTemplate'" />
+      <div *dxTemplate="let data of 'descriptionTemplate'">
+        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      </div>
+      <dxi-item dataField="image">
+        <div *dxTemplate="let data">
+          <app-image-uploader [height]="170"
+            [name]="data.dataField"
+            [(value)]="data.component.option('formData')[data.dataField]"
+            [defaultImgUrl]="defaultImageUrl"
+          ></app-image-uploader>
+        </div>
+      </dxi-item>
+      <dxi-item
+        itemType="button"
+        [buttonOptions]="submitButtonOptions"
+        onClick="onSubmit($event)"
+      ></dxi-item>
+    </dx-form>
+  </form>

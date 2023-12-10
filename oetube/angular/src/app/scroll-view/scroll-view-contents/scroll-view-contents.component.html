@@ -1,0 +1,10 @@
+<div class="col d-flex w-auto justify-content-end" *ngIf="items?.length > 1">
+    <dx-button-group
+      [items]="items"
+      keyExpr="key"
+      (onSelectionChanged)="onSelectionChanged($event)"
+      [selectedItems]="[selectedItem]"
+      [selectionMode]="'single'"
+    >
+    </dx-button-group>
+  </div>

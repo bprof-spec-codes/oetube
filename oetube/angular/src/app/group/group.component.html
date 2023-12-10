@@ -1,0 +1,8 @@
+<app-lazy-tab-panel [inputItems]="inputItems">
+    <div *appTemplate="'explore'">
+        <app-group-explore></app-group-explore>
+    </div>
+    <div *appTemplate="'create'">
+        <app-group-create (submitted)="onSubmitted($event)"></app-group-create>
+    </div>
+</app-lazy-tab-panel>

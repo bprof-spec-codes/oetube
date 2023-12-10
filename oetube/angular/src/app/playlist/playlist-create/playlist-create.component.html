@@ -1,0 +1,65 @@
+<main class="component-title">
+    <h4>Create you own playlist</h4>
+    <form (submit)="onSubmit($event)">
+        <dx-form [formData]="playlistModel" labelLocation="left">
+            <dxi-item dataField="name" [isRequired]="true"/>
+            <dxi-item dataField="description" [template]="'descriptionTemplate'"/>
+            <div *dxTemplate="let data of 'descriptionTemplate'">
+                <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+            </div>
+            <dxi-item dataField="image">
+                <div *dxTemplate="let data">
+                  <app-image-uploader
+                    [name]="data.dataField"
+                    [(value)]="data.component.option('formData')[data.dataField]"
+                  ></app-image-uploader>
+                </div>
+              </dxi-item>
+          
+            <dxi-item dataField="items">
+                <div *dxTemplate="let data">
+                    <app-scroll-view-selector-popup
+                    [title]="'Edit items'"
+                    [(value)]="data.component.option('formData')[data.dataField]"
+                    [icon]="'edit'"
+                    type="normal"
+                    [text]="'edit'"
+                  >
+                  <app-scroll-view>
+                    <app-drop-down-search>
+                      <app-video-search></app-video-search>
+                    </app-drop-down-search>
+                    <app-playlist-video-data-source></app-playlist-video-data-source>
+                    <app-scroll-view-contents>
+                      <app-video-contents [contextNavigation]="true"></app-video-contents>
+                    </app-scroll-view-contents>
+                  </app-scroll-view>
+                  </app-scroll-view-selector-popup>
+                </div>
+            </dxi-item>
+            <dxi-item
+            itemType="button"
+            [buttonOptions]="submitButtonOptions"
+            onClick="onSubmit($event)"
+        ></dxi-item>
+        </dx-form>
+    </form>
+    <!--
+    <dx-popup
+        id="success-popup"
+        [(visible)]="isPopupVisible"
+        [hideOnOutsideClick]="true"
+        [showTitle]="true"
+        (onHidden)="navigateToPlaylists()"
+        height="70vh"
+        width="50vw"
+        title="Success">
+        <p>Creator: {{ successfulPlaylistCreation.CreatorName }}</p><hr/>
+        <p>Name: {{ successfulPlaylistCreation.Name }}</p><hr/>
+        <div *ngIf="successfulPlaylistCreation.Description != ''">
+            <p>Description: {{ successfulPlaylistCreation.Description }}</p><hr/>
+        </div>
+        <img id="playlist-image" src="{{ successfulPlaylistCreation.Image }}"/>
+    </dx-popup>
+    -->
+</main>

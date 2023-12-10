@@ -1,0 +1,14 @@
+.volume-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  .icon {
+    position: relative;
+  }
+
+  .bar {
+    width: 100px;
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,17 @@
+<div class="volume-control">
+  <app-play-control
+    class="icon"
+    [icon]="icon"
+    [title]="title"
+    (click)="onVolumeClick()"
+  ></app-play-control>
+  <dx-slider
+    class="bar"
+    [min]="min"
+    [max]="maxVolumeValue"
+    [value]="volume"
+    (onValueChanged)="onInput($event)"
+    [step]="step"
+  >
+  </dx-slider>
+</div>

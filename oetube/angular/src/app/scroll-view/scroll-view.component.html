@@ -1,0 +1,147 @@
+<div id=scroll-view class="dx-card p-2">
+  <div class="card-body">
+      <ng-content select="app-drop-down-search"></ng-content>
+
+    <div class="row d-flex flex-wrap w-auto m-1">
+      <div class="col d-flex w-auto justify-content-start">
+        <dx-button class="mx-1" hint="Refresh" icon="refresh" (onClick)="refresh()"></dx-button>
+        <dx-button
+          class="mx-1"
+          icon="arrowup"
+          hint="Scroll Top"
+          (onClick)="scrollTop()"
+          [disabled]="reachedTop"
+        ></dx-button>
+        <dx-button
+          *ngFor="let item of actionButtons"
+          class="mx-1"
+          [hint]="item.name"
+          [icon]="item.icon"
+          [disabled]="item.disabled && item.disabled()"
+          (onClick)="item.action()"
+        ></dx-button>
+      </div>
+
+      <div class="col d-flex w-auto justify-content-end" *ngIf="contents?.items?.length>1">
+        <ng-content select="app-scroll-view-contents">
+        </ng-content>
+      </div>
+    </div>
+    <div class="d-flex flex-row w-100 justify-content-center flex-wrap">
+      <div
+        class="m-1 badge rounded opacity-75 dx-theme-border-color-as-background-color dx-theme-text-color row text-truncate"
+        *ngFor="let item of activeFilters"
+      >
+        <span class="bold align-text-center">
+          {{ item.display }}
+        </span>
+        <dx-button
+          [stylingMode]="'outlined'"
+          class="dx-theme-text-color-as-background-color"
+          type="default"
+          icon="close"
+          width="20"
+          height="20"
+          style="min-width: 0px"
+          (onClick)="removeFilter(item.key)"
+        ></dx-button>
+      </div>
+    </div>
+    <hr />
+    <div class="d-flex flex-row" [style.height.px]="height">
+      <div class="d-flex flex-column w-25" *ngIf="dataSource?.allowSelection">
+        <strong class="dx-button-text mx-auto">Selected Items</strong>
+        <dx-list
+          [(items)]="dataSource.selectedDatas"
+          keyExpr="id"
+          allowItemDeleting="true"
+          itemDeleteMode="static"
+          [(height)]="height"
+          noDataText="Drag and drop items here to make a selection"
+          (onItemDeleted)="onSelectedDataDelete($event)"
+          (onItemClick)="onSelectedDataClick($event)"
+          itemTemplate="itemTemplate"
+        >
+          <div *dxTemplate="let data of 'itemTemplate'">
+            <div id="selected-{{ data.id }}">
+              <span>
+                {{ data[selectedDatasDisplayExpr] }}
+              </span>
+            </div>
+            <dx-popover target="#selected-{{ data.id }}" showEvent="click" position="bottom">
+              <div>
+                <ng-container
+                  *ngTemplateOutlet="
+                  contents.selectedItem.appTemplate;
+                  context: { $implicit: data }
+                  "
+                >
+                </ng-container>
+              </div>
+            </dx-popover>
+          </div>
+          <dxo-item-dragging
+            [allowReordering]="true"
+            [data]="dataSource.selectedDatas"
+            [onAdd]="onDataAdd"
+            group="datas"
+          >
+            <div style.height="400 px"></div>
+          </dxo-item-dragging>
+        </dx-list>
+        <dx-button
+          (onClick)="selectedDatasClear()"
+          class="w-75 mx-auto"
+          type="default"
+          text="Clear all"
+        ></dx-button>
+      </div>
+      <div class="h-100 border" *ngIf="dataSource?.allowSelection"></div>
+      <dx-scroll-view
+        class="px-2 card-body w-25"
+        showScrollbar="always"
+        scrollByThumb="true"
+        [bounceEnabled]="false"
+        reachBottomText="Loading"
+        (onScroll)="onScroll($event)"
+        [(height)]="height"
+        fade
+      >
+        <div
+          [class]="contents.selectedItem.layoutClassList"
+          *ngIf="contents?.selectedItem"
+        >
+          <dx-draggable
+            *ngFor="let item of dataSource.cachedData"
+            [data]="item"
+            group="datas"
+            clone="true"
+            dragTemplate="dragTemplate"
+            (onDragStart)="onDragStart($event)"
+          >
+            <div *dxTemplate="let data of 'dragTemplate'">
+              <div class="dragged-item">
+                <ng-container
+                  *ngTemplateOutlet="
+                  contents.selectedItem.appTemplate;
+                  context: { $implicit: item }
+                  "
+                >
+                </ng-container>
+              </div>
+            </div>
+            <div class="m-2" [id]="item.id">
+              <ng-container
+                *ngTemplateOutlet="
+                contents.selectedItem.appTemplate;
+                context: { $implicit: item }
+                "
+              >
+              </ng-container>
+            </div>
+          </dx-draggable>
+        </div>
+      </dx-scroll-view>
+    </div>
+  </div>
+</div>

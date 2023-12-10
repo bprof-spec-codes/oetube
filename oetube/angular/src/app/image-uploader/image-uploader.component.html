@@ -1,0 +1,21 @@
+<div [style.height.px]="height" class="d-flex flex-row my-auto uploader card">
+  <dx-file-uploader
+    class="my-auto"
+    [width]="'40%'"
+    accept="image/*"
+    [(value)]="files"
+    (onValueChanged)="onValueChange($event)"
+    #fileUploader
+    uploadMode="useForm"
+    [showFileList]="false"
+    multiple="false"
+  ></dx-file-uploader>
+  <div [style.maxHeight.px]="height-20" class="img-container my-auto">
+    <ng-container *ngIf="imageUrl; else elseTemplate">
+      <img [style.maxHeight.px]="height-30" *ngIf="imageUrl" class="mx-auto my-auto" [src]="imageUrl" />
+    </ng-container>
+    <ng-template #elseTemplate>
+      <p class="mx-auto my-auto">No image selected</p>
+    </ng-template>
+  </div>
+</div>

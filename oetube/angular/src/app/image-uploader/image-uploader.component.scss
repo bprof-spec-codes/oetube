@@ -1,0 +1,10 @@
+.img-container{
+    width: 200px;
+    max-width: 200px;
+    display: flex;
+}
+img{
+    max-width: 190px;
+    max-height: 190px;
+    object-fit:cover;
+}

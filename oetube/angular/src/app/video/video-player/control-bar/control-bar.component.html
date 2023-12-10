@@ -1,0 +1,39 @@
+<div class="video-controls">
+  <app-video-seeker
+    class="bar"
+    [max]="duration"
+    [value]="currentProgress"
+    [label]="ariaLabel()"
+    (valueChange)="onChange($event)"
+  ></app-video-seeker>
+  <div class="controls">
+    <app-play-control
+      [icon]="iconPlaying.value"
+      [title]="iconPlaying.name"
+      (click)="onPlayClick()"
+    ></app-play-control>
+    <div class="mt-3">
+      <app-time [currentProgress]="currentProgress" [duration]="duration"></app-time>
+    </div>
+
+    <div class="dropdown">
+      <button *ngIf="resolutions && resolutions.length > 0" class="dropbtn">
+        {{ resolutions[resolutionIndex] }}
+      </button>
+      <div class="dropdown-content">
+        <a *ngFor="let resolution of resolutions; index as i" (click)="changeResolution(i)">{{
+          resolution
+        }}</a>
+      </div>
+    </div>
+
+    <div class="full-screen">
+      <app-volume-control></app-volume-control>
+      <app-play-control
+        icon="fullscreen"
+        title="Fullscreen"
+        (click)="onFullscreen()"
+      ></app-play-control>
+    </div>
+  </div>
+</div>

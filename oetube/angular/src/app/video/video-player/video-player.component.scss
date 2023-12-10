@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 65vw;
+  height: 65vh;
+  margin: 2em 2em 0 2em;
+
+  .col-videos {
+    
+    &__playlist {
+      background: #DDDDDD;
+    }
+  }
+}
