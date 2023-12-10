@@ -16,7 +16,6 @@ export class PlaylistDataSourceComponent extends DataSourceProviderDirective<Pla
   }
   @ViewChild(ScrollViewDataSourceComponent) _scrollViewDataSourceComponent:ScrollViewDataSourceComponent<PlaylistItemDto>
   constructor(public service:PlaylistService){
-    debugger
     super()
   }
   @Input() creatorId:string

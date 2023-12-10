@@ -15,26 +15,26 @@ import { UserUpdateComponent } from './user-update/user-update.component';
 import { VideoModule } from '../video/video.module';
 import { PlaylistModule } from '../playlist/playlist.module';
 import { GroupModule } from '../group/group.module';
-import { UserScrollViewModule } from './user-scroll-view.module';
-import { GroupScrollViewModule } from '../group/group-scroll-view.module';
-import { VideoScrollViewModule } from '../video/video-scroll-view.module';
-import { PlaylistScrollViewModule } from '../playlist/playlist-scroll-view.module';
 
 
 @NgModule({
   declarations: [
-    UserComponent,
-    UserExploreComponent,
-    UserDetailsComponent,
-    UserUpdateComponent,
+    UserSearchComponent,
+    UserDataSourceComponent,
+    UserContentsComponent,
+    MemberDataSourceComponent,
+    UserTileItemComponent,
+    UserListItemComponent,
   ],
   imports: [
-    UserRoutingModule,
-    UserScrollViewModule,
-    GroupScrollViewModule,
-    VideoScrollViewModule,
-    PlaylistScrollViewModule,
     CollectorModule,
   ],
+  exports:[ 
+    UserSearchComponent,
+    UserDataSourceComponent,
+    UserContentsComponent,
+    MemberDataSourceComponent,
+    UserTileItemComponent,
+    UserListItemComponent]
 })
-export class UserModule { }
+export class UserScrollViewModule { }

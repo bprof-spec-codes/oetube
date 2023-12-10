@@ -16,6 +16,8 @@ import { GroupTileItemComponent } from './group-explore/group-contents/group-til
 import { GroupListItemComponent } from './group-explore/group-contents/group-list-item/group-list-item.component';
 import { GroupContentsComponent } from './group-explore/group-contents/group-contents.component';
 import { CollectorModule } from '../collector.module';
+import { UserScrollViewModule } from '../user/user-scroll-view.module';
+import { GroupScrollViewModule } from './group-scroll-view.module';
 @NgModule({
   declarations: [
     GroupComponent,
@@ -24,27 +26,13 @@ import { CollectorModule } from '../collector.module';
     GroupUpdateComponent,
     GroupExploreComponent,
     GroupDetailsComponent,
-    GroupSearchComponent,
     GroupDetailsComponent,
-    GroupDataSourceComponent,
-    AccessGroupDataSourceComponent,
-    GroupContentsComponent,
-    GroupTileItemComponent,
-    GroupListItemComponent,
   ],
   imports: [
     CollectorModule,
     GroupRoutingModule,
-    UserModule
-  ],
-  exports: [
-    GroupSearchComponent,
-    GroupDetailsComponent,
-    GroupDataSourceComponent,
-    AccessGroupDataSourceComponent,
-    GroupTileItemComponent,
-    GroupContentsComponent,
-    GroupListItemComponent,
+    UserScrollViewModule,
+    GroupScrollViewModule
   ],
 })
 export class GroupModule {}

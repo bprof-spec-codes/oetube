@@ -25,6 +25,8 @@ namespace OeTube.Application.Dtos.OeTubeUsers
             destination.Id = source.Id;
             destination.Name = source.Name;
             destination.EmailDomain = source.EmailDomain;
+
+            destination.AboutMe = source.AboutMe;
             destination.CreationTime = source.CreationTime;
             destination.Image = _urlService.GetImageUrl(source.Id);
             return destination;

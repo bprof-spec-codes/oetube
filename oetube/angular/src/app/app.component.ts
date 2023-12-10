@@ -1,4 +1,6 @@
 import { RoutesService } from '@abp/ng.core';
+import { CurrentUserComponent, eThemeBasicComponents } from '@abp/ng.theme.basic';
+import { NavItemsService } from '@abp/ng.theme.shared';
 import { Component } from '@angular/core';
 
 @Component({
@@ -12,6 +14,7 @@ import { Component } from '@angular/core';
   `,
 })
 export class AppComponent {
-
+constructor(private navItems:NavItemsService){
+}
 
 }

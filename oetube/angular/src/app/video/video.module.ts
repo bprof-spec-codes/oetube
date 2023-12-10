@@ -21,6 +21,8 @@ import { CollectorModule } from '../collector.module';
 import { GroupModule } from '../group/group.module';
 import { PlaylistVideoDataSourceComponent } from './video-explore/playlist-video-data-source/playlist-video-data-source.component';
 import { VideoUploadComponent } from './video-upload/video-upload.component';
+import { VideoScrollViewModule } from './video-scroll-view.module';
+import { GroupScrollViewModule } from '../group/group-scroll-view.module';
 
 @NgModule({
   declarations: [
@@ -34,27 +36,13 @@ import { VideoUploadComponent } from './video-upload/video-upload.component';
     ControlBarComponent,
     VideoGridComponent,
     SearchBarComponent,
-    VideoDataSourceComponent,
-    VideoContentsComponent,
-    VideoSearchComponent,
-    VideoTileItemComponent,
-    VideoListItemComponent,
     VideoUploadComponent,
-    PlaylistVideoDataSourceComponent
   ],
   imports: [
     VideoRoutingModule,
-    GroupModule,
     CollectorModule,
-    SidebarModule
-  ],
-  exports:[
-    VideoDataSourceComponent,
-    VideoContentsComponent,
-    VideoSearchComponent,
-    PlaylistVideoDataSourceComponent,
-    VideoTileItemComponent,
-    VideoListItemComponent,
+    GroupScrollViewModule,
+    VideoScrollViewModule
   ],
 })
 export class VideoModule {}
