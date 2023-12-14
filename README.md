@@ -50,3 +50,22 @@
 	+ Members: TestUser4, TestUser5, TestUser3
 + Empty
 	+ Creator: TestUser1
+
+## UI ismertető
+  ### Home
+  #### NEM Bejelentkezett felhasználó
+  Bejelentkezéstől függetlenül hozzáfér a felhasználó ehhez az oldalhoz. Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van, illetve megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
+
+  ### Playlist
+  Ezen a felületen 3 tab-ot is elkülöníthetünk:
+  + Create
+    Lejátszási listákat lehet létrehozni, a megfelelő adatok megadása után. Ezen adatok közül a Name az kötelező, viszont a Description és a képfeltöltés opcionális
+  + Playlists
+  + Edit
+  ### Group
+
+
+
+# Probléma jegyzőkönyv
+## Backend
+## Frontend
