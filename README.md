@@ -58,11 +58,11 @@
 
   ### Playlist
   Ezen a felületen 3 tab-ot is elkülöníthetünk:
-  + Create
+  + Create </br>
     Lejátszási listákat lehet létrehozni, a megfelelő adatok megadása után. Ezen adatok közül a Name az kötelező, viszont a Description és a képfeltöltés opcionális. Amennyiben nem ad meg a felhasználó képet, akkor egy alapértelmezett kép, lesz a lejátszási lista indexképe. Létrehozáskor azonnal tudunk videókat is hozzáadni a listához. Ezeket a videókat egy pop-up ablakon keresztül tudjuk hozzáadni a listához.
-  + Playlists
+  + Playlists </br>
     Kilistázásra kerül minden playlist amihez hozzáfér a felhasználó. Amennyiben egy lejátszási lista üres vagy nincs benne olyan tartalom, amihez jogosultságunk van és nem mi készítettük, akkor az a lejátszási lista nem jelenik meg.
-  + Edit
+  + Edit </br>
     Meglévő lejátszási lista minden paraméterét tudjuk módosítani.
   ### Group
 
