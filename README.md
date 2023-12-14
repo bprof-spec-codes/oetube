@@ -53,7 +53,6 @@
 
 ## UI ismertető
   ### Home
-  #### NEM Bejelentkezett felhasználó
   Bejelentkezéstől függetlenül hozzáfér a felhasználó ehhez az oldalhoz. Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van, illetve megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
 
   ### Playlist
