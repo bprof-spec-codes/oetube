@@ -53,7 +53,20 @@
 
 ## UI ismertető
   ### Home
-  Bejelentkezéstől függetlenül hozzáfér a felhasználó ehhez az oldalhoz. Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van, illetve megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
+  #### Explore
+  Bejelentkezéstől függetlenül hozzáfér a felhasználó ehhez az oldalhoz.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/00b4f8e7-8c3b-439a-9737-d62e4bb8683a)
+
+  
+  Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van, illetve megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/99b139f8-7885-47fa-814c-77509f1b87e9)
+
+  #### Upload
+  Ezen a felületen lehet feltölteni a kiválasztott videó fájlt. A Name mező kitöltése kötelező, viszont a Description mező opcionális. Ezen két paraméteren kívül értelemszerűen ki kell választani a videófájlt a SELECT FILE gomb megnyomása után.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/1b5e9127-c3a2-42ba-9b47-b86a7626bf35)
+Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd feltöltés megkezdődik. A konverzió állapotát egy pop-up ablakon lehet nyomonkövetni.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/880058ee-8f9c-47a6-bec1-2c23a21c3df1)
+
 
   ### Playlist
   Ezen a felületen 3 tab-ot is elkülöníthetünk:
