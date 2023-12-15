@@ -58,8 +58,9 @@
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/00b4f8e7-8c3b-439a-9737-d62e4bb8683a)
 
   
-  Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van, illetve megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
-  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/99b139f8-7885-47fa-814c-77509f1b87e9)
+  Bejelentkezett felhasználó nem csak a publikus videókhoz fér hozzá, hanem minden olyan videóhoz, amihez jogosultsága van. Az alábbi képen egy extra videóval bővül ki a lista, amely a felhasználóhoz tartozó privát videó. Továbbá megjelenik egy extra tab (Upload), ahol a felhasználónak lehetősége van feltölteni videót.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/fde7468f-e7fb-416a-ba84-e657c21b6a0e)
+
 
   #### Upload
   Ezen a felületen lehet feltölteni a kiválasztott videó fájlt. A Name mező kitöltése kötelező, viszont a Description mező opcionális. Ezen két paraméteren kívül értelemszerűen ki kell választani a videófájlt a SELECT FILE gomb megnyomása után.
