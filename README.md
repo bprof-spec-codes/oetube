@@ -108,6 +108,14 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   A Name paraméter kivételével minden egyéb paraméter opcionális. Fel lehet tölteni képet, viszont, ha nem tölt fel képet a felhasználó, akkor egy alapértelmezett indexkép rendelődik a csoporthoz. A megszokott stuktúra alapján egy pop-up ablakban lehet kiválasztani a csoporthoz tartozó felhasználókat. Ezen lépések utána SUBMIT gomb megnyomása után a csoport elkészül.
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/536fa416-2bd0-4a89-ab73-6a97b51b700f)
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/e2206b9e-acfa-4843-9693-18d49d968545)
+  
+  #### Group - MEMBERS
+  A kiválasztott csoport adatai jelennek meg, illetve az oda tartozó felhasználók kerülnek kilistázásra.
+  **MÉG NEM MŰKÖDIK A GROUP MEMBERS**
+
+  #### Group - Edit
+  A kiválasztott csoport szerkeszthető.
+  **MÉG NEM MŰKÖDIK A GROUP EDIT**
 
 
 
