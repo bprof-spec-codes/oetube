@@ -64,7 +64,6 @@ export class ScrollViewSelectorPopupComponent<
   mapButton(source: Partial<DxButtonComponent>, destination: DxButtonComponent) {
     if (source) {
       Object.keys(source).forEach(k => {
-        debugger;
         const value = source[k];
         if (value) {
           destination[k] = value;
