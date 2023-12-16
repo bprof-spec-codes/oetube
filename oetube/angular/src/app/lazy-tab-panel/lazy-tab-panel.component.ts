@@ -22,7 +22,7 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
   private _creatorId:string
   @Input() set  creatorId(v:string){
     if(v!=this.creatorId){
-      v=this.creatorId;
+      this._creatorId=v;
       this.filterItems()
     }
   }
@@ -40,6 +40,7 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
     const currentUserId=this.currentUserService.getCurrentUser().id
     
     this.items.forEach((v,i)=>{
+      debugger
       const authResult=(!v.authRequired || currentUserId!=undefined)
       if(!authResult){
         v.visible=false

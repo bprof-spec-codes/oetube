@@ -8,7 +8,7 @@ import { UserDto } from '@proxy/application/dtos/oe-tube-users';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.scss'],
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent {
   inputItems: LazyTabItem[] = [
     {
       key: 'details',
@@ -51,16 +51,21 @@ export class UserDetailsComponent implements OnInit {
       visible: true,
     },
   ];
-  height: number = 415;
+  height: string = "60vh";
   model: UserDto;
   id: string;
-  constructor(private userService: OeTubeUserService, private route: ActivatedRoute) {}
-  ngOnInit(): void {
+  selectedIndex:number=0
+
+  constructor(private userService: OeTubeUserService, private route: ActivatedRoute) {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.id = params.get('id');
+      this.id = params.get('id')
       this.userService.get(this.id).subscribe(r => {
         this.model = r;
       });
     });
   }
+  onSubmitted(e){
+    window.location.reload()
+  }
+
 }

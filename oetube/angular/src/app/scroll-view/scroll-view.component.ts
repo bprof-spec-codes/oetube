@@ -67,7 +67,7 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   @ContentChild(DropDownSearchComponent,{descendants:true}) dropDownSearch: DropDownSearchComponent;
   @ViewChild("search") searchContainer: ElementRef<any>
 
-
+  @Input() height:string="58vh"
   @ContentChild(DataSourceProviderDirective)
   public dataSourceProvider: DataSourceProviderDirective<TOutputListDto>;
 
@@ -176,6 +176,10 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
 
     _this.dataSource.selectItem(e.fromData);
   }
+  onDoubleClick(e){
+    this.dataSource.selectItem(e)
+  }
+  
 }
 
 export type ActionButton = {

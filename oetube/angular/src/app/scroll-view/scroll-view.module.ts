@@ -28,6 +28,7 @@ import { DateSearchItemComponent } from './drop-down-search/date-search-item/dat
 import { ScrollViewDataSourceComponent } from './scroll-view-data-source/scroll-view-data-source.component';
 import { ScrollViewContentsComponent } from './scroll-view-contents/scroll-view-contents.component';
 import { RouterModule } from '@angular/router';
+import { DoubleClickDirective } from '../double-click.directive';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     TemplateRefCollectionModule,
     CommonModule,
+    DoubleClickDirective,
     DxScrollViewModule,
     DxDraggableModule,
     DxButtonModule,

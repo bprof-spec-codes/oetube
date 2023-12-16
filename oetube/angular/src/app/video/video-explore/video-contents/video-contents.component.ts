@@ -16,5 +16,4 @@ export class VideoContentsComponent extends TemplateRefCollectionComponent<Scrol
     {key:"list",hint:"List",icon:"fields",layoutClassList:"d-flex flex-row flex-wrap justify-content-center"}
   ]
   @Input() contextNavigation:boolean=false
-  @Input() allowSelection:boolean
 }

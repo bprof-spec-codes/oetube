@@ -10,9 +10,7 @@ img {
 }
 
 ::ng-deep .dx-sortable{
-  height: 50vh !important;
-  flex-grow: 1;
-  //height: inherit !important;
+  min-height: 50vh !important;
 }
 
 .dragged-item{
