@@ -10,4 +10,5 @@ export class VideoTileItemComponent {
   @Input() item:VideoListItemDto
   @Input() contextNavigation:boolean=true
   @Input() contextItems=[""]
+  @Input() getRoute:Function
 }

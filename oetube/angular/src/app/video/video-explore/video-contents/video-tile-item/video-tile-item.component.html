@@ -1,5 +1,5 @@
 
-  <a [routerLink]="contextNavigation?[]:['/video/watch/', item.id]">
+  <a [routerLink]="contextNavigation?[]:getRoute(item)">
 <div [id]="'context_'+item.id" class="pic-container">
   <img class="rounded my-1 w-100" [src]="item.indexImage | auth" draggable="false" />
   <div class="bottom-right">
@@ -14,7 +14,7 @@
   </a>
 <dx-context-menu *ngIf="contextNavigation" [target]="'#context_'+item.id" [items]="contextItems">
   <div *dxTemplate="let i of 'item'">
-    <a [routerLink]="['/video/watch/', item.id]"  target="_blank" class="text-decoration-none" >
+    <a [routerLink]="getRoute(item)"  target="_blank" class="text-decoration-none" >
       Open in new tab {{ item.name }}
     </a>
   </div>
