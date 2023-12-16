@@ -16,7 +16,6 @@ function configureRoutes(routesService: RoutesService) {
       {
         path: '/',
         name: 'Video',
-        //iconClass: 'fas fa-home',
         order: 1,
         layout: eLayoutType.application,
       },
