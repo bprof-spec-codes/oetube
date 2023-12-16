@@ -146,7 +146,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   onDragStart(e: DragStartEvent) {
-    console.log(this)
     if (!this.dataSource.allowSelection) {
       e.cancel = true;
     }
@@ -154,7 +153,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   onSelectedDataDelete(e: ItemDeletedEvent) {
-    debugger
     if (this.selectedDataDisplay == e.itemData) {
       this.selectedDataDisplay = undefined;
     }
