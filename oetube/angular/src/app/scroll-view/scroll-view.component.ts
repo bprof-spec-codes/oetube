@@ -61,7 +61,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   @Input() selectedDatasDisplayExpr: string = 'name';
 
   @Input() actionButtons: ActionButton[] = [];
-  @Input() height = 400;
 
   @ViewChild(DxScrollViewComponent) instance: DxScrollViewComponent;
 

@@ -48,7 +48,7 @@
       </div>
     </div>
     <hr />
-    <div class="d-flex flex-row" [style.height.px]="height">
+    <div class="d-flex flex-row content" [style.height]="'58vh'">
       <div class="d-flex flex-column w-25" *ngIf="dataSource?.allowSelection">
         <strong class="dx-button-text mx-auto">Selected Items</strong>
         <dx-list
@@ -56,7 +56,6 @@
           keyExpr="id"
           allowItemDeleting="true"
           itemDeleteMode="static"
-          [(height)]="height"
           noDataText="Drag and drop items here to make a selection"
           (onItemDeleted)="onSelectedDataDelete($event)"
           (onItemClick)="onSelectedDataClick($event)"
@@ -86,7 +85,6 @@
             [onAdd]="onDataAdd"
             group="datas"
           >
-            <div style.height="400 px"></div>
           </dxo-item-dragging>
         </dx-list>
         <dx-button
@@ -104,8 +102,6 @@
         [bounceEnabled]="false"
         reachBottomText="Loading"
         (onScroll)="onScroll($event)"
-        [(height)]="height"
-        fade
       >
         <div
           [class]="contents.selectedItem.layoutClassList"
