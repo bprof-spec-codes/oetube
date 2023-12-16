@@ -58,7 +58,6 @@ export class PaginationGridComponent<
   createDataSource() {
    return new DataSource<TOutputListDto,string>({
       load: async options => {
-        console.log("load")
         let query=this.loadOptionsToQuery(options)
         return lastValueFrom(this.getList(query))
           .then(response => {
@@ -109,7 +108,6 @@ export class PaginationGridComponent<
         break;
       }
     }
-    debugger
     let currentPageSize=this.dxDataGrid.paging.pageSize
     if(!allowedPageSizes.includes(currentPageSize))
     {
