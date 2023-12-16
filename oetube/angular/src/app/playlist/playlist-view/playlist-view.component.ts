@@ -12,32 +12,24 @@ import { LazyTabItem } from 'src/app/lazy-tab-panel/lazy-tab-panel.component';
   templateUrl: './playlist-view.component.html',
   styleUrls: ['./playlist-view.component.scss']
 })
-export class PlaylistViewComponent implements OnInit {
-  inputItems:LazyTabItem[]=[
-    {key:"details",title:"Details",authRequired:false,onlyCreator:false,isLoaded:true,visible:true},
-    {key:"edit",title:"Edit",authRequired:true,onlyCreator:true,isLoaded:false,visible:true}
-  ]
-  id:string
-  model:PlaylistDto
-
-
-
-  videoQuery: VideoQueryDto = {
-    pagination:{skip:0,take:(2**31)-1}
-  }
-  
-  videos: VideoListItemDto[] = []
-  constructor(private service:PlaylistService,private route:ActivatedRoute){
-  }
- async ngOnInit() {
-    this.route.paramMap.subscribe((params:ParamMap)=>{
-      this.id=params.get('id')
-      this.service.get(this.id).subscribe(r=>{
-        this.model=r
-        this.service.getVideos(this.id,this.videoQuery).subscribe(r=>{
-          this.videos.push(...r.items)
-        })
+export class PlaylistViewComponent{
+ 
+  _model:PlaylistDto
+  @Input() set model(v:PlaylistDto){
+    this._model=v
+    if(v!=undefined){
+      this.service.getVideos(v.id,{pagination:{skip:0,take:(2**31)-1}}).subscribe(r=>{
+        this.videos=[]
+        this.videos.push(...r.items)
       })
-    })
+    }
   }
+  get model():PlaylistDto{
+    return this._model
+  }
+
+  videos: VideoListItemDto[] = []
+  constructor(private service:PlaylistService){
+  }
+ 
 }
