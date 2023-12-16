@@ -17,9 +17,9 @@ namespace OeTube.Data.QueryExtensions
                    on accessGroup.GroupId equals @group.Id
                    select @group;
         }
-        public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context,Guid? requesterId,IQueryable<Video>? videos=null)
+        public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context,Guid? requesterId)
         {
-            videos ??= context.Set<Video>();
+            var videos= context.Set<Video>();
             var publicAccess= from video in videos
                                where video.Access == AccessType.Public
                                select video;
