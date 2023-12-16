@@ -32,7 +32,6 @@ export class DurationSearchItemComponent implements OnInit {
   protected defaultValueKeys?: string[] = ['Min', 'Max'];
   protected defaultConverter: Converter<any, any> = {
     convert: v => {
-      debugger;
       const minkey = 'durationMin';
       const maxkey = 'durationMax';
       const min = v[minkey];
