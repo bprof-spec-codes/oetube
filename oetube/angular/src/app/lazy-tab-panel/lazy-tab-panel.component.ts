@@ -40,7 +40,6 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
     const currentUserId=this.currentUserService.getCurrentUser().id
     
     this.items.forEach((v,i)=>{
-      debugger
       const authResult=(!v.authRequired || currentUserId!=undefined)
       if(!authResult){
         v.visible=false
@@ -60,7 +59,6 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
       this.changeDetector.detectChanges()
     }
   onSelectionChange(e){
-    console.log(e)
     if(this.selectedItem){
       if(!this.selectedItem.isLoaded){
         this.selectedItem.isLoaded=true
