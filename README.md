@@ -139,8 +139,8 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/854cd2bf-4b6b-47b6-8ec3-8c932764a0c3)
 
   #### Video - Edit
-  **MÉG KI KELL TÖLTENI EZT A RÉSZT**
-
+  Ezen a felületen lehet módosítani a feltöltött videó adatait
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/cfbbcb30-1523-45aa-aa63-32fc12400c7d)
 
   ### Playlist
 
