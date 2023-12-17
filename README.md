@@ -187,6 +187,7 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
 
 # Probléma jegyzőkönyv
 ## Backend
+ - Új keretrendszer megismerése
 ## Frontend
  - Az abp és a devex megjelenítés összeolvasztása nem volt zökkenőmentes
  - Videó lejátszásánál kezelni kellett azt, hogy a video seeker egyszerre mutassa azt, hogy hol tart a jelenlegi lejátszás, és kézzel is állítható legyen (nehéz volt megkülönböztetni, hogy a seeker állása azért változott meg, mert a videó előrehaladt, vagy mert a felhasználó beletekert)
