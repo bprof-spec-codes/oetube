@@ -328,6 +328,8 @@ namespace OeTube;
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
                 options.DocumentFilter<ControllerCustomOrderFilter>();
+                options.DocumentFilter<EndpointDocumentationFilter>();
+                options.EnableAnnotations();
             });
     }
 
