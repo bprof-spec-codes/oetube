@@ -15,18 +15,23 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { environment } from '../environments/environment';
 import { registerLocale } from '@abp/ng.core/locale';
-import { DxDropDownBoxModule, DxListModule } from 'devextreme-angular';
+import { DxDropDownBoxModule, DxListModule, DxToastModule } from 'devextreme-angular';
 import { DxRadioGroupModule } from "devextreme-angular";
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SidebarModule } from './sidebar/sidebar.module';
-
+import { NotifyUploadCompletedComponent } from './notify-upload-completed/notify-upload-completed.component';
+import { DxoPositionModule } from 'devextreme-angular/ui/nested';
+import {RouterModule} from "@angular/router"
  @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     DxDropDownBoxModule,
+    DxToastModule,
+    RouterModule,
     DxListModule,
+    DxoPositionModule,
     DxRadioGroupModule,
     SidebarModule,
     CoreModule.forRoot({
@@ -42,7 +47,7 @@ import { SidebarModule } from './sidebar/sidebar.module';
     SettingManagementConfigModule.forRoot(),
     FeatureManagementModule.forRoot(),
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent,  NotifyUploadCompletedComponent],
   providers: [APP_ROUTE_PROVIDER,
  ],
   bootstrap: [AppComponent],

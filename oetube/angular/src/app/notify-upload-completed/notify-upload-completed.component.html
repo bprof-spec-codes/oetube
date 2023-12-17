@@ -1,0 +1,16 @@
+<dx-toast
+  [displayTime]="3000"
+  [position]="'bottom center'"
+  [width]="'auto'"
+  [type]="'custom'"
+  [(visible)]="visible"
+  contentTemplate="content"
+>
+<div *dxTemplate="let data of 'content'">
+    <a class="link-light text-decoration-none" [routerLink]="['/video',id]" >
+        <div class="w-100 text-center">
+            {{message}}
+        </div>
+        </a>
+</div>
+</dx-toast>
