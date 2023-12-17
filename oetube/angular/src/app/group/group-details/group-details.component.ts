@@ -33,7 +33,7 @@ export class GroupDetailsComponent {
     },
   ];
 
-  height: string = "60vh";
+   height: string = "60vh";
   id: string;
   model: GroupDto;
   currentUser: CurrentUser;
@@ -48,12 +48,16 @@ export class GroupDetailsComponent {
     this.currentUser = currentUserService.getCurrentUser();
     this.activatedRoute.params.subscribe(v => {
       this.id = v.id;
-      this.groupService.get(this.id).subscribe(r => {
-        this.model = r;
-      this.getMethod=(args)=>groupService.getGroupMembers(this.model.id,args)
+      this.groupService.get(this.id).subscribe({
+        next:(r)=>{
+          this.model = r;
+          this.getMethod=(args)=>groupService.getGroupMembers(this.model.id,args)
+        },
+        error:(e)=>{
+          this.router.navigate(["group"])
+        }
+      })
 
-
-      });
     });
   }
 
