@@ -29,7 +29,7 @@ export class VideoUpdateComponent {
   submitButtonOptions = {
     text: 'Submit',
     useSubmitBehavior: true,
-    type: 'default',
+    type: 'normal',
   };
 
   model: UpdateVideoDto;

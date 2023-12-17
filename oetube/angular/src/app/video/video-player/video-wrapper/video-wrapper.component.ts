@@ -70,6 +70,9 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
     })
   }
 
+  pause(){
+    this.videoElement.nativeElement.pause()
+  }
   ngAfterViewInit() {
     this.subscriptions();
     Object.keys(this.videoListeners).forEach(videoListener => {
@@ -97,11 +100,14 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.video) {
+      console.log(changes)
       const currentTime = this.videoElement.nativeElement.currentTime;
 
       this.load(this.video.hlsResolutions[this.resolutionIndex].hlsList);
       this.videoTimeService.setCurrentTime(currentTime);
-
+      if(changes["video"]==undefined){
+        this.videoPlayerService.play()
+      }
     }
   }
 

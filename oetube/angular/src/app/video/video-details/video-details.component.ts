@@ -30,12 +30,11 @@ export class VideoDetailsComponent {
   reset(){
     if(this.player?.wrapper)
     {
+      this.player.wrapper.pause()
       this.player.wrapper.videoPlayerService.pause()
       this.player.wrapper.videoTimeService.setCurrentTime(0)
-      this.player.wrapper.videoTimeService.setVideoDuration(0)
       this.player.wrapper.videoTimeService.setVideoProgress(0)
-      this.changeDetector.detectChanges()
-
+      this.player.wrapper.videoPlayerService.setVideoEnded(false)
     }
 
   }
@@ -52,12 +51,15 @@ export class VideoDetailsComponent {
           this.getMethod=(args)=>this.playlistService.getVideos(this.playlist.id,args)
           this.getRoute=(id)=>["/video",id,this.playlist.id]
          this.reset()
+      this.changeDetector.detectChanges()
+
         })
       }
       else{
         this.getMethod=(args)=>this.videoService.getList(args)
         this.getRoute=(id)=>["/video",id]
         this.reset()
+        this.changeDetector.detectChanges()
       }
     })
     })
