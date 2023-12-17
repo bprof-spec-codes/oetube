@@ -30,7 +30,6 @@ export class MemberDataSourceComponent extends DataSourceProviderDirective<UserL
   constructor(public userService:OeTubeUserService, public groupService:GroupService,public currentUserService:CurrentUserService){
     super()
     this.filteredKeys=[currentUserService.getCurrentUser().id]
-    console.log(this)  
   }
   getMethod=(args)=>this.userService.getList(args)
   getInitialSelectionMethod=(id,args)=>this.groupService.getExplicitMembersByIdAndInput(id,args)

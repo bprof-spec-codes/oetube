@@ -52,11 +52,8 @@ export class SearchItem {
 
   protected _bindingValue=[]
   set bindingValue(v: any) {
-    debugger
     this._bindingValue = v;
     this.setValue(v);
-    console.log(this.value)
-    console.log(this._value)
   }
   get bindingValue() {
     return this._bindingValue;

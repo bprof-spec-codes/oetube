@@ -1,6 +1,6 @@
 <div *appTemplate="'tile'; let item">
-    <app-video-tile-item [contextNavigation]="contextNavigation" [item]="item"></app-video-tile-item>
+    <app-video-tile-item [contextNavigation]="contextNavigation" [getRoute]="getRoute" [item]="item"></app-video-tile-item>
 </div>
 <div *appTemplate="'list';let item">
-    <app-video-list-item [item]="item"></app-video-list-item>
+    <app-video-list-item [contextNavigation]="contextNavigation" [getRoute]="getRoute" [item]="item"></app-video-list-item>
 </div>

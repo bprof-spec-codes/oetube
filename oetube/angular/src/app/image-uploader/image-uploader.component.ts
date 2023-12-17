@@ -19,7 +19,6 @@ export class ImageUploaderComponent implements OnDestroy{
 
   private _defaultImgUrl:string
   @Input() set defaultImgUrl(value:string){
-    debugger
     this._defaultImgUrl=value
     if(!this.imageUrl){
       this.imageUrl=value

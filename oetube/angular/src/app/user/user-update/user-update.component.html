@@ -1,5 +1,5 @@
-<form class="dx-card p-5 h-100" (submit)="onSubmit($event)" *ngIf="model">
-    <dx-form [formData]="model" [labelLocation]="'left'">
+<form class="dx-card p-5 h-100"  (submit)="onSubmit($event)" *ngIf="model">
+    <dx-form [formData]="model" [style.height]="height" [labelLocation]="'left'">
       <dxi-item dataField="name" [isRequired]="true" />
       <dxi-item dataField="aboutMe" [template]="'descriptionTemplate'" />
       <div *dxTemplate="let data of 'descriptionTemplate'">

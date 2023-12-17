@@ -1,4 +1,4 @@
-<div class="container mb-5" *ngIf="!IsOneCol">
+<div class="container mb-5" *ngIf="!multicolumn">
   <app-search-bar (searchClicked)="onSearch($event)"></app-search-bar>
 </div>
 
@@ -15,6 +15,10 @@
   <div [class]="rowClasses">
     <div *ngFor="let video of videos" class="col position-relative">
       <div class="pic-container">
+        <div
+          *ngIf="video.id === currentVideoId"
+          class="position-absolute h-100 w-100 border border-4 border-primary rounded"
+        ></div>
         <img class="rounded my-1 w-100" [src]="video.indexImage | auth" />
         <div class="bottom-right">{{ fromatVideoDuration(video.duration) }}</div>
       </div>
@@ -29,10 +33,17 @@
         -->
 
         <a
-          [routerLink]="'/video/watch/' + video.id"
+          *ngIf="video.id !== currentVideoId; else name"
+          [routerLink]="['/video', video.id,currentPlaylistId??'']"
+
           class="h5 my-1 stretched-link text-decoration-none text-reset"
           >{{ video.name }}</a
         >
+        <ng-template #name>
+          <span
+            class="h5 my-1 stretched-link text-decoration-none text-reset"
+          >{{ video.name }}</span>
+        </ng-template>
 
       </div>
     </div>

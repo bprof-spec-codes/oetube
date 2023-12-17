@@ -89,8 +89,6 @@ export class TemplateRefCollectionComponent<C extends TemplateItemContext = Temp
   ngAfterViewInit(): void {
     this.collectItems(this.contentTemplateQuery);
     this.collectItems(this.viewTemplateQuery);
-    console.log(this.contentTemplateQuery)
-    console.log(this)
     if (this.items.length > 0) {
       this._selectedItem = this.items[0];
     }

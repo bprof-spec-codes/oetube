@@ -48,7 +48,16 @@ namespace OeTube.Application.Dtos.Playlists
             destination.SetName(source.Name)
                        .SetDescription(source.Description);
 
+            Dictionary<Guid, int> order = new();
+            for (int i = 0; i < source.Items.Count; i++)
+            {
+                order.Add(source.Items[i], i);
+            }
+
+
             var videos = await _videoRepository.GetManyAsync(source.Items);
+            videos.Sort((x, y) => order[x.Id].CompareTo(order[y.Id]));
+            
 
             await _playlistRepository.UpdateChildrenAsync(destination, videos);
             if (source.Image is not null)

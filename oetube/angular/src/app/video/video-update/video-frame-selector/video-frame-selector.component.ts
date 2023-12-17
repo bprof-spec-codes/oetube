@@ -1,4 +1,4 @@
-import { Component,Input,OnInit,OnDestroy,EventEmitter } from '@angular/core';
+import { Component,Input,OnInit,OnDestroy,EventEmitter,Output } from '@angular/core';
 import { VideoService } from '@proxy/application';
 import { VideoIndexImagesDto } from '@proxy/application/dtos/videos';
 import { RestService, Rest } from '@abp/ng.core';
@@ -18,8 +18,8 @@ export class VideoFrameSelectorComponent implements OnInit,OnDestroy {
   @Input() height:number=180
   @Input() videoId:string
   dto:VideoIndexImagesDto
-  value?:number
-  valueChange:EventEmitter<number>=new EventEmitter()
+  @Input() value?:number
+  @Output() valueChange:EventEmitter<number>=new EventEmitter()
   selected:string
   indexImages:string[]=[]
   styledImages:string[]=[]

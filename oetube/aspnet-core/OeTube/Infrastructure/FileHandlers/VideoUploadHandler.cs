@@ -43,8 +43,6 @@ namespace OeTube.Infrastructure.FileHandlers
         {
             if (video.IsAllResolutionReady())
             {
-                var resolutions = video.GetResolutionsBy(true).ToArray();
-                var extractFrameTarget = resolutions.OrderByDescending(r => r.Height).First();
                 var processUploadTask = _processUploadTaskFactory.Create(video, videoInfo);
                 await _backgroundJobManager.EnqueueAsync(processUploadTask);
             }

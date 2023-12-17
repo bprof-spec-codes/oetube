@@ -13,7 +13,6 @@ export class DateSearchItemComponent implements OnInit  {
   @Input() displayFormat="yyyy.MM.dd"
   protected defaultConverter?: Converter<any, any>={
     convert(v){
-     debugger
       let convertedValue={}
       Object.keys(v).forEach((k)=>{
         const keyValue:Date=v[k]

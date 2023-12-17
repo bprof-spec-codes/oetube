@@ -61,14 +61,13 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   @Input() selectedDatasDisplayExpr: string = 'name';
 
   @Input() actionButtons: ActionButton[] = [];
-  @Input() height = 400;
 
   @ViewChild(DxScrollViewComponent) instance: DxScrollViewComponent;
 
   @ContentChild(DropDownSearchComponent,{descendants:true}) dropDownSearch: DropDownSearchComponent;
   @ViewChild("search") searchContainer: ElementRef<any>
 
-
+  @Input() height:string="58vh"
   @ContentChild(DataSourceProviderDirective)
   public dataSourceProvider: DataSourceProviderDirective<TOutputListDto>;
 
@@ -147,7 +146,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   onDragStart(e: DragStartEvent) {
-    console.log(this)
     if (!this.dataSource.allowSelection) {
       e.cancel = true;
     }
@@ -155,7 +153,6 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
   }
 
   onSelectedDataDelete(e: ItemDeletedEvent) {
-    debugger
     if (this.selectedDataDisplay == e.itemData) {
       this.selectedDataDisplay = undefined;
     }
@@ -177,6 +174,10 @@ export class ScrollViewComponent<TOutputListDto extends EntityDto<string> = Enti
 
     _this.dataSource.selectItem(e.fromData);
   }
+  onDoubleClick(e){
+    this.dataSource.selectItem(e)
+  }
+  
 }
 
 export type ActionButton = {

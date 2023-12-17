@@ -22,7 +22,7 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
   private _creatorId:string
   @Input() set  creatorId(v:string){
     if(v!=this.creatorId){
-      v=this.creatorId;
+      this._creatorId=v;
       this.filterItems()
     }
   }
@@ -59,7 +59,6 @@ export class LazyTabPanelComponent extends TemplateRefCollectionComponent<LazyTa
       this.changeDetector.detectChanges()
     }
   onSelectionChange(e){
-    console.log(e)
     if(this.selectedItem){
       if(!this.selectedItem.isLoaded){
         this.selectedItem.isLoaded=true
