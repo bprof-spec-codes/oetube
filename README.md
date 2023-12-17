@@ -158,8 +158,9 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/77c2ca2e-b0f3-4c2f-81f8-9313c95fc1a8)
 
   #### Playlist - Edit
-  A lejátszási lista minden paramétere edit-elhető.
-  **HIÁNYZIK A PLAYLIST EDIT FELÜLET**
+  A lejátszási lista minden paramétere edit-elhető, illetve a Delete gomb megnyomásával törölhető a lista.
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/a3bde3e6-b80e-4222-bab8-4121b9f49c0a)
+
 
 
   ### Group
