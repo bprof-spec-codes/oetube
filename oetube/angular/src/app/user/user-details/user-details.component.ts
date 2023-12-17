@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OeTubeUserService } from '@proxy/application';
 import { LazyTabItem } from 'src/app/lazy-tab-panel/lazy-tab-panel.component';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UserDto } from '@proxy/application/dtos/oe-tube-users';
 @Component({
   selector: 'app-user-details',
@@ -56,11 +56,12 @@ export class UserDetailsComponent {
   id: string;
   selectedIndex:number=0
 
-  constructor(private userService: OeTubeUserService, private route: ActivatedRoute) {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+  constructor(private userService: OeTubeUserService,private router:Router, private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
       this.id = params.get('id')
-      this.userService.get(this.id).subscribe(r => {
-        this.model = r;
+      this.userService.get(this.id).subscribe({
+        next:(r)=>this.model=r,
+        error:(e)=>this.router.navigate(['/user'])
       });
     });
   }

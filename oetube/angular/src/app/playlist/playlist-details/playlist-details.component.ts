@@ -22,8 +22,9 @@ export class PlaylistDetailsComponent {
     
     ){
     route.paramMap.subscribe(p=>{
-      service.get(p.get("id")).subscribe(r=>{
-        this.model=r
+      service.get(p.get("id")).subscribe({
+        next:(r)=>this.model=r,
+        error:(e)=>this.router.navigate(['/playlist'])
       })
     })
   }
