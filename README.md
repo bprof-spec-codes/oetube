@@ -191,3 +191,4 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
  - Az abp és a devex megjelenítés összeolvasztása nem volt zökkenőmentes
  - Videó lejátszásánál kezelni kellett azt, hogy a video seeker egyszerre mutassa azt, hogy hol tart a jelenlegi lejátszás, és kézzel is állítható legyen (nehéz volt megkülönböztetni, hogy a seeker állása azért változott meg, mert a videó előrehaladt, vagy mert a felhasználó beletekert)
  - Többszöri videómegnyitáskor nem állt le az előző videó, ezért többszörösen is hallani lehetett a hangot.
+ - A csapatból valaki által létrehozott komponens újrafelhasználása nehézkes volt néha, mivel elég komplexekre sikeredtek és amennyiben nem te írtad, akkor nehézkes volt átlátni.
