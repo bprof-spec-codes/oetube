@@ -134,10 +134,9 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/880058ee-8f9c-47a6-bec1-2c23a21c3df1)
 
   #### Video - Watch
-  A kiválasztott videót lehet megnézni, illetve a videó jobb oldalán minden egyéb videó klistázásra kerül, amihez a felhasználónak jogosultsága van
-  **HIÁNYZIK A VIDEÓ JOBB OLDALÁRÓL AZ ÖSSZES TÖBBI VIDEÓ**
-  Amennyiben egy lejátszási listához tartozik a videó, akkor a jobb oldalon az adott lejátszási többi tartalma jelenik meg.
-  **A LEJÁTSZÁSI LIST JOBB OLDALA LEVÁGÓDIK, EZT MÉG JAVÍTANI KELL**
+  A kiválasztott videót lehet megnézni, illetve a videó jobb oldalán minden egyéb videó klistázásra kerül, amihez a felhasználónak jogosultsága van. Amennyiben egy lejátszási listához tartozik a videó, akkor a jobb oldalon az adott lejátszási többi tartalma jelenik meg.
+
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/854cd2bf-4b6b-47b6-8ec3-8c932764a0c3)
 
   #### Video - Edit
   **MÉG KI KELL TÖLTENI EZT A RÉSZT**
