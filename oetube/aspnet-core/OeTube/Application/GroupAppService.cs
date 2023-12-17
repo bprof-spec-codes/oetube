@@ -84,9 +84,10 @@ namespace OeTube.Application
         }
         [SwaggerOperation(description:"Megadja az adott id-jű Grouphoz tartozó összes User paginált listáját, beleértve a Membereket és az EmailDomaint is, a keresési argumentumok alapján.")]
         public async Task<PaginationDto<UserListItemDto>> GetGroupMembersAsync(Guid id, UserQueryDto input)
+        
         {
             return await _factory.CreateGetChildrenListMethod<OeTubeUser, IUserQueryArgs, UserListItemDto>()
-                                 .GetCustomChildrenListAsync<GroupRepository>(id,(repository,entity)=>repository.GetMembers(entity,input));
+                                 .GetCustomChildrenListAsync<IGroupRepository>(id,(repository,entity)=>repository.GetMembersAsync(entity,input));
         }
 
         [HttpGet("api/src/group/default-image")]
