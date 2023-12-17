@@ -1,42 +1,60 @@
-<div class="d-flex flex-row" *ngIf="model">
-  <div
-    class="dx-card d-flex flex-column justify-content-center w-25 align-top p-3"
-    [style.height.px]="600"
-  >
+<app-lazy-tab-panel
+  *ngIf="model"
+  [inputItems]="inputItems"
+  [(selectedIndex)]="selectedIndex"
+  [creatorId]="model?.creator?.id"
+>
+  <div *appTemplate="'members'" class="d-flex flex-row">
     <div
-      class="dx-card d-flex flex-column justify-content-center w-35 align-top p-3"
-      [style.height.px]="600"
+      class="dx-card d-flex flex-column w-25 p-3"
     >
-      <div class="mx-auto">
-        <img class="group-image" [src]="model.image" />
+    <a class="text-decoration-none" [routerLink]="['/user',model.creator.id]">
+      <div class="creator dx-card d-flex justify-content-evenly p-1 flex-wrap">
+        <strong class="my-auto">{{model.creator.name}}</strong>
+        <img class="img-fluid" [src]="model.creator.thumbnailImage">
       </div>
-      <div class="text-wrap h-auto h-50 text-center mb-5">
+    </a>
+      <div class="mx-auto">
+        <img class="group-image img-fluid" [src]="model.image" />
+      </div>
+      <div class="text-wrap text-center mb-5">
         <h6>{{ model.name }}</h6>
       </div>
-      <dx-scroll-view [height]="200">
+     
+      <dx-scroll-view [style.height]="'40vh'">
+
+          <div class="mb-4 d-flex flex-row flex-wrap justify-content-center">
+            <div *ngFor="let item of model.emailDomains" class="badge dx-theme-text-color-as-background-color m-1 text-wrap text-break">
+              <span class="dx-button-text">
+                {{item}}
+              </span>
+            </div>
+          </div>
+      
         <span class="text-justify text-wrap h-auto h-50 text-center">
-          {{ model.description }}
+          {{ model.description }} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur maxime expedita et nostrum dolor doloremque! Inventore perspiciatis provident, debitis dignissimos ipsum deleniti sit quas, aspernatur corrupti, at reiciendis beatae optio. Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere corrupti laudantium ut nemo ipsam, nobis reiciendis, nostrum minima natus eligendi suscipit quis incidunt quos iste reprehenderit quam optio ex neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa sequi consequuntur ex itaque, a nemo deserunt in corporis. Dicta expedita mollitia facere doloremque odit unde praesentium id sint veniam dolor.
         </span>
       </dx-scroll-view>
-      <div class="text-wrap h-auto h-50 text-center">
-        <p>Email domains:</p>
-        <p *ngFor="let item of model.emailDomains">{{ item }}</p>
-      </div>
+    
     </div>
+    <app-scroll-view [height]="height">
+      <app-drop-down-search>
+        <app-user-search></app-user-search>
+      </app-drop-down-search>
+      <app-scroll-view-data-source
+        [allowSelection]="false"
+        [getMethod]="getMethod"
+      ></app-scroll-view-data-source>
+      <app-scroll-view-contents>
+        <app-user-contents></app-user-contents>
+      </app-scroll-view-contents>
+    </app-scroll-view>
   </div>
-
-  <app-lazy-tab-panel
-    [inputItems]="inputItems"
-    [(selectedIndex)]="selectedIndex"
-    [creatorId]="model?.creator?.id"
-  >
-    <div *appTemplate="'members'">group details works</div>
-    <div *appTemplate="'edit'">
-      <app-group-update
-        (submitted)="onSubmitted($event)"
-        (deleted)="onDeleted()"
-        [inputModel]="model"
-      ></app-group-update>
-    </div>
-  </app-lazy-tab-panel>
-</div>
+  <div *appTemplate="'edit'">
+    <app-group-update
+      (submitted)="onSubmitted($event)"
+      (deleted)="onDeleted()"
+      [inputModel]="model"
+    ></app-group-update>
+  </div>
+</app-lazy-tab-panel>

@@ -51,7 +51,6 @@ namespace OeTube.Domain.Entities.Groups
 
         public Group UpdateEmailDomains(IEnumerable<string> emailDomains)
         {
-            this.emailDomains.Clear();
             foreach (var item in emailDomains)
             {
                 this.emailDomains.Add(new EmailDomain(Id, item));

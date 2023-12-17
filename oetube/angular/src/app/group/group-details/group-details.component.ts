@@ -13,7 +13,7 @@ import { AppTemplate } from 'src/app/template-ref-collection/template-ref-collec
   templateUrl: './group-details.component.html',
   styleUrls: ['./group-details.component.scss'],
 })
-export class GroupDetailsComponent implements OnInit {
+export class GroupDetailsComponent {
   inputItems: LazyTabItem[] = [
     {
       key: 'members',
@@ -33,33 +33,30 @@ export class GroupDetailsComponent implements OnInit {
     },
   ];
 
-  height: number = 415;
+  height: string = "60vh";
   id: string;
   model: GroupDto;
   currentUser: CurrentUser;
   selectedIndex: number;
-
+  getMethod:Function
   constructor(
     private groupService: GroupService,
     private activatedRoute: ActivatedRoute,
-    private title: Title,
     currentUserService: CurrentUserService,
     private router: Router
   ) {
     this.currentUser = currentUserService.getCurrentUser();
-  }
-
-  ngOnInit(): void {
     this.activatedRoute.params.subscribe(v => {
       this.id = v.id;
       this.groupService.get(this.id).subscribe(r => {
         this.model = r;
+      this.getMethod=(args)=>groupService.getGroupMembers(this.model.id,args)
+
+
       });
     });
-    if (this.id == undefined) {
-      return;
-    }
   }
+
   onDeleted() {
     this.router.navigate(['/group']);
   }
