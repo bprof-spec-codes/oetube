@@ -10,6 +10,7 @@ namespace OeTube.Domain.Infrastructure.FileHandlers
         public AccessType Access { get; set; }
         public Guid? CreatorId { get; set; }
         public ByteContent? Content { get; set; }
+        public bool IsWebAssemblyAvailable { get; set; }
     }
 
     public interface IStartVideoUploadHandler : IFileHandler<StartVideoUploadHandlerArgs, Video>
