@@ -40,6 +40,7 @@ import { DxiItemModule, DxoPagerModule, DxoPagingModule } from 'devextreme-angul
 import { TemplateRefCollectionModule } from './template-ref-collection/template-ref-collection.module';
 import { SharedModule } from './shared/shared.module';
 import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
+import { DoubleClickDirective } from './double-click.directive';
 
 @NgModule({
   imports: [
@@ -91,7 +92,6 @@ import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
     ImageUploaderModule,
     TemplateRefCollectionModule,
     ScrollViewModule,
-    
     RouterModule,
 
     FormsModule,

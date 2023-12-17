@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output,EventEmitter } from '@angular/core';
 import { OeTubeUserService } from '@proxy/application';
 import { UpdateUserDto, UserDto } from '@proxy/application/dtos/oe-tube-users';
 import { DxButtonComponent } from 'devextreme-angular';
@@ -13,18 +13,20 @@ export class UserUpdateComponent {
   _inputModel:UserDto
   @Input() set inputModel(v:UserDto){
     this._inputModel=v
-    debugger
     this.model={image:null,name:v.name,aboutMe:v.aboutMe}
     this.defaultImageUrl=v.image
   }
+  @Input() height:string
   defaultImageUrl:string
   model:UpdateUserDto
+  @Output() submitted=new EventEmitter<UserDto>()
+
   constructor(private service:OeTubeUserService){
   }
   onSubmit($event){
     this.service.update(this._inputModel.id,this.model).subscribe({
       error:()=>console.log("error"),
-      next:()=>window.location.reload(),
+      next:(r)=>this.submitted.emit(r)
     })
   }
   @Input() submitButtonOptions: Partial<DxButtonComponent> = {

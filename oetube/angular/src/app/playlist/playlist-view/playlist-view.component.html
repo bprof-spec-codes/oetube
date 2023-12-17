@@ -7,8 +7,6 @@
     </dx-data-grid>
 </div>-->
 
-<app-lazy-tab-panel [creatorId]="model?.creator?.id" [inputItems]="inputItems">
-  <div *appTemplate="'details'">
     <div class="component-title" *ngIf="model">
       <h4><img [src]="model.image" class="playlist-image" />{{ model.name }}</h4>
       <p class="description">{{ model.description }}</p>
@@ -66,8 +64,4 @@
       </div>
     </dx-tree-list>
   </div>
-</div>
-  <div *appTemplate="'edit'">
-    <app-playlist-update [model]="model"></app-playlist-update>
-  </div>
-</app-lazy-tab-panel>
+ 

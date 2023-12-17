@@ -48,7 +48,7 @@
       </div>
     </div>
     <hr />
-    <div class="d-flex flex-row content" [style.height]="'58vh'">
+    <div class="d-flex flex-row content" [style.height]="height">
       <div class="d-flex flex-column w-25" *ngIf="dataSource?.allowSelection">
         <strong class="dx-button-text mx-auto">Selected Items</strong>
         <dx-list
@@ -112,6 +112,9 @@
             [data]="item"
             group="datas"
             clone="true"
+            appDoubleClick
+            [doubleClickEnabled]="dataSource?.allowSelection"
+            (doubleClick)="onDoubleClick(item)"
             dragTemplate="dragTemplate"
             (onDragStart)="onDragStart($event)"
           >

@@ -11,7 +11,8 @@ import { NgModule } from '@angular/core';
 import { DxTabsModule } from 'devextreme-angular';
 import { TabbedItem } from 'devextreme/ui/form';
 import { LazyTabItem } from '../lazy-tab-panel/lazy-tab-panel.component';
-
+import { PlaylistDto } from '@proxy/application/dtos/playlists';
+import {Router} from "@angular/router"
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
@@ -23,4 +24,10 @@ export class PlaylistComponent {
     {key:"explore",title:"Explore",onlyCreator:false,isLoaded:true,authRequired:false,visible:true},
     {key:"create",title:"Create",onlyCreator:false,isLoaded:true,authRequired:true,visible:true},
   ]
+  constructor(private router:Router){
+
+  }
+  onSubmitted(e:PlaylistDto){
+    this.router.navigate(["/playlist",e.id])
+  }
 }
