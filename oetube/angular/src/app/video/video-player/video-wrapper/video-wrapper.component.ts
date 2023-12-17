@@ -11,10 +11,10 @@ import {
 } from '@angular/core';
 import { HlsResolutionDto, VideoDto } from '@proxy/application/dtos/videos';
 import Hls from 'hls.js';
-import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
 import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
+import { VideoPlayerService } from 'src/app/services/video/video-player.service';
 @Component({
   selector: 'app-video-wrapper',
   templateUrl: './video-wrapper.component.html',
@@ -30,32 +30,34 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
   private videoListeners = {
     loadedmetadata: () =>
       this.videoTimeService.setVideoDuration(this.videoElement.nativeElement.duration),
-    canplay: () => this.videoService.setLoading(false),
-    seeking: () => this.videoService.setLoading(true),
+    canplay: () => this.videoPlayerService.setLoading(false),
+    seeking: () => this.videoPlayerService.setLoading(true),
     timeupdate: () => {
       this.videoTimeService.setVideoProgress(this.videoElement.nativeElement.currentTime);
       if (
         this.videoElement.nativeElement.currentTime === this.videoElement.nativeElement.duration &&
         this.videoElement.nativeElement.duration > 0
       ) {
-        this.videoService.pause();
-        this.videoService.setVideoEnded(true);
+        this.videoPlayerService.pause();
+        this.videoPlayerService.setVideoEnded(true);
       } else {
-        this.videoService.setVideoEnded(false);
+        this.videoPlayerService.setVideoEnded(false);
       }
     },
   };
 
-  @Input() video?: VideoDto;
-  @Input() resolutionIndex?: number;
+  @Input() resolutionIndex: number = 0;
+
+  @Input() video: VideoDto;
+
   @ViewChild('video', { static: true }) videoElement: ElementRef<HTMLVideoElement> =
     {} as ElementRef<HTMLVideoElement>;
 
   constructor(
-    private videoService: VideoService,
-    private volumeService: VolumeService,
-    private videoTimeService: VideoTimeService,
-    currentUserService:CurrentUserService
+    public videoPlayerService: VideoPlayerService,
+    public volumeService: VolumeService,
+    public videoTimeService: VideoTimeService,
+    currentUserService:CurrentUserService,
   ) {
     this.hls=new Hls({
       xhrSetup(xhr, url) {
@@ -78,7 +80,6 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
         );
       }
     });
-
     this.load(this.video.hlsResolutions[0].hlsList);
   }
 
@@ -95,22 +96,21 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.video != undefined) {
+    if (this.video) {
       const currentTime = this.videoElement.nativeElement.currentTime;
 
       this.load(this.video.hlsResolutions[this.resolutionIndex].hlsList);
-
       this.videoTimeService.setCurrentTime(currentTime);
-      this.videoService.play();
+
     }
   }
 
   /** Play/Pause video on click */
   onVideoClick() {
     if (this.playing) {
-      this.videoService.pause();
+      this.videoPlayerService.pause();
     } else {
-      this.videoService.play();
+      this.videoPlayerService.play();
     }
   }
 
@@ -170,15 +170,15 @@ export class VideoWrapperComponent implements AfterViewInit, OnDestroy, OnChange
    * Setup subscriptions
    */
   private subscriptions() {
-    this.videoService.playingState$.subscribe(playing => this.playPauseVideo(playing));
+    this.videoPlayerService.playingState$.subscribe(playing => this.playPauseVideo(playing));
     this.videoTimeService.currentTime$.subscribe(
       currentTime => (this.videoElement.nativeElement.currentTime = currentTime)
     );
     this.volumeService.volumeValue$.subscribe(
       volume => (this.videoElement.nativeElement.volume = volume)
     );
-    this.videoService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
-    this.videoService.loading$.subscribe(loading => (this.loading = loading));
+    this.videoPlayerService.videoEnded$.subscribe(ended => (this.videoEnded = ended));
+    this.videoPlayerService.loading$.subscribe(loading => (this.loading = loading));
   }
 
   /**

@@ -21,32 +21,32 @@
           (onClick)="item.action()"
         ></dx-button>
       </div>
-
+      <div class="d-flex flex-row w-auto justify-content-center flex-wrap">
+        <div
+          class="m-1 badge rounded opacity-75 dx-theme-border-color-as-background-color dx-theme-text-color row text-truncate"
+          *ngFor="let item of activeFilters"
+        >
+          <span class="bold align-text-center">
+            {{ item.display }}
+          </span>
+          <dx-button
+            [stylingMode]="'outlined'"
+            class="dx-theme-text-color-as-background-color"
+            type="default"
+            icon="close"
+            width="20"
+            height="20"
+            style="min-width: 0px"
+            (onClick)="removeFilter(item.key)"
+          ></dx-button>
+        </div>
+      </div>
       <div class="col d-flex w-auto justify-content-end" *ngIf="contents?.items?.length>1">
         <ng-content select="app-scroll-view-contents">
         </ng-content>
       </div>
     </div>
-    <div class="d-flex flex-row w-100 justify-content-center flex-wrap">
-      <div
-        class="m-1 badge rounded opacity-75 dx-theme-border-color-as-background-color dx-theme-text-color row text-truncate"
-        *ngFor="let item of activeFilters"
-      >
-        <span class="bold align-text-center">
-          {{ item.display }}
-        </span>
-        <dx-button
-          [stylingMode]="'outlined'"
-          class="dx-theme-text-color-as-background-color"
-          type="default"
-          icon="close"
-          width="20"
-          height="20"
-          style="min-width: 0px"
-          (onClick)="removeFilter(item.key)"
-        ></dx-button>
-      </div>
-    </div>
+
     <hr />
     <div class="d-flex flex-row content" [style.height]="height">
       <div class="d-flex flex-column w-25" *ngIf="dataSource?.allowSelection">

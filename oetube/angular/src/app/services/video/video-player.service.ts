@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class VideoService {
+export class VideoPlayerService {
   private playingState = new Subject<boolean>();
   private loading = new BehaviorSubject<boolean>(true);
   private videoEnded = new BehaviorSubject<boolean>(false);

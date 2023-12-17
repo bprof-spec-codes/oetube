@@ -10,8 +10,8 @@ import {
 
 import { ValueChangedEvent } from 'devextreme/ui/progress_bar';
 import { VideoDto } from '@proxy/application/dtos/videos';
-import { VideoService } from 'src/app/services/video/video.service';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
+import { VideoPlayerService } from 'src/app/services/video/video-player.service';
 
 @Component({
   selector: 'app-control-bar',
@@ -32,7 +32,7 @@ export class ControlBarComponent implements OnInit {
   isDropDownBoxOpened = false;
   selectedResolution = '';
 
-  constructor(private videoService: VideoService, private videoTimeService: VideoTimeService) {}
+  constructor(private videoService: VideoPlayerService, private videoTimeService: VideoTimeService) {}
 
   ngOnInit() {
     this.videoService.playingState$.subscribe(playing => (this.playing = playing));

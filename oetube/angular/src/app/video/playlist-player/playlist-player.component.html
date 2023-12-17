@@ -1,0 +1,19 @@
+<app-scroll-view [height]="'40vw'" *ngIf="getMethod && getRoute">
+    <app-scroll-view-data-source
+    [getMethod]="getMethod"
+    [allowSelection]="false"
+  ></app-scroll-view-data-source>
+  <app-scroll-view-contents>
+    <app-template-ref-collection [inputItems]="inputItems">
+        <div *appTemplate="'tile';let item">
+            <a [routerLink]="getRoute(item.id)">
+            <div [class]="currentVideo.id===item.id?'current':'not-current'" [style.width]="'100%'">
+                <div class="img-container">
+                    <img [src]="item.indexImage | auth">
+                </div>
+            </div>
+        </a>
+    </div>
+    </app-template-ref-collection>
+  </app-scroll-view-contents>
+</app-scroll-view>

@@ -18,7 +18,6 @@ import { Directive,Output,ElementRef, Input,EventEmitter,HostListener } from '@a
     @HostListener("mousedown") mouseDown(e:any){
         if(this.doubleClickEnabled){
             this.clickCount++
-            console.log("mousedown")
             setTimeout(()=>{
                 if(this.clickCount>1){
                     this.doubleClick.emit(this.elementRef)
