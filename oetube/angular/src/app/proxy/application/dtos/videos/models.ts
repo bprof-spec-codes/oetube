@@ -1,5 +1,6 @@
 import type { IRemoteStreamContent } from '../../../volo/abp/content/models';
 import type { AccessType } from '../../../domain/entities/videos/access-type.enum';
+import type { WebAssemblyState } from './web-assembly-state.enum';
 import type { EntityDto } from '@abp/ng.core';
 import type { CreatorDto } from '../oe-tube-users/models';
 import type { QueryDto } from '../models';
@@ -20,6 +21,7 @@ export interface StartVideoUploadDto {
   access: AccessType;
   content: FormData;
   accessGroups: string[];
+  webAssemblyState: WebAssemblyState;
 }
 
 export interface UpdateVideoDto {
@@ -51,7 +53,7 @@ export interface VideoDto extends EntityDto<string> {
 
 export interface VideoIndexImagesDto extends EntityDto<string> {
   indexImages: string[];
-  selected:string
+  selected?: string;
 }
 
 export interface VideoListItemDto extends EntityDto<string> {
