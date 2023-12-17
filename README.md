@@ -139,6 +139,9 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   Amennyiben egy lejátszási listához tartozik a videó, akkor a jobb oldalon az adott lejátszási többi tartalma jelenik meg.
   **A LEJÁTSZÁSI LIST JOBB OLDALA LEVÁGÓDIK, EZT MÉG JAVÍTANI KELL**
 
+  #### Video - Edit
+  **MÉG KI KELL TÖLTENI EZT A RÉSZT**
+
 
   ### Playlist
 
