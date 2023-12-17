@@ -13,14 +13,18 @@ namespace OeTube.Infrastructure.FileHandlers
 {
     public class StartVideoUploadHandler : VideoUploadHandler<StartVideoUploadHandlerArgs>, IStartVideoUploadHandler, ITransientDependency
     {
+        private readonly IUploadTaskFactory _uploadTaskFactory;
+
         public StartVideoUploadHandler(IFileContainerFactory fileContainerFactory,
-                                IBackgroundJobManager backgroundJobManager,
+                                  IBackgroundJobManager backgroundJobManager,
                                   IProcessUploadTaskFactory processUploadTaskFactory,
                                   IFFProbeService ffprobeService,
                                   IVideoFileValidator videoFileValidator,
                                   IVideoRepository repository,
-                                  IVideoFileConfig config) : base(fileContainerFactory, backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
+                                  IVideoFileConfig config,
+                                  IUploadTaskFactory uploadTaskFactory) : base(fileContainerFactory, backgroundJobManager, processUploadTaskFactory, ffprobeService, videoFileValidator, repository, config)
         {
+            this._uploadTaskFactory = uploadTaskFactory;
         }
 
         public override async Task<Video> HandleFileAsync<TRelatedType>(StartVideoUploadHandlerArgs args, CancellationToken cancellationToken = default)
@@ -44,9 +48,29 @@ namespace OeTube.Infrastructure.FileHandlers
                 await container.SaveFileAsync(new ResizedPath(video.Id, resolution), args.Content!, cancellationToken);
                 video.Resolutions.Get(resolution).MarkReady();
             }
-            //await _repository.InsertAsync(video, true, cancellationToken);
-            await ProcessUploadIfIsItReadyAsync(video, sourceInfo);
+            if (args.IsWebAssemblyAvailable)
+            {
+                await ProcessUploadIfIsItReadyAsync(video, sourceInfo);
+            }
+            else if(!video.IsAllResolutionReady())
+            {
+             
+                var resizingArgs=new VideoResizingArgs()
+                {
+                    Id = video.Id,
+                    Tasks = video.GetResolutionsBy(false).Select(_uploadTaskFactory.Create).ToList()
+                };
+                foreach (var res in video.Resolutions)
+                {
+                    if (!res.IsReady)
+                    {
+                        res.MarkReady();
+                    }
+                }
+                await _backgroundJobManager.EnqueueAsync(resizingArgs);
+            }
             return video;
         }
     }
+
 }

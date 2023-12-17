@@ -1,8 +1,11 @@
-﻿using OeTube.Domain.FilePaths.VideoFiles;
+﻿using OeTube.Domain.Entities.Videos;
+using OeTube.Domain.FilePaths.VideoFiles;
 using OeTube.Domain.Infrastructure.FFmpeg;
 using OeTube.Domain.Infrastructure.FileContainers;
 using OeTube.Domain.Repositories;
 using OeTube.Events;
+using OeTube.Infrastructure.FFMpeg;
+using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Local;
 

@@ -102,7 +102,7 @@ export class VideoService {
     this.restService.request<any, VideoUploadStateDto>({
       method: 'POST',
       url: '/api/app/video/start-upload',
-      params: { name: input.name, description: input.description, access: input.access, accessGroups: input.accessGroups },
+      params: { name: input.name, description: input.description, access: input.access, accessGroups: input.accessGroups, webAssemblyState: input.webAssemblyState },
       body: input.content,
     },
     { apiName: this.apiName,...config });

@@ -7,7 +7,7 @@ namespace OeTube.Jobs
 {
     public class ProcessUploadJob : AsyncBackgroundJob<ProcessVideoUploadArgs>, ITransientDependency
     {
-        private IProcessVideoUploadHandler _processVideoUploadHandler;
+        private readonly IProcessVideoUploadHandler _processVideoUploadHandler;
 
         public ProcessUploadJob(IProcessVideoUploadHandler processVideoUploadHandler)
         {
