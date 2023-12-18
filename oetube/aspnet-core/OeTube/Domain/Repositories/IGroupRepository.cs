@@ -11,6 +11,7 @@ namespace OeTube.Domain.Repositories
         IChildQueryRepository<Group, Guid, OeTubeUser, IUserQueryArgs>,
         IParentUpdateRepositoryByKey<Group, Guid>
     {
+        Task<PaginationResult<OeTubeUser>> GetMembersAsync(Group entity, IUserQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default);
         Task<int> GetMembersCountAsync(Group group, CancellationToken cancellationToken = default);
 
         Task<bool> IsMemberAsync(Guid? userId, Group group);

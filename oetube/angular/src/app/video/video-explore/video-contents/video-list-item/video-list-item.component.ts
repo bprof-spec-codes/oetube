@@ -7,6 +7,7 @@ import { VideoListItemDto } from '@proxy/application/dtos/videos';
   styleUrls: ['./video-list-item.component.scss']
 })
 export class VideoListItemComponent {
-  @Input() video:VideoListItemDto
-
+  @Input() item:VideoListItemDto
+  @Input() contextNavigation:boolean=true
+  @Input() getRoute:Function
 }

@@ -125,7 +125,6 @@ get query():QueryDto{
 
   deselectItem(item:TOutputListDto){
     if(this.allowSelection){
-      debugger
       const index=this.selectedDatas.indexOf(item)
       if(index!=-1){
         this.selectedDatas.splice(index,1)

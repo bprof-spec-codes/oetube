@@ -2,13 +2,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { NgModule } from '@angular/core';
 import { PlaylistComponent } from './playlist.component';
-import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
-import { PlaylistViewComponent } from './playlist-view/playlist-view.component';
+import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent },
-  { path: 'create', component: PlaylistCreateComponent },,
-  { path: ':id', component: PlaylistViewComponent}
+  { path: ':id', component: PlaylistDetailsComponent}
 ];
 
 @NgModule({

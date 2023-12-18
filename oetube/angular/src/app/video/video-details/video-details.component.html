@@ -1,13 +1,50 @@
-
-<app-lazy-tab-panel [inputItems]="inputItems"  [creatorId]="model?.creator?.id">
-    <div *appTemplate="'watch'">
-        <div [style.height.px]="1000">
-
+<app-lazy-tab-panel
+  (selectedItemChange)="onSelectedItemChange($event)"
+  [inputItems]="inputItems"
+  [creatorId]="model?.creator?.id"
+>
+  <div *appTemplate="'watch'">
+    <div class="d-flex">
+      <div class="w-75 mt-4" *ngIf="model">
         <app-video-player [video]="model"></app-video-player>
+        <div class="details">
+          <div class="p-3 pb-1 dx-card mx-auto w-100">
+            <div class="row">
+              <div class="col my-auto text-start d-block text-truncate">
+                <strong class="mw-auto word-break w-50 d-inline h5">{{ model.name }}</strong>
+              </div>
+              <div class="col text-end">
+                <strong>
+                  {{ model.creationTime | date : 'yyyy.MM.dd' }}
+                </strong>
+              </div>
+            </div>
+            <div class="row">
+                <a [routerLink]="['/user', model.creator.id]" class="col d-flex flex-row text-decoration-none justify-content-end">
+                  <div class="creator-img-container">
+                    <img class="img-fluid" [src]="model.creator.thumbnailImage" />
+                  </div>
+                  <div class="my-auto d-block text-truncate">
+                    <strong>{{ model.creator.name }} </strong>
+                  </div>
+                </a>
+            </div>
+          </div>
+          <p class="pt-1 m-2 text-justify">{{ model.description }}</p>
         </div>
+      </div>
+      <div class="w-25 mt-4">
+        <app-playlist-player
+          class="mx-auto w-100"
+          [getRoute]="getRoute"
+          [getMethod]="getMethod"
+          [currentVideo]="model"
+        ></app-playlist-player>
+      </div>
     </div>
-    <div *appTemplate="'edit'">
-        <app-video-update  [inputModel]="model"></app-video-update>
     </div>
+      
+  <div *appTemplate="'edit'">
+    <app-video-update [inputModel]="model"></app-video-update>
+  </div>
 </app-lazy-tab-panel>
-

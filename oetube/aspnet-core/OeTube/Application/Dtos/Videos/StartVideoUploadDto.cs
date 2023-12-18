@@ -1,4 +1,5 @@
-﻿using OeTube.Domain.Entities.Videos;
+﻿using Microsoft.AspNetCore.Mvc;
+using OeTube.Domain.Entities.Videos;
 using OeTube.Domain.Infrastructure;
 using OeTube.Domain.Infrastructure.FileHandlers;
 using OeTube.Domain.Repositories;
@@ -10,6 +11,11 @@ using Volo.Abp.Users;
 
 namespace OeTube.Application.Dtos.Videos
 {
+    public enum WebAssemblyState
+    {
+        Disabled=0,
+        Enabled=1,
+    }
     public class StartVideoUploadMapper : AsyncObjectMapper<StartVideoUploadDto, Video>, ITransientDependency
     {
         private readonly ICurrentUser _currentUser;
@@ -33,6 +39,7 @@ namespace OeTube.Application.Dtos.Videos
 
         public override async Task<Video> MapAsync(StartVideoUploadDto source)
         {
+
             var args = new StartVideoUploadHandlerArgs()
             {
                 Id = _guidGenerator.Create(),
@@ -40,7 +47,8 @@ namespace OeTube.Application.Dtos.Videos
                 Content = await ByteContent.FromRemoteStreamContentAsync(source.Content),
                 CreatorId = _currentUser.Id,
                 Description = source.Description,
-                Name = source.Name
+                Name = source.Name,
+                IsWebAssemblyAvailable=source.WebAssemblyState==WebAssemblyState.Enabled
             };
             var video = await _videoUploadHandler.HandleFileAsync<Video>(args);
             var groups = await _groupRepository.GetManyAsync(source.AccessGroups);
@@ -68,5 +76,6 @@ namespace OeTube.Application.Dtos.Videos
         public IRemoteStreamContent? Content { get; set; }
 
         public List<Guid> AccessGroups { get; set; } = new List<Guid>();
+        public WebAssemblyState WebAssemblyState { get; set; }
     }
 }

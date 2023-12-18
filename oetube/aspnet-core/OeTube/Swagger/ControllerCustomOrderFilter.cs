@@ -7,19 +7,11 @@ namespace OeTube.Swagger
 {
     public class OetubeFirstComparer : IComparer<KeyValuePair<string, OpenApiPathItem>>
     {
-        private static readonly HashSet<string> AppServices = Assembly.GetExecutingAssembly().GetTypes()
-                                                         .Where(t => t.GetInterface(typeof(IApplicationService).Name) is not null)
-                                                         .Select(t => t.Name.Replace("AppService", "")).ToHashSet();
-
-        private bool IsAppService(KeyValuePair<string, OpenApiPathItem> path)
-        {
-            return path.Value.Operations.SelectMany(o => o.Value.Tags).Any(t => AppServices.Contains(t.Name));
-        }
 
         public int Compare(KeyValuePair<string, OpenApiPathItem> x, KeyValuePair<string, OpenApiPathItem> y)
         {
-            var xIsAppService = IsAppService(x);
-            var yIsAppService = IsAppService(y);
+            var xIsAppService = AppServiceUtility.IsAppService(x);
+            var yIsAppService = AppServiceUtility.IsAppService(y);
 
             if (xIsAppService && yIsAppService)
             {
@@ -39,7 +31,6 @@ namespace OeTube.Swagger
             }
         }
     }
-
     public class ControllerCustomOrderFilter : IDocumentFilter
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)

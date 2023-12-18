@@ -19,6 +19,7 @@ import { UserScrollViewModule } from './user-scroll-view.module';
 import { GroupScrollViewModule } from '../group/group-scroll-view.module';
 import { VideoScrollViewModule } from '../video/video-scroll-view.module';
 import { PlaylistScrollViewModule } from '../playlist/playlist-scroll-view.module';
+import { AdministrationComponent } from './administration/administration.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { PlaylistScrollViewModule } from '../playlist/playlist-scroll-view.modul
     UserExploreComponent,
     UserDetailsComponent,
     UserUpdateComponent,
+    AdministrationComponent
   ],
   imports: [
     UserRoutingModule,

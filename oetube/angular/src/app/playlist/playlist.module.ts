@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistComponent } from './playlist.component';
-import { PlaylistCreateComponent } from './playlist-create/playlist-create.component';
 import { DxButtonModule, DxDataGridModule, DxTabPanelModule, DxTemplateModule, DxTreeListModule } from 'devextreme-angular';
 
 import { PlaylistViewComponent } from './playlist-view/playlist-view.component';
-import { PlaylistEditorComponent } from './playlist-editor/playlist-editor.component';
+import { PlaylistEditorComponent, PlaylistUpdateComponent,PlaylistCreateComponent } from './playlist-editor/playlist-editor.component';
 import { PlaylistContentsComponent } from './playlist-explore/playlist-contents/playlist-contents.component';
 import { CollectorModule } from '../collector.module';
 import { VideoModule } from '../video/video.module';
@@ -17,14 +16,17 @@ import { PlaylistListItemComponent } from './playlist-explore/playlist-contents/
 import { PlaylistYourListsComponent } from './playlist-your-lists/playlist-your-lists.component';
 import { PlaylistScrollViewModule } from './playlist-scroll-view.module';
 import { VideoScrollViewModule } from '../video/video-scroll-view.module';
+import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
 
 @NgModule({
   declarations: [
     PlaylistComponent,
     PlaylistYourListsComponent,
-    PlaylistCreateComponent,
     PlaylistViewComponent,
     PlaylistEditorComponent,
+    PlaylistUpdateComponent,
+    PlaylistCreateComponent,
+    PlaylistDetailsComponent,
     PlaylistExploreComponent,
   ],
   imports: [

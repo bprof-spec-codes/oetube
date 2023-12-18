@@ -1,0 +1,64 @@
+<div>
+  <div class="d-flex flex-row" *ngFor="let item of this.defaultImages">
+    <div class="row m-4">
+      <div [style.width]="'15%'" class="d-flex justify-content-center">
+        <span class="dx-field-item-label-text my-auto"> {{ item.name }} Default Image </span>
+      </div>
+      <div class="col">
+        <app-image-uploader
+          [height]="170"
+          [name]="'input'"
+          [(value)]="item.formData"
+          [defaultImgUrl]="item.objectUrl"
+        ></app-image-uploader>
+      </div>
+      <dx-button
+        [disabled]="item.formData === null"
+        class="my-auto"
+        (onClick)="imageUpload(item)"
+        [width]="'10em'"
+        text="upload"
+      ></dx-button>
+    </div>
+  </div>
+  <div class="row m-4 d-flex flex-row w-100">
+    <div [style.width]="'15%'" class="d-flex justify-content-center">
+      <span class="dx-field-item-label-text my-auto"> Delete Content </span>
+    </div>
+    <dx-select-box
+      [width]="'10%'"
+      class="ms-1"
+      [(value)]="selectedDelete"
+      keyExpr="name"
+      displayExpr="name"
+      [items]="deleteContents"
+    >
+    </dx-select-box>
+    <dx-text-box
+      class="ms-1"
+      class="w-50"
+      [(value)]="id"
+      [(isValid)]="isValid"
+      [maxLength]="36"
+      placeholder="Enter ID: 00000000-0000-0000-0000-000000000000"
+    >
+      <dx-validator>
+        <dxi-validation-rule type="pattern" [pattern]="guidPattern" message="It's not valid GUID!">
+        </dxi-validation-rule>
+      </dx-validator>
+    </dx-text-box>
+    <app-delete-dialog-button class="my-auto" [style.width]="'10em'" [disabled]="!isValid" (confirmed)="delete()">
+    </app-delete-dialog-button>
+  </div>
+  <div [style.height]="'100px'"></div>
+  <dx-popup [height]="'auto'" [width]="'40em'" [showTitle]="false" [visible]="popupVisible">
+    <div class="w-100 text-center mb-4">
+      <span class="h4">
+        {{ popupMessage }}
+      </span>
+    </div>
+    <div class="d-flex w-100 justify-content-evenly">
+      <dx-button text="Ok" (onClick)="close()" type="normal"> </dx-button>
+    </div>
+  </dx-popup>
+</div>

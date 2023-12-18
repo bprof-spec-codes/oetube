@@ -1,8 +1,13 @@
 
   <div [id]="'context_'+item.id" class="card" [style.width.px]="300">
     <a class="text-decoration-none" [routerLink]="contextNavigation?[]:['/group',item.id]">
-    <div class="card-body h-auto d-flex flex-row justify-content-between">
-      <img
+    <div class="card-body h-auto d-flex flex-column justify-content-between">
+        <div class="d-flex flex-row justify-content-end">
+          <span>{{item.totalMembersCount}}</span>
+          <i class="dx-icon-user"></i>
+      </div>
+      <div class="d-flex flex-row">
+        <img
         [style.width.px]="90"
         [style.height.px]="90"
         [src]="item.thumbnailImage"
@@ -10,9 +15,12 @@
         class="rounded-star my-auto img-responsive"
         draggable="false"
       />
-        <strong class="my-auto text-wrap mx-auto">{{ item.name }}</strong>
-        <span class="mx-3">{{ item.totalMembersCount }} <i class="dx-icon-user"></i></span>
+      <div class="my-auto mx-auto text-center d-block text-truncate w-100">
+        <strong>{{ item.name }}</strong>
+      </div>
     </div>
+      </div>
+     
   </a>
     <div class="d-flex card-footer justify-content-evenly">
       <small class="my-auto text-muted">{{ item.creationTime | date : 'yyyy.MM.dd' }}</small>

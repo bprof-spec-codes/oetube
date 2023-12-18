@@ -1,24 +1,13 @@
 <div class="d-flex flex-row" *ngIf="model">
-  <div
-    class="dx-card d-flex flex-column justify-content-center w-25 align-top p-3"
-    [style.height.px]="600"
+  <app-lazy-tab-panel
+    class="w-100"
+    [(selectedIndex)]="selectedIndex"
+    [creatorId]="id"
+    [inputItems]="inputItems"
   >
-    <div class="mx-auto">
-      <img class="user-image" [src]="model.image" />
-    </div>
-    <div class="text-wrap h-auto h-100 text-center mb-5">
-      <h6>{{ model.name }}</h6>
-    </div>
-    <dx-scroll-view [height]="400">
-      <span class="text-justify">
-        {{ model.aboutMe }}
-      </span>
-    </dx-scroll-view>
-  </div>
-
-  <app-lazy-tab-panel class="w-75" [creatorId]="id" [inputItems]="inputItems">
-    <div *appTemplate="'videos'">
-      <app-scroll-view [height]="height">
+    <div *appTemplate="'videos'" class="d-flex flex-row">
+      <ng-container *ngTemplateOutlet="profile"></ng-container>
+      <app-scroll-view class="w-75" [height]="height">
         <app-drop-down-search>
           <app-video-search></app-video-search>
         </app-drop-down-search>
@@ -28,8 +17,9 @@
         </app-scroll-view-contents>
       </app-scroll-view>
     </div>
-    <div *appTemplate="'playlists'">
-      <app-scroll-view [height]="height">
+    <div *appTemplate="'playlists'" class="d-flex flex-row">
+      <ng-container *ngTemplateOutlet="profile"></ng-container>
+      <app-scroll-view class="w-75" [height]="height">
         <app-drop-down-search>
           <app-playlist-search></app-playlist-search>
         </app-drop-down-search>
@@ -39,8 +29,9 @@
         </app-scroll-view-contents>
       </app-scroll-view>
     </div>
-    <div *appTemplate="'groups'">
-      <app-scroll-view [height]="height">
+    <div *appTemplate="'groups'" class="d-flex flex-row">
+      <ng-container *ngTemplateOutlet="profile"></ng-container>
+      <app-scroll-view class="w-75" [height]="height">
         <app-drop-down-search>
           <app-group-search></app-group-search>
         </app-drop-down-search>
@@ -51,7 +42,29 @@
       </app-scroll-view>
     </div>
     <div *appTemplate="'edit'">
-      <app-user-update [inputModel]="model"></app-user-update>
+      <app-user-update
+        (submitted)="onSubmitted($event)"
+        [inputModel]="model"
+      ></app-user-update>
+    </div>
+    <div *appTemplate="'administration'">
+      <app-administration></app-administration>
     </div>
   </app-lazy-tab-panel>
+
 </div>
+<ng-template #profile>
+  <div class="dx-card d-flex flex-column w-25 p-3">
+    <div class="mx-auto">
+      <img class="user-image" [src]="model.image" />
+    </div>
+    <div class="d-block text-truncate w-100 mb-4">
+      <strong class="my-auto  mx-auto h5">{{ model.name }}</strong>
+    </div>
+    <dx-scroll-view [style.height]="'40vh'">
+      <span class="text-justify text-break">
+        {{ model.aboutMe }}
+      </span>
+    </dx-scroll-view>
+  </div>
+</ng-template>

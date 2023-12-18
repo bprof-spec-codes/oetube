@@ -1,21 +1,8 @@
-<!--<dx-tab-panel>
-    <dxi-item title="playlists">
-        <div *dxTemplate>
-            <app-playlist-your-lists></app-playlist-your-lists>
-        </div>
-    </dxi-item>
-    <dxi-item title="Create">
-        <div *dxTemplate>
-            <app-playlist-create></app-playlist-create>
-        </div>
-    </dxi-item>
-</dx-tab-panel>-->
-
 <app-lazy-tab-panel [inputItems]="inputItems">
     <div *appTemplate="'explore';let data">
        <app-playlist-explore></app-playlist-explore>
     </div>
     <div *appTemplate="'create';let data">
-        <app-playlist-create ></app-playlist-create>
+        <app-playlist-create (submitted)="onSubmitted($event)"></app-playlist-create>
     </div>
 </app-lazy-tab-panel>

@@ -10,7 +10,7 @@ img {
 }
 
 ::ng-deep .dx-sortable{
-  min-height: 300px !important;
+  min-height: 50vh !important;
 }
 
 .dragged-item{
@@ -22,28 +22,4 @@ img {
   white-space: nowrap;
   border-bottom: 1px dashed;
   text-decoration: none;
-}
-.fade-in{
-    animation: fade-in 1s ease-in;
-}
-.fade-out{
-  animation: fade-out 1s ease-in
-}
-@keyframes fade-in { 
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes fade-out{
-
-  0%{
-    opacity: 1;
-  }
-  100%{
-    opacity: 0;
-  }
 }

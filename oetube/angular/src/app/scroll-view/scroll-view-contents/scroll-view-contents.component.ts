@@ -30,7 +30,6 @@ export class ScrollViewContentsComponent implements AfterViewInit{
   onSelectionChanged(e)
   {
    this.selectedItem=e.addedItems[0]
-   console.log(this.selectedItem)
   }
 ngAfterViewInit(): void {
     this.changeDetector.detectChanges()

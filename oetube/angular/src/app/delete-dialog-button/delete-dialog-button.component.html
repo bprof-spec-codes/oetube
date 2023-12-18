@@ -1,0 +1,21 @@
+<dx-button
+text="delete"
+type="danger"
+[visible]="visible"
+[disabled]="disabled"
+(onClick)="onClick()"
+>
+</dx-button>
+
+<dx-popup [height]="'auto'" [width]="'40em'" [showTitle]="false" [visible]="popupVisible">
+    <div class="w-100 text-center mb-4">
+        <span class="h4">
+            Are you sure you want to permanently delete this content?
+        </span>
+    </div>
+    <div class="d-flex w-100 justify-content-evenly">
+        <dx-button text="Cancel" (onClick)="cancel()" type="default"></dx-button>
+        <dx-button text="Confirm" (onClick)="confirm()" type="danger">
+        </dx-button>
+    </div>
+</dx-popup>

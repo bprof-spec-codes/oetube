@@ -127,7 +127,6 @@ export class FFInfo {
     this.duration = Number.parseFloat(fileInfo.format.duration);
     this.size = Number.parseInt(fileInfo.format.size);
     this.bitRate = Number.parseInt(fileInfo.format.bit_rate);
-    console.log(fileInfo.format.bit_rate);
     this.formatName = fileInfo.format.format_name;
     this.formatLongName = fileInfo.format.format_long_name;
     let stream = fileInfo.streams.find(value => {
