@@ -1,25 +1,25 @@
-<div class="container" *ngIf="video">
-  <div class="row w-100 h-100">
-    <div class="col-9 col-video">
-      <div class="video-app">
-        <div class="video-player">
-          <app-video-wrapper
-            [resolutionIndex]="resolutionIndex"
-            [video]="video"
-          ></app-video-wrapper>
-          <app-control-bar
-            [resolutionIndex]="resolutionIndex"
-            (resolutionChanged)="onResolutionChanged($event)"
-            [video]="video"
-          ></app-control-bar>
-        </div>
-      </div>
-      <div *ngIf="video">
-        <h4 class="pt-3 pb-1">{{ video.name }}</h4>
-        <h6>{{ video.creatorId ?? 'Unknown' }}</h6>
-        <p class="pt-1">{{ video.description }}</p>
-      </div>
-    </div>
+
+    <div class="container" *ngIf="video">
+      <div class="row w-100">
+        <div class="col-video w-100">
+          <div class="video-app w-100">
+            <div class="video-player">
+              <app-video-wrapper
+                [resolutionIndex]="resolutionIndex"
+                [video]="video"
+              ></app-video-wrapper>
+              <app-control-bar
+                [resolutionIndex]="resolutionIndex"
+                (resolutionChanged)="onResolutionChanged($event)"
+                [video]="video"
+              ></app-control-bar>
+            </div>
+          </div>
+      
+  </div>
+ 
+    <!--
+
     <div *ngIf="playlistId" [ngClass]="{
       'col-3':true, 'rounded':true, 'col-videos':true,
       'col-videos__playlist':playlistId
@@ -38,4 +38,4 @@
       ></app-video-grid>
     </div>
   </div>
-</div>
+    -->

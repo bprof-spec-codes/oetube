@@ -16,18 +16,24 @@ namespace OeTube.Data.QueryExtensions
 
             return context.GetAvaliableVideos(requesterId, playlist).Any();
         }
-        
+     
         public static IQueryable<Video> GetAvaliableVideos(this OeTubeDbContext context, Guid? requesterId, Playlist playlist)
         {
-            return context.GetAvaliableVideos(requesterId, GetVideos(context, playlist));
+            var result = from video in context.GetAvaliableVideos(requesterId)
+                         join videoItem in context.Set<VideoItem>()
+                         on video.Id equals videoItem.VideoId
+                         where videoItem.PlaylistId == playlist.Id
+                         orderby videoItem.Order
+                         select video;
+            return result;
         }
 
         public static IQueryable<Video> GetVideos(this OeTubeDbContext context, Playlist playlist)
         {
-            var result = from videoItem in context.Set<VideoItem>()
+            var result = from video in context.Set<Video>()
+                         join videoItem in context.Set<VideoItem>()
+                         on video.Id equals videoItem.VideoId
                          where videoItem.PlaylistId == playlist.Id
-                         join video in context.Set<Video>()
-                         on videoItem.VideoId equals video.Id
                          orderby videoItem.Order
                          select video;
             return result;

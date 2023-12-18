@@ -35,10 +35,8 @@ export class PlaylistYourListsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     this.playlistService.getList(this.playlistQueryDto).subscribe({
       next: success => {
-        console.log(success)
         this.playlists = success.items
       }
     })
@@ -47,7 +45,6 @@ export class PlaylistYourListsComponent implements OnInit {
 
   navigateToList(event){
     let itemData : any = event.itemData
-    console.log(itemData)
     //the route may vary according to the creator of the playlist content component
     this.router.navigate(['playlist/view/' + itemData.id])
   }

@@ -1,0 +1,8 @@
+<app-lazy-tab-panel [creatorId]="model?.creator?.id"  [(selectedIndex)]="selectedIndex" [inputItems]="inputItems">
+    <div *appTemplate="'details'">
+        <app-playlist-view [model]="model"></app-playlist-view>
+    </div>
+    <div *appTemplate="'edit'">
+<app-playlist-update [inputModel]="model" (deleted)="onDeleted()" (submitted)="onSubmitted($event)"></app-playlist-update>
+</div>
+</app-lazy-tab-panel>

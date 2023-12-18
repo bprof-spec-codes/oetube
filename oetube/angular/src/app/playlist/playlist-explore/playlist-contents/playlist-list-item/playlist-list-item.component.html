@@ -4,11 +4,11 @@
       class="my-auto mx-auto creator-image-container d-block text-truncate text-wrap p-1 text-center"
     >
       <div *ngIf="item.creator">
-        <a [routerLink]="['/user',item.creator.id]" class="text-decoration-none">
+        <a [routerLink]="['/user',item.creator.id]" class="text-decoration-none no-wrap d-flex flex-row">
         <img class="my-auto" [src]="item.creator.thumbnailImage" />
-        <span class="text-muted mx-auto">
-          {{ item.creator.name }}
-        </span>
+        <div class="my-auto mx-auto text-center d-block text-truncate w-100">
+          <strong>{{ item.creator.name }}</strong>
+        </div>
       </a>
     </div>
     </div>
@@ -23,14 +23,16 @@
   </div>
   </a>
   <div class="d-flex justify-content-evenly w-100 align-bottom">
-    <div>
+    <div class="my-auto">
       <i class="dx-icon-clock"></i>
       {{ item.totalDuration | time }}
     </div>
-    <div class="my-auto mx-auto">
-      {{ item.creationTime | date : 'yyyy.MM.dd' }}
+    <div>
+      <span class="my-auto mx-auto">
+        {{ item.creationTime | date : 'yyyy.MM.dd' }}
+      </span>
     </div>
-    <div class="">
+    <div class="my-auto">
       <i class="dx-icon-video"></i>
       {{ item.itemsCount }}
     </div>

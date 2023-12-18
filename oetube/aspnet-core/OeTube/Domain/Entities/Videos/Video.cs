@@ -96,7 +96,5 @@ namespace OeTube.Domain.Entities.Videos
         public const int NameMinLength = 3;
         public const int NameMaxLength = 100;
         public const int DescriptionMaxLength = 1000;
-        public const int FormatMaxLength = 10;
-        public const int FormatMinLength = 2;
     }
 }

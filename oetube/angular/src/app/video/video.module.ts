@@ -44,7 +44,8 @@ import { VideoFrameSelectorComponent } from './video-update/video-frame-selector
     VideoFrameSelectorComponent,
     PlaylistPlayerComponent,
     VideoUploadComponent,
-    VideoUpdateComponent
+    VideoUpdateComponent,
+    PlaylistPlayerComponent
   ],
   imports: [
     VideoRoutingModule,
