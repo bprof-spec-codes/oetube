@@ -176,14 +176,12 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
   
   #### Group - MEMBERS
   A kiválasztott csoport adatai jelennek meg, illetve az oda tartozó felhasználók kerülnek kilistázásra.
-  **MÉG NEM MŰKÖDIK A GROUP MEMBERS**
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/8952fb01-6845-4015-971c-77b3bf1d9f00)
+
 
   #### Group - Edit
   A kiválasztott csoport szerkeszthető.
-  **MÉG NEM MŰKÖDIK A GROUP EDIT**
-
-
-
+  ![image](https://github.com/bprof-spec-codes/oetube/assets/91885130/a9167134-41be-42cd-a4e8-dac44908dbff)
 
 # Probléma jegyzőkönyv
 ## Backend
