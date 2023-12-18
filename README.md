@@ -188,8 +188,18 @@ Amennyiben a felhasználó megnyomja a SUBMIT gombot, akkor a kovenrzió, majd f
 # Probléma jegyzőkönyv
 ## Backend
  - Új keretrendszer megismerése
+ - Bejelentkezés hosszú ideig nem működött kliens oldalon, mert az environment.*.ts-ben az oAuthConfig "issuer" fieldjében a backend címének végéről lemaradt egy per jel.
+ - ABP seedelés migráláskor rendszeresen hibára futott. A csoportok seedelésénél egy olyan több darabból álló(split query) lekérdezés volt használva, ami paginálta(skip,take) az adatokat, de nem határozta meg a rendezés módját. https://learn.microsoft.com/hu-hu/ef/core/querying/single-split-queries#split-queries.
+ - Nem lehetett 3 karakternél hosszabb nevű lejátszási listát létrehozni, mert a playlist adatbázis konfigurációjában véletlenül fel volt cserélve a minimális és a maximális hossz.
+ - Lejátszási listák videói nem az eredeti sorrendben jelentek meg. Módosításkor a kliens csak a videók id-jait küldi el, amikből egy  WHERE...IN-nek megfelelő LINQ lekérdezéssel jut hozzá a szerver a valódi entitásokhoz. Ezzel az a probléma, hogy az adatok lekérésének a sorrendje nem a bemeneti paraméterek sorendjétől függ, hanem ahogy épp az adatbázis "megtalálja" őket, szóval találatokat vissza kellett rendezni, mielőtt tovább lettek küldve update-re.
+
+
 ## Frontend
  - Az abp és a devex megjelenítés összeolvasztása nem volt zökkenőmentes
  - Videó lejátszásánál kezelni kellett azt, hogy a video seeker egyszerre mutassa azt, hogy hol tart a jelenlegi lejátszás, és kézzel is állítható legyen (nehéz volt megkülönböztetni, hogy a seeker állása azért változott meg, mert a videó előrehaladt, vagy mert a felhasználó beletekert)
  - Többszöri videómegnyitáskor nem állt le az előző videó, ezért többszörösen is hallani lehetett a hangot.
  - A csapatból valaki által létrehozott komponens újrafelhasználása nehézkes volt néha, mivel elég komplexekre sikeredtek és amennyiben nem te írtad, akkor nehézkes volt átlátni.
+ -  Project kezdetén nagyon sok időbe telt, mire sikerült egy olyan FFMPEG WASM javascript könyvtárat találni, ami nem csak szerveroldali, hanem böngészős környezetben is működik: "@ffmpeg/core": "^0.11.0", "@ffmpeg/ffmpeg": "^0.11.5",
+ -  Kliens kilistázta a videókat, de néhánynál az indexkép nem jelent és egyénileg sem lehetett elérni őket. 
+Egyes videóknál a gond a hibás listázó SQL lekérdezés volt backend oldalon, így a felhasználónak olyan videókat is kilistázott, amihez valójában nem volt hozzáférése. Emellett voltak olyan videók is, amihez viszont volt és ugyanúgy nem jelentek meg a tartalmak. Itt a háttérben az állt, hogy a frontend a beágyazott tartalmaknál nem küldte el az azonosító tokent. Végül a képeknél egy pipe, míg a HLS streamingnél a helyes XMLHttpRequest konfiguráció megoldotta a problémát.
+
