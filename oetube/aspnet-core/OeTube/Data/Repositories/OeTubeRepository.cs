@@ -26,7 +26,7 @@ namespace OeTube.Data.Repositories
             return Include<TEntity, TIncluder>(await GetQueryableAsync<TEntity>(), true);
         }
 
-        public async Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
+        public async virtual Task<PaginationResult<TEntity>> GetListAsync(TQueryArgs? args = default, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             return await CreateListAsync<TEntity, TIncluder, TFilter, TQueryArgs>
                 (await GetQueryableAsync<TEntity>(), args, includeDetails, cancellationToken);

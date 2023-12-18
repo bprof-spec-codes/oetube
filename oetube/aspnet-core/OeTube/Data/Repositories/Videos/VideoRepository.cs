@@ -20,7 +20,11 @@ namespace OeTube.Data.Repositories.Videos
         public VideoRepository(IDbContextProvider<OeTubeDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
-
+        public override async Task<PaginationResult<Video>> GetListAsync(IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
+        {
+            return await CreateListAsync<Video, VideoIncluder, VideoFilter, IVideoQueryArgs>
+           ((await GetQueryableAsync<Video>()).Where(v=>v.IsUploadCompleted), args, includeDetails, cancellationToken);
+        }
         public async Task<OeTubeUser?> GetCreatorAsync(Video video, bool includeDetails = true, CancellationToken cancellationToken = default)
         {
             return await GetCreatorAsync<Video, OeTubeUser, UserIncluder>(video, includeDetails, cancellationToken);

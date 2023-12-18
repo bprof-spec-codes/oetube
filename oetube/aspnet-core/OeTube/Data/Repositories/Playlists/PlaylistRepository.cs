@@ -60,7 +60,7 @@ namespace OeTube.Data.Repositories.Playlists
 
         public async Task<PaginationResult<Video>> GetChildrenAsync(Playlist entity, IVideoQueryArgs? args = null, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
-            var queryable = (await GetDbContextAsync()).GetVideos(entity);
+            var queryable = (await GetDbContextAsync()).GetVideos(entity).Where(v=>v.IsUploadCompleted);
             return await CreateListAsync<Video, VideoIncluder, VideoFilter, IVideoQueryArgs>
                 (queryable, args, includeDetails, cancellationToken);
         }
