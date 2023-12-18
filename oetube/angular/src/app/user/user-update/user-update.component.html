@@ -1,23 +1,50 @@
-<form class="dx-card p-5 h-100"  (submit)="onSubmit($event)" *ngIf="model">
-    <dx-form [formData]="model" [style.height]="height" [labelLocation]="'left'">
-      <dxi-item dataField="name" [isRequired]="true" />
-      <dxi-item dataField="aboutMe" [template]="'descriptionTemplate'" />
-      <div *dxTemplate="let data of 'descriptionTemplate'">
-        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+<form class="dx-card p-5" (submit)="onSubmit($event)" *ngIf="model">
+  <dx-form [formData]="model" [style.height]="height" [labelLocation]="'left'">
+    <dxi-item
+      dataField="name"
+      [isRequired]="true"
+      editorType="dxTextBox"
+      [editorOptions]="{ maxLength: val.nameMaxLength }"
+    >
+      <dxi-validation-rule type="required"> </dxi-validation-rule>
+      <dxi-validation-rule
+        type="stringLength"
+        [min]="val.nameMinLength"
+        [max]="val.nameMaxLength"
+        [message]="val.nameMessage"
+      >
+      </dxi-validation-rule>
+    </dxi-item>
+    <dxi-item dataField="aboutMe">
+      <div *dxTemplate="let data">
+        <dx-text-area
+          [(value)]="data.component.option('formData')[data.dataField]"
+          autoResizeEnabled="true"
+          [maxLength]="val.aboutMeMaxLength"
+        >
+        </dx-text-area>
       </div>
-      <dxi-item dataField="image">
-        <div *dxTemplate="let data">
-          <app-image-uploader [height]="170"
-            [name]="data.dataField"
-            [(value)]="data.component.option('formData')[data.dataField]"
-            [defaultImgUrl]="defaultImageUrl"
-          ></app-image-uploader>
-        </div>
-      </dxi-item>
-      <dxi-item
-        itemType="button"
-        [buttonOptions]="submitButtonOptions"
-        onClick="onSubmit($event)"
-      ></dxi-item>
-    </dx-form>
-  </form>
+      <dxi-validation-rule
+        type="stringLength"
+        [max]="val.aboutMeMaxLength"
+        [message]="val.aboutMeMessage"
+      >
+      </dxi-validation-rule>
+    </dxi-item>
+    <dxi-item dataField="image">
+      <div *dxTemplate="let data">
+        <app-image-uploader
+          [height]="170"
+          [name]="data.dataField"
+          [(value)]="data.component.option('formData')[data.dataField]"
+          [defaultImgUrl]="defaultImageUrl"
+        ></app-image-uploader>
+      </div>
+    </dxi-item>
+    <dxi-item
+      itemType="button"
+      [buttonOptions]="submitButtonOptions"
+      onClick="onSubmit($event)"
+    ></dxi-item>
+  </dx-form>
+</form>

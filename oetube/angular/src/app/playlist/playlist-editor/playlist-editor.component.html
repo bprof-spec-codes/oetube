@@ -10,11 +10,37 @@
   </div>
   <form (submit)="onSubmit($event)">
     <dx-form [formData]="model" [labelLocation]="'left'">
-      <dxi-item dataField="name" [isRequired]="true" />
-      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
-      <div *dxTemplate="let data of 'descriptionTemplate'">
-        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
+      <dxi-item
+      dataField="name"
+      [isRequired]="true"
+      editorType="dxTextBox"
+      [editorOptions]="{ maxLength: val.nameMaxLength }"
+    >
+      <dxi-validation-rule type="required"> </dxi-validation-rule>
+      <dxi-validation-rule
+        type="stringLength"
+        [min]="val.nameMinLength"
+        [max]="val.nameMaxLength"
+        [message]="val.nameMessage"
+      >
+      </dxi-validation-rule>
+    </dxi-item>
+    <dxi-item dataField="description">
+      <div *dxTemplate="let data">
+        <dx-text-area
+          [(value)]="data.component.option('formData')[data.dataField]"
+          [maxLength]="val.descriptionMaxLength"
+          autoResizeEnabled="true"
+        >
+        </dx-text-area>
       </div>
+      <dxi-validation-rule
+        type="stringLength"
+        [max]="val.descriptionMaxLength"
+        [message]="val.descriptionMessage"
+      >
+      </dxi-validation-rule>
+    </dxi-item>
       <dxi-item dataField="image">
         <div *dxTemplate="let data">
           <app-image-uploader

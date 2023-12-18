@@ -1,8 +1,11 @@
 .pic-container {
     text-align: center;
     color: white;
-    width: 200px;
+    width: 100%;
     position: relative;
+  }
+  .video{
+    max-width: 250px;
   }
   .bottom-right {
     position: absolute;

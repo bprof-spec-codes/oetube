@@ -17,7 +17,7 @@
       <div class="mx-auto">
         <img class="group-image img-fluid" [src]="model.image" />
       </div>
-      <div class="text-wrap text-center mb-5">
+      <div class="d-block text-wrap text-center text-truncate">
         <h6>{{ model.name }}</h6>
       </div>
      
@@ -37,7 +37,7 @@
       </dx-scroll-view>
     
     </div>
-    <app-scroll-view [height]="height">
+    <app-scroll-view [height]="height" class="w-75">
       <app-drop-down-search>
         <app-user-search></app-user-search>
       </app-drop-down-search>

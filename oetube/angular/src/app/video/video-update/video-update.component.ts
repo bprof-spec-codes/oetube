@@ -1,8 +1,10 @@
 import { Component, Input,EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { VideoService } from '@proxy/application';
+import { VideoValidationDto } from '@proxy/application/dtos/validations';
 import { UpdateVideoDto, VideoDto } from '@proxy/application/dtos/videos';
 import { AccessType } from '@proxy/domain/entities/videos';
+import { ValidationStoreService } from 'src/app/services/validation-store.service';
 
 @Component({
   selector: 'app-video-update',
@@ -33,8 +35,9 @@ export class VideoUpdateComponent {
   };
 
   model: UpdateVideoDto;
-  constructor(private service:VideoService,private router:Router){
-
+  val:VideoValidationDto
+  constructor(private service:VideoService,private router:Router,validationStore:ValidationStoreService){
+    this.val=validationStore.validations.video
   }
   delete(){
       this.service.delete(this.inputModel.id).subscribe(r=>{

@@ -1,7 +1,9 @@
 import { Component, Input, Output,EventEmitter } from '@angular/core';
 import { OeTubeUserService } from '@proxy/application';
 import { UpdateUserDto, UserDto } from '@proxy/application/dtos/oe-tube-users';
+import { UserValidationDto } from '@proxy/application/dtos/validations';
 import { DxButtonComponent } from 'devextreme-angular';
+import { ValidationStoreService } from 'src/app/services/validation-store.service';
 
 @Component({
   selector: 'app-user-update',
@@ -19,9 +21,11 @@ export class UserUpdateComponent {
   @Input() height:string
   defaultImageUrl:string
   model:UpdateUserDto
+  val:UserValidationDto
   @Output() submitted=new EventEmitter<UserDto>()
 
-  constructor(private service:OeTubeUserService){
+  constructor(private service:OeTubeUserService,validationStore:ValidationStoreService){
+    this.val=validationStore.validations.user
   }
   onSubmit($event){
     this.service.update(this._inputModel.id,this.model).subscribe({
