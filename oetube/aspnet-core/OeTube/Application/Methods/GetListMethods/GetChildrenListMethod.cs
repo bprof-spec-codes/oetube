@@ -54,7 +54,8 @@ namespace OeTube.Application.Methods.GetListMethods
         }
         public virtual async Task<PaginationDto<TChildOutputListItemDto>> GetChildrenListAsync(TKey id, TChildQueryArgs input)
         {
-                if (Repository is IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> childQueryAvaliable)
+            var isAdmin = ServiceProvider.GetRequiredService<ICurrentUser>().IsInRole("admin");
+            if (Repository is IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs> childQueryAvaliable&&!isAdmin)
                 {
                     var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;
                     return await GetCustomChildrenListAsync<IChildQueryAvaliableRepository<TEntity, TKey, TChildEntity, TChildQueryArgs>>

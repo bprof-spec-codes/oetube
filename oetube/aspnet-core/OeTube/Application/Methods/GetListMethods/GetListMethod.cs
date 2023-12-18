@@ -49,8 +49,8 @@ namespace OeTube.Application.Methods.GetListMethods
         }
         public virtual async Task<PaginationDto<TOutputListItemDto>> GetListAsync(TQueryArgs input)
         {
-
-            if (Repository is IQueryAvaliableRepository<TEntity, TQueryArgs>)
+            var isAdmin=ServiceProvider.GetRequiredService<ICurrentUser>().IsInRole("admin");
+            if (Repository is IQueryAvaliableRepository<TEntity, TQueryArgs> && !isAdmin)
             {
                 var requesterId = ServiceProvider.GetRequiredService<ICurrentUser>().Id;
                 return await GetCustomListAsync<IQueryAvaliableRepository<TEntity, TQueryArgs>>((repository) => repository.GetAvaliableAsync(requesterId, input));
