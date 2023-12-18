@@ -41,11 +41,13 @@ import { TemplateRefCollectionModule } from './template-ref-collection/template-
 import { SharedModule } from './shared/shared.module';
 import { AppPipeModule } from './pipes/auth-url-pipe/app-pipe.module';
 import { DoubleClickDirective } from './double-click.directive';
+import { DeleteDialogButtonComponent } from './delete-dialog-button/delete-dialog-button.component';
+import { DeleteDialogButtonModule } from './delete-dialog-button/delete-dialog-button.module';
 
 @NgModule({
   imports: [
     CommonModule,
-
+    DeleteDialogButtonModule,
     AppPipeModule,
     ScrollViewModule,
     LazyTabPanelModule,
@@ -93,7 +95,7 @@ import { DoubleClickDirective } from './double-click.directive';
     TemplateRefCollectionModule,
     ScrollViewModule,
     RouterModule,
-
+    DeleteDialogButtonComponent,
     FormsModule,
     ReactiveFormsModule,
     DxFormModule,
