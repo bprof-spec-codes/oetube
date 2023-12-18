@@ -13,6 +13,8 @@ import { DxButtonComponent } from 'devextreme-angular';
 import { ValueChangedEvent } from 'devextreme/ui/calendar';
 import { Router, provideRouter } from '@angular/router';
 import { GroupModule } from '../group.module';
+import { ValidationStoreService } from 'src/app/services/validation-store.service';
+import { GroupValidationDto } from '@proxy/application/dtos/validations';
 @Component({
   templateUrl: './group-editor.component.html',
   styleUrls: ['./group-editor.component.scss'],
@@ -24,8 +26,11 @@ export class GroupEditorComponent  {
   @Output() submitted=new EventEmitter<GroupDto>()
   model: CreateUpdateGroupDto;
   defaultImgUrl: string;
-
-  constructor(protected groupService: GroupService) {}
+  val:GroupValidationDto
+  emailDomainsValid:boolean=true
+  constructor(protected groupService: GroupService,validationStore:ValidationStoreService) {
+    this.val=validationStore.validations.group
+  }
  
   onSubmit(event: Event) {}
   modelToJson() {
@@ -52,9 +57,7 @@ export class GroupCreateComponent extends GroupEditorComponent implements OnInit
     members: [],
     image: null,
   };
-  constructor(groupService: GroupService) {
-    super(groupService);
-  }
+ 
   ngOnInit(): void {
     this.groupService.getDefaultImage().subscribe(r => {
       this.defaultImgUrl = URL.createObjectURL(r);
@@ -62,14 +65,16 @@ export class GroupCreateComponent extends GroupEditorComponent implements OnInit
   }
 
   async onSubmit(event: Event) {
-    this.groupService.create(this.model).subscribe({
-      next: v => {
-        this.submitted.emit(v)
-      },
-      error: e => {
-        console.log(e);
-      },
-    });
+    if(this.emailDomainsValid){
+      this.groupService.create(this.model).subscribe({
+        next: v => {
+          this.submitted.emit(v)
+        },
+        error: e => {
+          console.log(e);
+        },
+      });
+    }
   }
 }
 @Component({
@@ -88,9 +93,7 @@ export class GroupUpdateComponent extends GroupEditorComponent implements OnInit
   
 
   @Output() deleted:EventEmitter<GroupDto>=new EventEmitter()
-  constructor(groupService: GroupService) {
-    super(groupService);
-  }
+
   ngOnInit(): void {
     this.model = {
       name: this.inputModel.name,
@@ -103,14 +106,16 @@ export class GroupUpdateComponent extends GroupEditorComponent implements OnInit
   }
 
   async onSubmit(event: Event) {
-    this.groupService.update(this.inputModel.id, this.model).subscribe({
-      next: v => {
-        this.submitted.emit(v)
-      },
-      error: e => {
-        console.log(e);
-      },
-    });
+    if(this.emailDomainsValid){
+      this.groupService.update(this.inputModel.id, this.model).subscribe({
+        next: v => {
+          this.submitted.emit(v)
+        },
+        error: e => {
+          console.log(e);
+        },
+      });
+    }
   }
 
  public async delete(){

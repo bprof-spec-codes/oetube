@@ -19,6 +19,8 @@ import { AccessType } from '@proxy/domain/entities/videos';
 import { GroupService } from '@proxy/application';
 import { time } from 'console';
 import { FFService } from 'src/app/services/video/FF.service';
+import { ValidationStoreService } from 'src/app/services/validation-store.service';
+import { VideoValidationDto } from '@proxy/application/dtos/validations';
 @Component({
   selector: 'app-video-upload',
   templateUrl: './video-upload.component.html',
@@ -56,8 +58,10 @@ export class VideoUploadComponent implements OnInit {
   };
   isUploading=false
   isUploadingCompleted=false
-
-  constructor(private videoService: VideoService, private ffService: FFService) {}
+  val:VideoValidationDto
+  constructor(private videoService: VideoService, private ffService: FFService, validationStore:ValidationStoreService) {
+    this.val=validationStore.validations.video
+  }
   subscription: any;
 
 

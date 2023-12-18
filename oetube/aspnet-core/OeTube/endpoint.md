@@ -41,6 +41,9 @@
 		+ **/api/app/playlist/{id}:** *Módosit egy Playlist-t. Csak létrehozója hajthatja végre és csak saját videókat adhat hozzá, mint elem.*
 	+ **Delete**
 		+ **/api/app/playlist/{id}:** *Kitöröl egy Playlist-t. Csak a létrehozója hajthatja végre.*
++ #### /Validation ####
+	+ **Get**
+		+ **/api/app/validation**
 + #### /Video ####
 	+ **Get**
 		+ **/api/app/video:** *Pagináltan lekérdezi az összes kérelmezőnek elérhető Video-t a megadott keresési argumentumok alapján.*

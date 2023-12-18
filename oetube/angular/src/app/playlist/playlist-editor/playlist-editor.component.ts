@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { PlaylistService } from '@proxy/application';
 import { CreateUpdatePlaylistDto, PlaylistDto } from '@proxy/application/dtos/playlists';
+import { PlaylistValidationDto } from '@proxy/application/dtos/validations';
 import { DxButtonComponent } from 'devextreme-angular';
+import { ValidationStoreService } from 'src/app/services/validation-store.service';
 
 @Component({
   selector: 'app-playlist-editor',
@@ -17,7 +19,10 @@ export class PlaylistEditorComponent {
   @Input() title: string;
   @Output() submitted = new EventEmitter<PlaylistDto>();
   defaultImgUrl: string;
-  constructor(protected playlistService: PlaylistService) {}
+  val:PlaylistValidationDto
+  constructor(protected playlistService: PlaylistService, validationStore:ValidationStoreService) {
+    this.val=validationStore.validations.playlist
+  }
   onSubmit(event: Event) {}
   modelToJson() {
     return JSON.stringify(this.model, null, 4);

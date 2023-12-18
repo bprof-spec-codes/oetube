@@ -1,16 +1,17 @@
 
-  <a [routerLink]="contextNavigation?[]:getRoute(item)">
-<div [id]="'context_'+item.id" class="pic-container">
-  <img class="rounded my-1 w-100" [src]="item.indexImage | auth" draggable="false" />
-  <div class="bottom-right">
-    {{ item.duration | time}}
-  </div>
-</div>
-  <div class="text-truncate">
-    <strong>
-      {{ item.name }}
-    </strong>
-  </div>
+  <a [routerLink]="contextNavigation?[]:getRoute(item)" class="text-decoration-none"> 
+    <div class="video">
+      <div [id]="'context_'+item.id" class="pic-container">
+        <img class="rounded my-1 w-100" [src]="item.indexImage | auth" draggable="false" />
+        <div class="bottom-right">
+          {{ item.duration | time}}
+        </div>
+      </div>
+      <div class="col my-auto text-start d-block text-truncate w-100">
+        <strong >{{ item.name }}</strong>
+      </div>
+    </div>
+
   </a>
 <dx-context-menu *ngIf="contextNavigation" [target]="'#context_'+item.id" [items]="contextItems">
   <div *dxTemplate="let i of 'item'">

@@ -1,12 +1,38 @@
 <div class="component-title">
   <h4>Upload your video</h4>
   <form (submit)="onSubmit($event)">
-    <dx-form [formData]="uploadModel">
-      <dxi-item dataField="name" [isRequired]="true" />
-      <dxi-item dataField="description" [template]="'descriptionTemplate'" />
-      <div *dxTemplate="let data of 'descriptionTemplate'">
-        <dx-text-area [(value)]="data.component.option('formData')[data.dataField]"></dx-text-area>
-      </div>
+    <dx-form [formData]="uploadModel" [labelLocation]="'left'">
+      <dxi-item
+        dataField="name"
+        [isRequired]="true"
+        editorType="dxTextBox"
+        [editorOptions]="{ maxLength: val.nameMaxLength }"
+      >
+        <dxi-validation-rule type="required"> </dxi-validation-rule>
+        <dxi-validation-rule
+          type="stringLength"
+          [min]="val.nameMinLength"
+          [max]="val.nameMaxLength"
+          [message]="val.nameMessage"
+        >
+        </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="description">
+        <div *dxTemplate="let data">
+          <dx-text-area
+            [(value)]="data.component.option('formData')[data.dataField]"
+            [maxLength]="val.descriptionMaxLength"
+            autoResizeEnabled="true"
+          >
+          </dx-text-area>
+        </div>
+        <dxi-validation-rule
+          type="stringLength"
+          [max]="val.descriptionMaxLength"
+          [message]="val.descriptionMessage"
+        >
+        </dxi-validation-rule>
+      </dxi-item>
       <dxi-item dataField="access">
         <dxo-label text="Access"></dxo-label>
         <dx-radio-group
@@ -28,15 +54,15 @@
                 [text]="'edit'"
                 [disabled]="uploadModel.access !== item"
               >
-              <app-scroll-view [initialLoad]="false">
-                <app-drop-down-search>
-                  <app-group-search></app-group-search>
-                </app-drop-down-search>
-                <app-access-group-data-source></app-access-group-data-source>
-                <app-scroll-view-contents>
-                  <app-group-contents [contextNavigation]="true"></app-group-contents>
-                </app-scroll-view-contents>
-              </app-scroll-view>
+                <app-scroll-view [initialLoad]="false">
+                  <app-drop-down-search>
+                    <app-group-search></app-group-search>
+                  </app-drop-down-search>
+                  <app-access-group-data-source></app-access-group-data-source>
+                  <app-scroll-view-contents>
+                    <app-group-contents [contextNavigation]="true"></app-group-contents>
+                  </app-scroll-view-contents>
+                </app-scroll-view>
               </app-scroll-view-selector-popup>
             </div>
           </div>
@@ -61,7 +87,10 @@
   <dx-popup [visible]="isUploading" [height]="'auto'" [showTitle]="false">
     <ng-container *ngIf="isUploadingCompleted; else elseTemplate">
       <div class="w-auto m-2">
-        <h6 class="text-center mx-auto">The file is succesfully uploaded! You have to wait for some time until the video is fully completed.</h6>
+        <h6 class="text-center mx-auto">
+          The file is succesfully uploaded! You have to wait for some time until the video is fully
+          completed.
+        </h6>
         <div class="mt-4 mx-auto w-25">
           <dx-button class="w-100" (onClick)="refresh()" text="Ok"> </dx-button>
         </div>
@@ -69,9 +98,14 @@
     </ng-container>
     <ng-template #elseTemplate>
       <div *ngIf="hasTask">
-        <dx-linear-gauge  id="gauge" [value]="progress*100" >
+        <dx-linear-gauge id="gauge" [value]="progress * 100">
           <dxo-range-container>
-            <dxi-range *ngFor="let i of taskIntervals" [startValue]="i.min" [endValue]="i.max" [color]="i.color">
+            <dxi-range
+              *ngFor="let i of taskIntervals"
+              [startValue]="i.min"
+              [endValue]="i.max"
+              [color]="i.color"
+            >
             </dxi-range>
           </dxo-range-container>
           <dxo-scale [startValue]="0" [endValue]="100" [tickInterval]="taskIntervals[0].max">
@@ -81,12 +115,8 @@
             <dxo-font [size]="28"></dxo-font>
           </dxo-title>
         </dx-linear-gauge>
-          <h5 class="text-center">
-            {{progress*100 | number: '1.0-0'}} %
-          </h5>
+        <h5 class="text-center">{{ progress * 100 | number : '1.0-0' }} %</h5>
       </div>
     </ng-template>
-    </dx-popup>
-
+  </dx-popup>
 </div>
-
