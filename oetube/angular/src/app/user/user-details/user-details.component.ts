@@ -50,6 +50,15 @@ export class UserDetailsComponent {
       isLoaded: false,
       visible: true,
     },
+    {
+      key:'administration',
+      title:"Administration",
+      authRequired:true,
+      onlyCreator:true,
+      role:"admin",
+      isLoaded:false,
+      visible:true
+    }
   ];
   height: string = "60vh";
   model: UserDto;

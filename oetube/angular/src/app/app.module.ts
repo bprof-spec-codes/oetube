@@ -22,12 +22,14 @@ import { SidebarModule } from './sidebar/sidebar.module';
 import { NotifyUploadCompletedComponent } from './notify-upload-completed/notify-upload-completed.component';
 import { DxoPositionModule } from 'devextreme-angular/ui/nested';
 import {RouterModule} from "@angular/router"
+import { CurrentUserModule } from './current-user/current-user.module';
  @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     DxDropDownBoxModule,
+    CurrentUserModule,
     DxToastModule,
     RouterModule,
     DxListModule,

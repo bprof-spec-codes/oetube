@@ -1,5 +1,4 @@
 import { Component,OnDestroy } from '@angular/core';
-import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 import { SignalrService } from 'src/app/services/video/signalr.service';
 import { Observable,Subscription } from 'rxjs';
 import { VideoDto } from '@proxy/application/dtos/videos';

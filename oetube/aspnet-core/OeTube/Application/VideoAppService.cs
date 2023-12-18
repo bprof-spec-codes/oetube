@@ -24,6 +24,7 @@ namespace OeTube.Application
         private readonly VideoMethodFactory _factory;
         private readonly Type _creatorAuth = typeof(CreatorChecker);
         private readonly Type _accessAuth = typeof(VideoAccessChecker);
+        private readonly Type _creatorOrAdminAuth = typeof(CreatorOrAdminChecker);
 
         public VideoAppService(VideoMethodFactory videoMethodFactory)
         {
@@ -92,7 +93,7 @@ namespace OeTube.Application
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
-                          .SetAuthorizationAndPolicy(_creatorAuth)
+                          .SetAuthorizationAndPolicy(_creatorOrAdminAuth)
                           .DeleteAsync(id);
         }
 

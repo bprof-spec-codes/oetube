@@ -13,8 +13,8 @@ import { HlsResolutionDto, VideoDto } from '@proxy/application/dtos/videos';
 import Hls from 'hls.js';
 import { VideoTimeService } from 'src/app/services/video/video-time.service';
 import { VolumeService } from 'src/app/services/video/volume.service';
-import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 import { VideoPlayerService } from 'src/app/services/video/video-player.service';
+import { CurrentUserService } from 'src/app/current-user/services/current-user.service';
 @Component({
   selector: 'app-video-wrapper',
   templateUrl: './video-wrapper.component.html',
