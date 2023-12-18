@@ -19,21 +19,42 @@ namespace OeTube.Application.Caches
         }
         protected virtual void ConfigureItemsCount()
         {
-            RequesterDtoCache.ConfigureProperty<PlaylistItemDto, int>
-                (p => p.ItemsCount, async (key, entity, userId) => await Repository.GetAvaliableItemsCountAsync(userId, entity!));
+
+            RequesterDtoCache.ConfigureProperty<PlaylistItemDto, int>(p => p.ItemsCount, 
+                async (key, entity, userId) => 
+                {
+                    if (CurrentUser.IsInRole("admin"))
+                    {
+                        return await Repository.GetItemsCountAsync(entity!);
+                    }
+                    else
+                    {
+                        return await Repository.GetAvaliableItemsCountAsync(userId, entity!);
+                    }
+                });
         }
-        public async Task<int> GetOrAddItemsCountAsync(Playlist entity)
-        {
-            return await RequesterDtoCache.GetOrAddAsync<PlaylistItemDto, int>(entity.Id, entity, p => p.ItemsCount);
-        }
-        protected virtual void ConfigureTotalDuration()
-        {
-            RequesterDtoCache.ConfigureProperty<PlaylistDto, TimeSpan>
-           (p => p.TotalDuration, async (key, entity, userId) => await Repository.GetAvaliableTotalDurationAsync(userId, entity!));
-        }
-        public async Task<TimeSpan> GetOrAddTotalDurationAsync(Playlist entity)
-        {
-            return await RequesterDtoCache.GetOrAddAsync<PlaylistDto, TimeSpan>(entity.Id,entity, p => p.TotalDuration);
-        }
+    public async Task<int> GetOrAddItemsCountAsync(Playlist entity)
+    {
+        return await RequesterDtoCache.GetOrAddAsync<PlaylistItemDto, int>(entity.Id, entity, p => p.ItemsCount);
     }
+    protected virtual void ConfigureTotalDuration()
+    {
+        RequesterDtoCache.ConfigureProperty<PlaylistDto, TimeSpan>
+       (p => p.TotalDuration, async (key, entity, userId) => 
+       {
+           if (CurrentUser.IsInRole("admin"))
+           {
+               return await Repository.GetTotalDurationAsync(entity!);
+           }
+           else
+           {
+               return await Repository.GetAvaliableTotalDurationAsync(userId, entity!);
+           }
+       });
+    }
+    public async Task<TimeSpan> GetOrAddTotalDurationAsync(Playlist entity)
+    {
+        return await RequesterDtoCache.GetOrAddAsync<PlaylistDto, TimeSpan>(entity.Id, entity, p => p.TotalDuration);
+    }
+}
 }
