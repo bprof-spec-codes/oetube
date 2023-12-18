@@ -25,6 +25,7 @@ namespace OeTube.Application
     {
         private readonly PlaylistMethodFactory _factory;
         private readonly Type _creatorAuth = typeof(CreatorChecker);
+        private readonly Type _creatorOrAdminAuth = typeof(CreatorOrAdminChecker);
         private readonly Type _accessAuth = typeof(PlaylistAccessChecker);
 
         public PlaylistAppService(PlaylistMethodFactory factory)
@@ -70,7 +71,7 @@ namespace OeTube.Application
         public async Task DeleteAsync(Guid id)
         {
             await _factory.CreateDeleteMethod()
-                          .SetAuthorizationAndPolicy(_creatorAuth)
+                          .SetAuthorizationAndPolicy(_creatorOrAdminAuth)
                           .DeleteAsync(id);
         }
 

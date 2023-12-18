@@ -5,7 +5,7 @@ import { RestService, Rest } from '@abp/ng.core';
 import { HttpRequest } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable,lastValueFrom } from 'rxjs';
-import { UrlService } from 'src/app/auth/url-service/url.service';
+import { UrlService } from 'src/app/current-user/url-service/url.service';
 @Component({
   selector: 'app-video-frame-selector',
   templateUrl: './video-frame-selector.component.html',

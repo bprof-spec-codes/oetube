@@ -47,7 +47,11 @@
         [inputModel]="model"
       ></app-user-update>
     </div>
+    <div *appTemplate="'administration'">
+      <app-administration></app-administration>
+    </div>
   </app-lazy-tab-panel>
+
 </div>
 <ng-template #profile>
   <div class="dx-card d-flex flex-column w-25 p-3">

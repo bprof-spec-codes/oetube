@@ -5,9 +5,9 @@ import { GroupDto } from '@proxy/application/dtos/groups';
 import { GroupService } from '@proxy/application';
 import { UserListItemDto } from '@proxy/application/dtos/oe-tube-users';
 import { GroupItem } from 'devextreme/ui/form';
-import { CurrentUser, CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 import { LazyTabItem } from 'src/app/lazy-tab-panel/lazy-tab-panel.component';
 import { AppTemplate } from 'src/app/template-ref-collection/template-ref-collection.component';
+import { CurrentUser, CurrentUserService } from 'src/app/current-user/services/current-user.service';
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.component.html',

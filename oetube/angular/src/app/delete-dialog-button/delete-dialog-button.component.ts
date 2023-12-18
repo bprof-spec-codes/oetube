@@ -7,6 +7,7 @@ import { Component, Input,Output,EventEmitter } from '@angular/core';
 })
 export class DeleteDialogButtonComponent {
   @Input() visible:boolean
+  @Input() disabled:boolean
   popupVisible:boolean
   @Output() confirmed:EventEmitter<any>=new EventEmitter()
   cancel(){
@@ -14,6 +15,7 @@ export class DeleteDialogButtonComponent {
   }
   confirm(){
     this.confirmed.emit()
+    this.popupVisible=false
   }
   onClick(){
     this.popupVisible=true

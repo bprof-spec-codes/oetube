@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { VideoDto } from '@proxy/application/dtos/videos';
 import { Observable, Subject } from 'rxjs';
-import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
+import { CurrentUserService } from 'src/app/current-user/services/current-user.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

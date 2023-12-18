@@ -4,8 +4,8 @@ import { UserListItemDto, UserQueryDto } from '@proxy/application/dtos/oe-tube-u
 import { UserDataSourceComponent } from '../user-data-source/user-data-source.component';
 import { Observable } from 'rxjs';
 import { PaginationDto } from '@proxy/application/dtos';
-import { CurrentUserService } from 'src/app/auth/current-user/current-user.service';
 import { DataSourceProviderDirective, ScrollViewDataSourceComponent } from 'src/app/scroll-view/scroll-view-data-source/scroll-view-data-source.component';
+import { CurrentUserService } from 'src/app/current-user/services/current-user.service';
 
 
 
