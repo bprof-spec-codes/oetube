@@ -26,6 +26,11 @@ namespace OeTube.Application.AuthorizationCheckers
         }
         public async Task<bool?> HasAccess(object? requestedObject)
         {
+            if (CurrentUser.IsInRole("admin"))
+            {
+                return true;
+            }
+
             if(requestedObject is TEntity entity)
             {
                 return !await Cache.AccessCacheService.GetOrAddAsync(entity);
@@ -34,7 +39,7 @@ namespace OeTube.Application.AuthorizationCheckers
         }
         public override async Task CheckRightsAsync(object? requestedObject)
         {
-            if (requestedObject is TEntity entity)
+            if (requestedObject is TEntity entity && !CurrentUser.IsInRole("admin"))
             {
                if(!await Cache.AccessCacheService.GetOrAddAsync(entity))
                 {
